@@ -3,6 +3,7 @@
 	class Map
 	{
 		private char[,] _tileMap;
+		private List<MapEntity> _entities;
 
 		public int SizeJ
 		{
@@ -19,8 +20,21 @@
 
 		public Map(int sizeJ, int sizeI)
 		{
-			_tileMap = new Tile[sizeJ, sizeI];
+			_tileMap = new char[sizeJ, sizeI];
 			_entities = new List<MapEntity>();
+		}
+
+		public MapEntity AddEntity(Entity entity, int posJ, int posI)
+		{
+			var mapEntity = new MapEntity(entity, posJ, posI);
+			AddEntity(mapEntity);
+
+			return mapEntity;
+		}
+
+		public void AddEntity(MapEntity mapEntity)
+		{
+			Entities.Add(mapEntity);
 		}
 	}
 
