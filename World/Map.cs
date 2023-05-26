@@ -1,9 +1,15 @@
-﻿namespace World
+﻿using System.Xml.Linq;
+
+namespace World
 {
 	class Map
 	{
+		private static readonly Dictionary<char, TileInfo> TILE_INFO = new Dictionary<char, TileInfo>(){
+			{' ', new TileInfo("Ground", true)},
+			{'w', new TileInfo("Wall", false)}
+		};
+
 		private char[,] _tileMap;
-		private List<MapEntity> _entities;
 
 		public int SizeJ
 		{
@@ -15,82 +21,37 @@
 		}
 		public char[,] TileMap
 		{ get => _tileMap; private set => _tileMap = value; }
-		public List<MapEntity> Entities
-		{ get => _entities; private set => _entities = value; }
+
+		public Map(char[,] tileMap)
+		{
+			_tileMap = tileMap;
+		}
 
 		public Map(int sizeJ, int sizeI)
 		{
 			_tileMap = new char[sizeJ, sizeI];
-			_entities = new List<MapEntity>();
 		}
 
-		public MapEntity AddEntity(Entity entity, int posJ, int posI)
+		public TileInfo GetTileInfo(int posJ, int posI)
 		{
-			var mapEntity = new MapEntity(entity, posJ, posI);
-			AddEntity(mapEntity);
-
-			return mapEntity;
+			return GetTileInfo(TileMap[posJ, posI]);
 		}
 
-		public void AddEntity(MapEntity mapEntity)
+		public static TileInfo GetTileInfo(char c)
 		{
-			Entities.Add(mapEntity);
-		}
-	}
-
-	struct MapEntity
-	{
-		public Entity entity;
-		public int posJ, posI;
-
-		public MapEntity(Entity entity, int posI, int posJ)
-		{
-			this.entity = entity;
-			this.posJ = posJ;
-			this.posI = posI;
+			return TILE_INFO[c];
 		}
 
-		public void Move(Direction.Directions direction)
+		public struct TileInfo
 		{
-			(int movJ, int movI) = Direction.TranslateDirection(direction);
-			Move(movJ, movI);
-		}
+			public string name;
+			public bool passable;
 
-		public void Move(int movJ, int movI)
-		{
-			posJ += movJ;
-			posI += movI;
-		}
-	}
-
-	struct Direction
-	{
-		private static readonly (int, int)[] directionDictionary = {
-			(0, 1),
-			(-1, 1),
-			(-1, 0),
-			(-1, -1),
-			(0, -1),
-			(1, -1),
-			(1, 0),
-			(1, 1)
-		};
-		
-		public static (int, int) TranslateDirection(Directions direction)
-		{
-			return directionDictionary[(int)direction];
-		}
-
-		public enum Directions
-		{
-			E = 0,
-			NE = 1,
-			N = 2,
-			NW = 3,
-			W = 4,
-			SW = 5,
-			S = 6,
-			SE = 7
+			public TileInfo(string name, bool passable)
+			{
+				this.name = name;
+				this.passable = passable;
+			}
 		}
 	}
 }
