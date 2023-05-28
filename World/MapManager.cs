@@ -29,6 +29,27 @@
 			Entities.Add(entity);
 		}
 
+		public bool MoveEntity(MapEntity entity, Direction.Directions direction)
+		{
+			if (CanEntityMoveTo(entity, direction))
+			{
+				entity.Move(direction);
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private bool CanEntityMoveTo(MapEntity entity, Direction.Directions direction)
+		{
+			(int offsetJ, int offsetI) = Direction.TranslateDirection(direction);
+
+			return TileTraversable(entity.posJ + offsetJ, entity.posI + offsetI);
+		}
+
 		private bool TileTraversable(int posJ, int posI)
 		{
 			return !(TileImpassable(posJ, posI) || TileOccupied(posJ, posI) || TileOutOfBounds(posJ, posI));
