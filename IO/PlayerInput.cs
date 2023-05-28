@@ -1,0 +1,7 @@
+﻿namespace IO
+{
+	class PlayerInput
+	{
+
+	}
+}
