@@ -7,55 +7,72 @@ namespace IO
 	{
 		public static char[,]? LoadMapCharData(string pathName)
 		{
-			FileStream fs;
+			StreamReader sr;
 
             try
             {
-                fs = Open(pathName, FileMode.Open);
+                sr = new StreamReader(pathName);
             }
 			catch (FileNotFoundException)
 			{
-				Debug.WriteLine($"File at{pathName} could not be found.");
+				Debug.WriteLine($"File at {pathName} could not be found.");
 
 				return null;
 			}
 
-            return ParseFileStream(fs);
+            var charData = ParseStreamReader(sr);
+            sr.Close();
+
+            return charData;
         }
 
-		private static char[,] ParseFileStream(FileStream fs)
+		private static char[,] ParseStreamReader(StreamReader sr)
         {
-            (int dimJ, int dimI) = GetDimentions(fs);
+            (int dimJ, int dimI) = GetDimentions(sr);
             var charData = new char[dimJ, dimI];
+            string? line;
+            int j = 0, i = 0;
 
-            for (int j = 0; j < dimJ; j++)
+            while ((line = sr.ReadLine()) != null)
             {
-                for (int i = 0; i < dimI; i++)
+                foreach (char c in line)
                 {
-                    char c = (char)fs.ReadByte();
-
-                    if (c == -1)
-                    {
-                        j = dimJ;
-                        break;
-                    }
-                    else if (c == '\n')
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        charData[j, i] = c;
-                    }
+                    charData[j, i] = c;
+                    i++;
                 }
+                j++;
             }
 
             return charData;
         }
 
-        private static (int, int) GetDimentions(FileStream fs)
+        private static (int, int) GetDimentions(StreamReader sr)
         {
-            throw new NotImplementedException();
+            return GetDimentions(GetStringList(sr));
+        }
+
+        private static (int, int) GetDimentions(List<string> lines)
+        {
+            int sizeJ = lines.Count, sizeI = 0;
+
+            foreach (string line in lines)
+                sizeI = Math.Max(sizeI, line.Length);
+
+            return (sizeJ, sizeI);
+
+        }
+
+        private static List<string> GetStringList(StreamReader sr)
+        {
+            List<string> lines = new List<string>(10);
+            string? line;
+
+            while ((line = sr.ReadLine()) != null)
+            {
+                lines.Add(line);
+            }
+
+            return lines;
         }
 	}
 }
