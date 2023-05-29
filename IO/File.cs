@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Reflection.PortableExecutable;
 using static System.IO.File;
 
 namespace IO
@@ -29,12 +30,14 @@ namespace IO
 		private static char[,] ParseStreamReader(StreamReader sr)
         {
             (int dimJ, int dimI) = GetDimentions(sr);
+            ResetStreamReader(sr);
             var charData = new char[dimJ, dimI];
             string? line;
-            int j = 0, i = 0;
-
+            
+            int j = 0; // TODO Maybe make this a for loop
             while ((line = sr.ReadLine()) != null)
             {
+                int i = 0;
                 foreach (char c in line)
                 {
                     charData[j, i] = c;
@@ -48,6 +51,7 @@ namespace IO
 
         private static (int, int) GetDimentions(StreamReader sr)
         {
+            ResetStreamReader(sr);
             return GetDimentions(GetStringList(sr));
         }
 
@@ -73,6 +77,12 @@ namespace IO
             }
 
             return lines;
+        }
+
+        private static void ResetStreamReader(StreamReader sr)
+        {
+            sr.DiscardBufferedData();
+            sr.BaseStream.Seek(0, System.IO.SeekOrigin.Begin);
         }
 	}
 }
