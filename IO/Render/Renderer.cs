@@ -9,10 +9,16 @@ namespace IO.Render
 	class Renderer
 	{
 		private char[,] _bufferCache;
+		private StringBuilder _bufferString;
 
 		private char[,] BufferCache {
 			get => _bufferCache;
 			set => _bufferCache = value;
+		}
+		private StringBuilder BufferString
+		{
+			get => _bufferString;
+			set => _bufferString = value;
 		}
 		private Element[] Elements
 		{ get; set; }
@@ -26,6 +32,7 @@ namespace IO.Render
 		public Renderer(int elementsCount, int dimJ, int dimI)
 		{
 			BufferCache = new char[dimJ, dimI];
+			BufferString = new StringBuilder(SizeJ*SizeI);
 			Elements = new Element[elementsCount];
 			CurrentElementCount = 0;
 		}
@@ -38,27 +45,11 @@ namespace IO.Render
 
 		public void RenderFrame()
 		{
-			UpdateBuffer();
+			UpdateBufferCache();
+			UpdateBufferString();
 			Console.CursorVisible = false;
 			Console.SetCursorPosition(0, 0);
-			Console.Write(BufferToString());
-		}
-
-		private string BufferToString()
-		{
-			StringBuilder sb = new(SizeJ * SizeI);
-
-			for (int j = 0; j < SizeJ; j++)
-			{
-				for (int i = 0; i < SizeI; i++)
-				{
-					char c = BufferCache[j, i];
-					sb.Append(c == 0 ? ' ' : c);
-				}
-				sb.Append('\n');
-			}
-
-			return sb.ToString();
+			Console.Write(BufferString);
 		}
 
 		private void CopyFrom(Element element)
@@ -77,12 +68,27 @@ namespace IO.Render
 			}
 		}
 
-		private void UpdateBuffer()
+		private void UpdateBufferCache()
 		{
 			foreach (var element in Elements)
 			{
 				if (element.enabled)
 					CopyFrom(element);
+			}
+		}
+
+		private void UpdateBufferString()
+		{
+			BufferString.Clear();
+
+			for (int j = 0; j < SizeJ; j++)
+			{
+				for (int i = 0; i < SizeI; i++)
+				{
+					char c = BufferCache[j, i];
+					BufferString.Append(c == 0 ? ' ' : c);
+				}
+				BufferString.Append('\n');
 			}
 		}
 
