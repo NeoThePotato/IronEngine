@@ -104,9 +104,17 @@ namespace IO.Render
 	/// </summary>
 	struct Element
 	{
+		public IRenderable renderable;
 		public bool enabled;
 		public int offsetJ, offsetI;
-		public IRenderable renderable;
+
+		public Element(IRenderable renderable, bool enabled = true, int offsetJ = 0, int offsetI = 0)
+		{
+			this.enabled = enabled;
+			this.offsetJ = offsetJ;
+			this.offsetI = offsetI;
+			this.renderable = renderable;
+		}
 	}
 
 }
