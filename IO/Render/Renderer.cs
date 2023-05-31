@@ -20,9 +20,7 @@ namespace IO.Render
 			get => _bufferString;
 			set => _bufferString = value;
 		}
-		private Element[] Elements
-		{ get; set; }
-		private int CurrentElementCount
+		private List<Element> Elements
 		{ get; set; }
 		private int SizeJ
 		{ get => GetSizeJ(BufferCache); }
@@ -33,14 +31,12 @@ namespace IO.Render
 		{
 			BufferCache = new char[dimJ, dimI];
 			BufferString = new StringBuilder(SizeJ*SizeI);
-			Elements = new Element[elementsCount];
-			CurrentElementCount = 0;
+			Elements = new List<Element>(elementsCount);
 		}
 
 		public void AddElement(Element element)
 		{
-			Elements[CurrentElementCount] = element;
-			CurrentElementCount++;
+			Elements.Add(element);
 		}
 
 		public void RenderFrame()
