@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Runtime.Versioning;
+using System.Text;
+using static System.Console;
 
 namespace IO.Render
 {
@@ -32,6 +34,7 @@ namespace IO.Render
 			BufferCache = new char[dimJ, dimI];
 			BufferString = new StringBuilder(SizeJ*SizeI);
 			Elements = new List<Element>(elementsCount);
+			AdjustBufferSize();
 		}
 
 		public void AddElement(Element element)
@@ -43,9 +46,8 @@ namespace IO.Render
 		{
 			UpdateBufferCache();
 			UpdateBufferString();
-			Console.CursorVisible = false;
-			Console.SetCursorPosition(0, 0);
-			Console.Write(BufferString);
+			AdjustConsole(); // TODO Find a way to fix the issue causing this to not render the first line
+			Write(BufferString);
 		}
 
 		private void CopyFrom(Element element)
@@ -86,6 +88,47 @@ namespace IO.Render
 				}
 				BufferString.Append('\n');
 			}
+		}
+
+		[SupportedOSPlatform("windows")]
+		private void AdjustConsole()
+		{
+			CursorVisible = false;
+			AdjustWindowSize();
+			SetCursorPosition(0, 0);
+			AdjustBufferSize();
+			SetWindowPosition(0, 0);
+		}
+
+		[SupportedOSPlatform("windows")]
+		private void AdjustWindowSize()
+		{
+			if (WindowWidth != SizeI || WindowHeight != SizeJ)
+				AdjustWindowSize(SizeI, SizeJ);
+		}
+
+		[SupportedOSPlatform("windows")]
+		private static void AdjustWindowSize(int sizeI, int sizeJ)
+		{
+			SetWindowSize(sizeI, sizeJ);
+		}
+
+		[SupportedOSPlatform("windows")]
+		private void AdjustBufferSize()
+		{
+			if (BufferWidth != SizeI || BufferHeight != SizeJ)
+				AdjustBufferSize(SizeI, SizeJ);
+		}
+		
+		[SupportedOSPlatform("windows")]
+		private static void AdjustBufferSize(int sizeI, int sizeJ)
+		{
+			if (sizeI < WindowWidth || sizeJ < WindowHeight || sizeI < CursorLeft || sizeJ < CursorTop)
+			{
+				AdjustWindowSize(sizeI, sizeJ);
+				SetCursorPosition(0, 0);
+			}
+			SetBufferSize(sizeI, sizeJ);
 		}
 
 		public static int GetSizeJ(char[,] arr)
