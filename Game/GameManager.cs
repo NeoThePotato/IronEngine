@@ -64,7 +64,8 @@ namespace Game
 
 		private Directions InputToDirection(PlayerInputs input)
 		{
-			var directionDict = new Dictionary<PlayerInputs, Directions>() {
+			var directionDict = new Dictionary<PlayerInputs, Directions>()
+			{
 				{ PlayerInputs.Right, Directions.E},
 				{ PlayerInputs.UpRight, Directions.NE},
 				{ PlayerInputs.Up, Directions.N },
@@ -74,6 +75,7 @@ namespace Game
 				{ PlayerInputs.Down, Directions.S },
 				{ PlayerInputs.DownRight, Directions.SE },
 				{ PlayerInputs.Any, Directions.None },
+				{ PlayerInputs.Confirm, Directions.None },
 			};
 
 			return directionDict[input];
