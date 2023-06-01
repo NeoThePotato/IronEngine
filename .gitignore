@@ -3,7 +3,7 @@
 ################################################################################
 
 /obj
+/bin
+/.vs
 /FinalProject.sln
 /FinalProject.csproj
-/.vs
-/bin/Debug/net6.0
