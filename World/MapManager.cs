@@ -82,12 +82,12 @@
 		}
 	}
 
-	struct MapEntity
+	class MapEntity
 	{
 		public Entity entity;
 		public int posJ, posI;
 
-		public MapEntity(Entity entity, int posI, int posJ)
+		public MapEntity(Entity entity, int posJ, int posI)
 		{
 			this.entity = entity;
 			this.posJ = posJ;
@@ -107,7 +107,7 @@
 		}
 	}
 
-	struct Direction
+	static class Direction
 	{
 		private static readonly (int, int)[] DIRECTION_VECTORS = {
 			(0, 1),
@@ -117,7 +117,8 @@
 			(0, -1),
 			(1, -1),
 			(1, 0),
-			(1, 1)
+			(1, 1),
+			(0, 0)
 		};
 
 		public static (int, int) TranslateDirection(Directions direction)
@@ -134,7 +135,8 @@
 			W = 4,
 			SW = 5,
 			S = 6,
-			SE = 7
+			SE = 7,
+			None = 8
 		}
 	}
 }
