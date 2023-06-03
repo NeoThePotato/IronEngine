@@ -4,10 +4,6 @@ namespace World
 {
 	class Map
 	{
-		private static readonly Dictionary<char, TileInfo> TILE_INFO = new Dictionary<char, TileInfo>(){
-			{' ', new TileInfo("Ground", true)},
-			{'w', new TileInfo("Wall", false)}
-		};
 
 		private char[,] _tileMap;
 
@@ -34,16 +30,16 @@ namespace World
 
 		public TileInfo GetTileInfo(int posJ, int posI)
 		{
-			return GetTileInfo(TileMap[posJ, posI]);
-		}
-
-		public static TileInfo GetTileInfo(char c)
-		{
-			return TILE_INFO[c];
+			return TileInfo.GetTileInfo(TileMap[posJ, posI]);
 		}
 
 		public struct TileInfo
 		{
+			public static readonly Dictionary<char, TileInfo> TILE_INFO = new Dictionary<char, TileInfo>(){
+			{' ', new TileInfo("Ground", true)},
+			{'w', new TileInfo("Wall", false)}
+			};
+
 			public string name;
 			public bool passable;
 
@@ -51,6 +47,11 @@ namespace World
 			{
 				this.name = name;
 				this.passable = passable;
+			}
+
+			public static TileInfo GetTileInfo(char c)
+			{
+				return TILE_INFO[c];
 			}
 		}
 	}
