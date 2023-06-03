@@ -33,6 +33,11 @@ namespace World
 			return TileInfo.GetTileInfo(TileMap[posJ, posI]);
 		}
 
+		public (int, int) GetRandomTileCoordinates()
+		{
+			return (Random.Shared.Next(0, SizeJ), Random.Shared.Next(0, SizeI));
+		}
+
 		public struct TileInfo
 		{
 			public static readonly Dictionary<char, TileInfo> TILE_INFO = new Dictionary<char, TileInfo>(){
