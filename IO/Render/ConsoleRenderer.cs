@@ -8,7 +8,7 @@ namespace IO.Render
 	/// <summary>
 	/// Handles rendering of elements into the console
 	/// </summary>
-	class Renderer
+	class ConsoleRenderer
 	{
 		private char[,] _bufferCache;
 		private StringBuilder _bufferString;
@@ -29,7 +29,7 @@ namespace IO.Render
 		private int SizeI
 		{ get => GetSizeI(BufferCache); }
 
-		public Renderer(int elementsCount, int dimJ, int dimI)
+		public ConsoleRenderer(int elementsCount, int dimJ, int dimI)
 		{
 			BufferCache = new char[dimJ, dimI];
 			BufferString = new StringBuilder(SizeJ*SizeI);

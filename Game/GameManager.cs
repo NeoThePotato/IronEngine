@@ -29,7 +29,7 @@ namespace Game
 		public void Start()
 		{
 			Debug.WriteLine("GameManager started.");
-			Renderer renderer = new Renderer(2, MapManager.Map.SizeJ, MapManager.Map.SizeI);
+			ConsoleRenderer renderer = new ConsoleRenderer(2, MapManager.Map.SizeJ, MapManager.Map.SizeI);
 			renderer.AddElement(new Element(this));
 
 			while (true)
