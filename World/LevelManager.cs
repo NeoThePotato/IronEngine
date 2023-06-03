@@ -1,6 +1,6 @@
 ﻿namespace World
 {
-	class MapManager
+	class LevelManager
 	{
 		private Map _map;
 		private List<MapEntity> _entities;
@@ -10,7 +10,7 @@
 		public List<MapEntity> Entities
 		{ get => _entities; private set => _entities = value; }
 
-		public MapManager(Map map)
+		public LevelManager(Map map)
 		{
 			_map = map;
 			_entities = new List<MapEntity>();
