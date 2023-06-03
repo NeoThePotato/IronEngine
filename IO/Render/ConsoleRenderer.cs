@@ -8,7 +8,7 @@ namespace IO.Render
 	/// <summary>
 	/// Handles rendering of elements into the console
 	/// </summary>
-	class ConsoleRenderer
+	class ConsoleRenderer : Renderer
 	{
 		private char[,] _bufferCache;
 		private StringBuilder _bufferString;
@@ -22,8 +22,6 @@ namespace IO.Render
 			get => _bufferString;
 			set => _bufferString = value;
 		}
-		private List<Element> Elements
-		{ get; set; }
 		private int SizeJ
 		{ get => GetSizeJ(BufferCache); }
 		private int SizeI
@@ -37,11 +35,6 @@ namespace IO.Render
 			AdjustBufferSize();
 		}
 
-		public void AddElement(Element element)
-		{
-			Elements.Add(element);
-		}
-
 		public void RenderFrame()
 		{
 			UpdateBufferCache();
@@ -50,28 +43,12 @@ namespace IO.Render
 			Write(BufferString);
 		}
 
-		private void CopyFrom(Element element)
-		{
-			CopyFrom(element.renderable.Render(), ref _bufferCache, element.offsetI, element.offsetJ);
-		}
-
-		private static void CopyFrom(char[,] source, ref char[,] destination, int offsetJ, int offsetI)
-		{
-			for (int j = 0; j < source.GetLength(0); j++) // Row iteration
-			{
-				for (int i = 0; i < source.GetLength(1); i++) // Char iteration
-				{
-					destination[j + offsetJ, i + offsetI] = source[j, i];
-				}
-			}
-		}
-
 		private void UpdateBufferCache()
 		{
-			foreach (var element in Elements)
+			foreach (var child in Children)
 			{
-				if (element.enabled)
-					CopyFrom(element);
+				if (child.Enabled)
+					CopyFrom(child);
 			}
 		}
 
@@ -130,34 +107,5 @@ namespace IO.Render
 			}
 			SetBufferSize(sizeI, sizeJ);
 		}
-
-		public static int GetSizeJ(char[,] arr)
-		{
-			return arr.GetLength(0);
-		}
-
-		public static int GetSizeI(char[,] arr)
-		{
-			return arr.GetLength(1);
-		}
 	}
-
-	/// <summary>
-	/// Contains a renderable element with info of where it should be rendered on the screen-space
-	/// </summary>
-	struct Element
-	{
-		public IRenderable renderable;
-		public bool enabled;
-		public int offsetJ, offsetI;
-
-		public Element(IRenderable renderable, bool enabled = true, int offsetJ = 0, int offsetI = 0)
-		{
-			this.enabled = enabled;
-			this.offsetJ = offsetJ;
-			this.offsetI = offsetI;
-			this.renderable = renderable;
-		}
-	}
-
 }
