@@ -27,11 +27,10 @@ namespace IO.Render
 		private int SizeI
 		{ get => GetSizeI(BufferCache); }
 
-		public ConsoleRenderer(int elementsCount, int dimJ, int dimI)
+		public ConsoleRenderer(GameManagerRenderer gameManagerRenderer)
 		{
-			BufferCache = new char[dimJ, dimI];
+			BufferCache = new char[gameManagerRenderer.SizeJ, gameManagerRenderer.SizeI];
 			BufferString = new StringBuilder(SizeJ*SizeI);
-			Elements = new List<Element>(elementsCount);
 			AdjustBufferSize();
 		}
 
