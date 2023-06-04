@@ -2,10 +2,10 @@
 {
 	abstract class Renderer
 	{
-		public int SizeJ
-		{ get; private set; }
-		public int SizeI
-		{ get; private set; }
+		public abstract int SizeJ
+		{ get; }
+		public abstract int SizeI
+		{ get; }
 		public int OffsetJ
 		{ get; private set; }
 		public int OffsetI

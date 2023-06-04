@@ -6,9 +6,9 @@ namespace IO.Render
 	class GameManagerRenderer : Renderer
 	{
 		private GameManager Manager;
-		new private int SizeJ
+		public override int SizeJ
 		{ get => Manager.LevelManager.Map.SizeJ; }
-		new private int SizeI
+		public override int SizeI
 		{ get => Manager.LevelManager.Map.SizeI; }
 
 		public GameManagerRenderer(GameManager gameManager)

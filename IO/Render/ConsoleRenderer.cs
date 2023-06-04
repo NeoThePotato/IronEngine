@@ -28,18 +28,17 @@ namespace IO.Render
 		{ get => (BufferSizeJ, BufferSizeI); }
 		private int BufferLength
 		{ get => BufferSizeJ * BufferSizeI; }
-		new private int SizeJ
+		public override int SizeJ
 		{ get => Size.Item1; }
-		new private int SizeI
+		public override int SizeI
 		{ get => Size.Item2; }
-		private (int, int) Size
+		public (int, int) Size
 		{ get => ChildRenderer.RequiredBufferSize(); }
 
 		public ConsoleRenderer(Renderer childRenderer)
 		{
 			ChildRenderer = childRenderer;
-			StringBuffer = new StringBuilder(BufferLength);
-			ValidateFrameBufferSize();
+			UpdateFrameBufferSize();
 			ValidateStringBufferCapacity();
 			AdjustConsoleBufferSize();
 		}
@@ -82,7 +81,7 @@ namespace IO.Render
 		#region BUFFER_SIZE_MANIPULATION
 		private void ValidateFrameBufferSize()
 		{
-			if (BufferSize != Size)
+			if (FrameBuffer == null || BufferSize != Size)
 				UpdateFrameBufferSize();
 		}
 
@@ -95,11 +94,12 @@ namespace IO.Render
 		private void UpdateFrameBufferSize(int sizeJ, int sizeI)
 		{
 			(int newSizeJ, int newSizeI) = Size;
+			FrameBuffer = new char[newSizeJ, newSizeI];
 		}
 
 		private void ValidateStringBufferCapacity()
 		{
-			if (StringBuffer.Capacity < BufferLength)
+			if (StringBuffer == null || StringBuffer.Capacity < BufferLength)
 				UpdateStringBufferCapacity();
 		}
 
@@ -110,7 +110,10 @@ namespace IO.Render
 
 		private void UpdateStringBufferCapacity(int capacity)
 		{
-			StringBuffer.Capacity = capacity;
+			if (StringBuffer != null)
+				StringBuffer.Capacity = capacity;
+			else
+				StringBuffer = new StringBuilder(capacity);
 		}
 		#endregion
 
