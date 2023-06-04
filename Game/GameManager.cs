@@ -1,12 +1,12 @@
 ﻿using IO.Render;
 using System.Diagnostics;
-using World;
+using Game.World;
 using static IO.PlayerInput;
-using static World.Direction;
+using static Game.World.Direction;
 
 namespace Game
 {
-	class GameManager : IRenderable
+    class GameManager : IRenderable
 	{
 		public LevelManager MapManager
 		{ get; private set; }

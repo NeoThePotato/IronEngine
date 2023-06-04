@@ -1,7 +1,0 @@
-﻿namespace World
-{
-	class Entity
-	{
-
-	}
-}
