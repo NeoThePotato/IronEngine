@@ -1,35 +1,27 @@
 ﻿using Game;
-using Game.World;
 
 namespace IO.Render
 {
 	class GameManagerRenderer : Renderer
 	{
-		private GameManager Manager;
+		private GameManager GameManager
+		{ get; set; }
+		private LevelManagerRenderer LevelManagerRenderer
+		{ get; set; }
 		public override int SizeJ
-		{ get => Manager.LevelManager.Map.SizeJ; }
+		{ get => LevelManagerRenderer.SizeJ; }
 		public override int SizeI
-		{ get => Manager.LevelManager.Map.SizeI; }
+		{ get => LevelManagerRenderer.SizeI; }
 
 		public GameManagerRenderer(GameManager gameManager)
 		{
-			Manager = gameManager;
+			GameManager = gameManager;
+			LevelManagerRenderer = new LevelManagerRenderer(GameManager.LevelManager);
 		}
 
 		public override void Render(ref char[,] buffer)
 		{
-			// Render level
-			for (int j = 0; j < SizeJ; j++)
-			{
-				for (int i = 0; i < SizeI; i++)
-				{
-					buffer[OffsetJ+j, OffsetI+i] = Manager.LevelManager.Map.TileMap[j, i];
-				}
-			}
-
-			// Render entities
-			foreach (var entity in Manager.Entities)
-				buffer[OffsetJ+entity.posJ, OffsetI+entity.posI] = '@';
+			LevelManagerRenderer.Render(ref buffer);
 		}
 	}
 }
