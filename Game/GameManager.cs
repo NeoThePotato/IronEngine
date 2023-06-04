@@ -6,39 +6,39 @@ using static World.Direction;
 
 namespace Game
 {
-	class GameManager : IRenderable
+	class GameManager
 	{
-		public LevelManager MapManager
+		public LevelManager LevelManager
 		{ get; private set; }
 		private List<MapEntity> Entities
-		{ get => MapManager.Entities; }
+		{ get => LevelManager.Entities; }
 		private MapEntity PlayerEntity
 		{ get; }
 		public int SizeJ
-		{ get => MapManager.Map.SizeJ; }
+		{ get => LevelManager.Map.SizeJ; }
 		public int SizeI
-		{ get => MapManager.Map.SizeI; }
+		{ get => LevelManager.Map.SizeI; }
 
 		public GameManager()
 		{
 			LoadMap("../../../Assets/Maps/TestMap.txt");
 			PlayerEntity = new MapEntity(new Entity(), 2, 2);
-			MapManager.AddEntity(PlayerEntity);
+			LevelManager.AddEntity(PlayerEntity);
 		}
 
 		public void Start()
 		{
 			Debug.WriteLine("GameManager started.");
-			ConsoleRenderer renderer = new ConsoleRenderer(2, MapManager.Map.SizeJ, MapManager.Map.SizeI);
+			ConsoleRenderer renderer = new ConsoleRenderer(2, LevelManager.Map.SizeJ, LevelManager.Map.SizeI);
 			renderer.AddElement(new Element(this));
 
 			while (true)
 			{
 				renderer.RenderFrame();
 				var dir = InputToDirection(WaitForKey());
-				var moved = MapManager.MoveEntity(PlayerEntity, dir);
+				var moved = LevelManager.MoveEntity(PlayerEntity, dir);
 				Debug.WriteLine($"Moved: {moved}, {PlayerEntity.posJ}, {PlayerEntity.posI}");
-				Debug.Assert(PlayerEntity.Equals(MapManager.Entities[0]));
+				Debug.Assert(PlayerEntity.Equals(LevelManager.Entities[0]));
 			}
 		}
 
@@ -53,7 +53,7 @@ namespace Game
 
 			if (charData != null)
 			{
-				MapManager = new LevelManager(new Map(charData));
+				LevelManager = new LevelManager(new Map(charData));
 				return true;
 			}
 			else
@@ -89,7 +89,7 @@ namespace Game
 			{
 				for (int i = 0; i < SizeI; i++)
 				{
-					map[j, i] = MapManager.Map.TileMap[j, i];
+					map[j, i] = LevelManager.Map.TileMap[j, i];
 				}
 			}
 
