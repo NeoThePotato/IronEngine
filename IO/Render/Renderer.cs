@@ -1,4 +1,6 @@
-﻿namespace IO.Render
+﻿using System.Drawing;
+
+namespace IO.Render
 {
 	abstract class Renderer
 	{
@@ -43,6 +45,61 @@
 		public static int GetSizeI(char[,] arr)
 		{
 			return arr.GetLength(1);
+		}
+	}
+
+	struct FrameBuffer
+	{
+		private OffsetBuffer<char> _charFrame;
+		private OffsetBuffer<ConsoleColor> _foregroundColorFrame;
+		private OffsetBuffer<ConsoleColor> _backgroundColorFrame;
+
+		public OffsetBuffer<char> Char
+		{ get => _charFrame; set => _charFrame = value; }
+		public OffsetBuffer<ConsoleColor> Foreground
+		{ get => _foregroundColorFrame; set => _foregroundColorFrame = value; }
+		public OffsetBuffer<ConsoleColor> Background
+		{ get => _backgroundColorFrame; set => _backgroundColorFrame = value; }
+
+		public FrameBuffer(int sizeJ, int sizeI, int offsetJ = 0, int offsetI = 0)
+		{
+			_charFrame = new OffsetBuffer<char>(sizeJ, sizeI, offsetJ, offsetI);
+			_foregroundColorFrame = new OffsetBuffer<ConsoleColor>(sizeJ, sizeI, offsetJ, offsetI);
+			_backgroundColorFrame = new OffsetBuffer<ConsoleColor>(sizeJ, sizeI, offsetJ, offsetI);
+		}
+
+		public FrameBuffer(FrameBuffer other, int offsetJ = 0, int offsetI = 0)
+		{
+			_charFrame = new OffsetBuffer<char>(other._charFrame, offsetJ, offsetI);
+			_foregroundColorFrame = new OffsetBuffer<ConsoleColor>(other._foregroundColorFrame, offsetJ, offsetI);
+			_backgroundColorFrame = new OffsetBuffer<ConsoleColor>(other._backgroundColorFrame, offsetJ, offsetI);
+		}
+
+		public struct OffsetBuffer<T>
+		{
+			private T[,] _buffer;
+			private int _offsetJ;
+			private int _offsetI;
+
+			public OffsetBuffer(int sizeJ, int sizeI, int offsetJ = 0, int offsetI = 0)
+			{
+				_buffer = new T[sizeJ, sizeI];
+				_offsetJ = offsetJ;
+				_offsetI = offsetI;
+			}
+
+			public OffsetBuffer(OffsetBuffer<T> other, int offsetJ = 0, int offsetI = 0)
+			{
+				_buffer = other._buffer;
+				_offsetJ = other._offsetJ + offsetJ;
+				_offsetI = other._offsetI + offsetI;
+			}
+
+			public T this[int j, int i]
+			{
+				get { return _buffer[j + _offsetJ, i + _offsetI]; }
+				set { _buffer[j + _offsetJ, i + _offsetI] = value; }
+			}
 		}
 	}
 }
