@@ -29,12 +29,11 @@ namespace Game
 		public void Start()
 		{
 			Debug.WriteLine("GameManager started.");
-			ConsoleRenderer renderer = new ConsoleRenderer(2, LevelManager.Map.SizeJ, LevelManager.Map.SizeI);
-			renderer.AddElement(new Element(this));
+			ConsoleRenderer consoleRenderer = new ConsoleRenderer(new GameManagerRenderer(this));
 
 			while (true)
 			{
-				renderer.RenderFrame();
+				consoleRenderer.RenderFrame();
 				var dir = InputToDirection(WaitForKey());
 				var moved = LevelManager.MoveEntity(PlayerEntity, dir);
 				Debug.WriteLine($"Moved: {moved}, {PlayerEntity.posJ}, {PlayerEntity.posI}");
