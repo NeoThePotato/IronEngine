@@ -105,7 +105,7 @@ namespace IO.Render
 
 		private void UpdateStringBufferCapacity()
 		{
-			UpdateStringBufferCapacity(BufferLength);
+			UpdateStringBufferCapacity(BufferLength+BufferSizeJ);
 		}
 
 		private void UpdateStringBufferCapacity(int capacity)
