@@ -53,6 +53,10 @@ namespace IO.Render
 		private OffsetBuffer<char>? _charFrame;
 		private OffsetBuffer<ConsoleColor>? _foregroundColorFrame;
 		private OffsetBuffer<ConsoleColor>? _backgroundColorFrame;
+		private readonly int _sizeJ;
+        private readonly int _sizeI;
+		private readonly int _offsetJ;
+        private readonly int _offsetI;
 
 		public OffsetBuffer<char>? Char
 		{ get => _charFrame; set => _charFrame = value; }
@@ -60,9 +64,21 @@ namespace IO.Render
 		{ get => _foregroundColorFrame; set => _foregroundColorFrame = value; }
 		public OffsetBuffer<ConsoleColor>? Background
 		{ get => _backgroundColorFrame; set => _backgroundColorFrame = value; }
+		public int SizeJ
+		{ get => _sizeJ; }
+		public int SizeI
+		{ get => _sizeI; }
+		public int OffsetJ
+		{ get => _offsetJ; }
+		public int OffsetI
+		{ get => _offsetI; }
 
 		public FrameBuffer(int sizeJ, int sizeI, int offsetJ = 0, int offsetI = 0, BufferType bufferType = BufferType.Full)
 		{
+			_sizeJ = sizeJ;
+			_sizeI = sizeI;
+			_offsetJ = offsetJ;
+			_offsetI = offsetI;
 			_charFrame = bufferType.HasFlag(BufferType.Character) ? new OffsetBuffer<char>(sizeJ, sizeI, offsetJ, offsetI) : null;
 			_foregroundColorFrame = bufferType.HasFlag(BufferType.Foreground) ? new OffsetBuffer<ConsoleColor>(sizeJ, sizeI, offsetJ, offsetI) : null;
 			_backgroundColorFrame = bufferType.HasFlag(BufferType.Background) ? new OffsetBuffer<ConsoleColor>(sizeJ, sizeI, offsetJ, offsetI) : null;
@@ -70,6 +86,10 @@ namespace IO.Render
 
 		public FrameBuffer(FrameBuffer other, int offsetJ = 0, int offsetI = 0)
 		{
+            _sizeJ = other.SizeJ;
+            _sizeI = other.SizeI;
+            _offsetJ = other.OffsetJ + offsetJ;
+            _offsetI = other.OffsetI + offsetI;
 			_charFrame = other._charFrame != null ? new OffsetBuffer<char>(other._charFrame.Value, offsetJ, offsetI) : null;
 			_foregroundColorFrame = other._foregroundColorFrame != null ? new OffsetBuffer<ConsoleColor>(other._foregroundColorFrame.Value, offsetJ, offsetI) : null;
 			_backgroundColorFrame = other._backgroundColorFrame != null ? new OffsetBuffer<ConsoleColor>(other._backgroundColorFrame.Value, offsetJ, offsetI) : null;
@@ -87,27 +107,35 @@ namespace IO.Render
 		public struct OffsetBuffer<T>
 		{
 			private T[,] _buffer;
-			private int _offsetJ;
-			private int _offsetI;
+
+            public int SizeJ
+            { get => _buffer.GetLength(0); }
+            public int SizeI
+            { get => _buffer.GetLength(1); }
+            public int OffsetJ
+			{ get; private set; }
+			public int OffsetI
+			{ get; private set; }
+
 
 			public OffsetBuffer(int sizeJ, int sizeI, int offsetJ = 0, int offsetI = 0)
 			{
 				_buffer = new T[sizeJ, sizeI];
-				_offsetJ = offsetJ;
-				_offsetI = offsetI;
+				OffsetJ = offsetJ;
+				OffsetI = offsetI;
 			}
 
 			public OffsetBuffer(OffsetBuffer<T> other, int offsetJ = 0, int offsetI = 0)
 			{
 				_buffer = other._buffer;
-				_offsetJ = other._offsetJ + offsetJ;
-				_offsetI = other._offsetI + offsetI;
+				OffsetJ = other.OffsetJ + offsetJ;
+				OffsetI = other.OffsetI + offsetI;
 			}
 
 			public T this[int j, int i]
 			{
-				get { return _buffer[j + _offsetJ, i + _offsetI]; }
-				set { _buffer[j + _offsetJ, i + _offsetI] = value; }
+				get { return _buffer[j + OffsetJ, i + OffsetI]; }
+				set { _buffer[j + OffsetJ, i + OffsetI] = value; }
 			}
 		}
 	}
