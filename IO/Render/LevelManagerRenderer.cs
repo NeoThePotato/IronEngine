@@ -9,9 +9,9 @@ namespace IO.Render
 		private MapRenderer MapRenderer
 		{ get; set; }
 		public override int SizeJ
-		{ get => LevelManager.Map.SizeJ; }
+		{ get => MapRenderer.SizeJ; }
 		public override int SizeI
-		{ get => LevelManager.Map.SizeI; }
+		{ get => MapRenderer.SizeI; }
 
 		public LevelManagerRenderer(LevelManager levelManager)
 		{
