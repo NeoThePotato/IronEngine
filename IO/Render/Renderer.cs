@@ -30,6 +30,11 @@
 			}
 		}
 
+		public (int, int) RequiredBufferSize()
+		{
+			return (OffsetJ + SizeJ, OffsetI + SizeI);
+		}
+
 		public static int GetSizeJ(char[,] arr)
 		{
 			return arr.GetLength(0);

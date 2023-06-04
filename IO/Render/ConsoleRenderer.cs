@@ -10,101 +10,151 @@ namespace IO.Render
 	/// </summary>
 	class ConsoleRenderer : Renderer
 	{
-		private char[,] _bufferCache;
-		private StringBuilder _bufferString;
+		private char[,] _frameBuffer;
 
-		private char[,] BufferCache {
-			get => _bufferCache;
-			set => _bufferCache = value;
+		private char[,] FrameBuffer {
+			get => _frameBuffer;
+			set => _frameBuffer = value;
 		}
-		private StringBuilder BufferString
-		{
-			get => _bufferString;
-			set => _bufferString = value;
-		}
-		private int SizeJ
-		{ get => GetSizeJ(BufferCache); }
-		private int SizeI
-		{ get => GetSizeI(BufferCache); }
+		private StringBuilder StringBuffer
+		{ get; set; }
+		private Renderer ChildRenderer
+		{ get; set; }
+		private int BufferSizeJ
+		{ get => GetSizeJ(FrameBuffer); }
+		private int BufferSizeI
+		{ get => GetSizeI(FrameBuffer); }
+		private (int, int) BufferSize
+		{ get => (BufferSizeJ, BufferSizeI); }
+		private int BufferLength
+		{ get => BufferSizeJ * BufferSizeI; }
+		new private int SizeJ
+		{ get => Size.Item1; }
+		new private int SizeI
+		{ get => Size.Item2; }
+		private (int, int) Size
+		{ get => ChildRenderer.RequiredBufferSize(); }
 
-		public ConsoleRenderer(GameManagerRenderer gameManagerRenderer)
+		public ConsoleRenderer(Renderer childRenderer)
 		{
-			BufferCache = new char[gameManagerRenderer.SizeJ, gameManagerRenderer.SizeI];
-			BufferString = new StringBuilder(SizeJ*SizeI);
-			AdjustBufferSize();
+			ChildRenderer = childRenderer;
+			StringBuffer = new StringBuilder(BufferLength);
+			ValidateFrameBufferSize();
+			ValidateStringBufferCapacity();
+			AdjustConsoleBufferSize();
 		}
 
 		public void RenderFrame()
 		{
-			UpdateBufferCache();
-			UpdateBufferString();
-			AdjustConsole(); // TODO Find a way to fix the issue causing this to not render the first line
-			Write(BufferString);
+			UpdateFrameBuffer();
+			UpdateStringBuffer();
+			AdjustConsoleWindow(); // TODO Find a way to fix the issue causing this to not render the first line
+			Write(StringBuffer);
 		}
 
-		private void UpdateBufferCache()
+		public override void Render(ref char[,] buffer)
 		{
-			foreach (var child in Children)
-			{
-				if (child.Enabled)
-					CopyFrom(child);
-			}
+			ChildRenderer.Render(ref buffer);
 		}
 
-		private void UpdateBufferString()
+		private void UpdateFrameBuffer()
 		{
-			BufferString.Clear();
+			ValidateFrameBufferSize();
+			Render(ref _frameBuffer);
+		}
 
-			for (int j = 0; j < SizeJ; j++)
+		private void UpdateStringBuffer()
+		{
+			ValidateStringBufferCapacity();
+			StringBuffer.Clear();
+
+			for (int j = 0; j < BufferSizeJ; j++)
 			{
-				for (int i = 0; i < SizeI; i++)
+				for (int i = 0; i < BufferSizeI; i++)
 				{
-					char c = BufferCache[j, i];
-					BufferString.Append(c == 0 ? ' ' : c);
+					char c = FrameBuffer[j, i];
+					StringBuffer.Append(c == 0 ? ' ' : c);
 				}
-				BufferString.Append('\n');
+				StringBuffer.Append('\n');
 			}
 		}
 
+		#region BUFFER_SIZE_MANIPULATION
+		private void ValidateFrameBufferSize()
+		{
+			if (BufferSize != Size)
+				UpdateFrameBufferSize();
+		}
+
+		private void UpdateFrameBufferSize()
+		{
+			(int sizeJ, int sizeI) = Size;
+			UpdateFrameBufferSize(sizeJ, sizeI);
+		}
+
+		private void UpdateFrameBufferSize(int sizeJ, int sizeI)
+		{
+			FrameBuffer = new char[BufferSizeJ, BufferSizeI];
+		}
+
+		private void ValidateStringBufferCapacity()
+		{
+			if (StringBuffer.Capacity < BufferLength)
+				UpdateStringBufferCapacity();
+		}
+
+		private void UpdateStringBufferCapacity()
+		{
+			UpdateStringBufferCapacity(BufferLength);
+		}
+
+		private void UpdateStringBufferCapacity(int capacity)
+		{
+			StringBuffer.Capacity = capacity;
+		}
+		#endregion
+
+		#region CONSOLE_WINDOW_MANIPULATION
 		[SupportedOSPlatform("windows")]
-		private void AdjustConsole()
+		private void AdjustConsoleWindow()
 		{
 			CursorVisible = false;
-			AdjustWindowSize();
+			AdjustConsoleWindowSize();
 			SetCursorPosition(0, 0);
-			AdjustBufferSize();
+			AdjustConsoleBufferSize();
 			SetWindowPosition(0, 0);
 		}
 
 		[SupportedOSPlatform("windows")]
-		private void AdjustWindowSize()
+		private void AdjustConsoleWindowSize()
 		{
-			if (WindowWidth != SizeI || WindowHeight != SizeJ)
-				AdjustWindowSize(SizeI, SizeJ);
+			if (WindowWidth != BufferSizeI || WindowHeight != BufferSizeJ)
+				AdjustConsoleWindowSize(BufferSizeI, BufferSizeJ);
 		}
 
 		[SupportedOSPlatform("windows")]
-		private static void AdjustWindowSize(int sizeI, int sizeJ)
+		private static void AdjustConsoleWindowSize(int sizeI, int sizeJ)
 		{
 			SetWindowSize(sizeI, sizeJ);
 		}
 
 		[SupportedOSPlatform("windows")]
-		private void AdjustBufferSize()
+		private void AdjustConsoleBufferSize()
 		{
-			if (BufferWidth != SizeI || BufferHeight != SizeJ)
-				AdjustBufferSize(SizeI, SizeJ);
+			if (BufferWidth != BufferSizeI || BufferHeight != BufferSizeJ)
+				AdjustConsoleBufferSize(BufferSizeI, BufferSizeJ);
 		}
 		
 		[SupportedOSPlatform("windows")]
-		private static void AdjustBufferSize(int sizeI, int sizeJ)
+		private static void AdjustConsoleBufferSize(int sizeI, int sizeJ)
 		{
 			if (sizeI < WindowWidth || sizeJ < WindowHeight || sizeI < CursorLeft || sizeJ < CursorTop)
 			{
-				AdjustWindowSize(sizeI, sizeJ);
+				AdjustConsoleWindowSize(sizeI, sizeJ);
 				SetCursorPosition(0, 0);
 			}
 			SetBufferSize(sizeI, sizeJ);
 		}
+		#endregion
 	}
 }
