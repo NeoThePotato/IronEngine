@@ -1,4 +1,5 @@
 ﻿using Game;
+using Game.World;
 
 namespace IO.Render
 {
@@ -6,13 +7,29 @@ namespace IO.Render
 	{
 		private GameManager Manager;
 		new private int SizeJ
-		{ get => GetSizeJ(BufferCache); }
+		{ get => Manager.LevelManager.Map.SizeJ; }
 		new private int SizeI
-		{ get => GetSizeI(BufferCache); }
+		{ get => Manager.LevelManager.Map.SizeI; }
 
 		public GameManagerRenderer(GameManager gameManager)
 		{
 			Manager = gameManager;
+		}
+
+		public override void Render(ref char[,] buffer)
+		{
+			// Render level
+			for (int j = 0; j < SizeJ; j++)
+			{
+				for (int i = 0; i < SizeI; i++)
+				{
+					buffer[OffsetJ+j, OffsetI+i] = Manager.LevelManager.Map.TileMap[j, i];
+				}
+			}
+
+			// Render entities
+			foreach (var entity in Manager.Entities)
+				buffer[OffsetJ+entity.posJ, OffsetI+entity.posI] = '@';
 		}
 	}
 }

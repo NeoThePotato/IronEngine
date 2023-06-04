@@ -10,14 +10,10 @@ namespace Game
 	{
 		public LevelManager LevelManager
 		{ get; private set; }
-		private List<MapEntity> Entities
+		public List<MapEntity> Entities
 		{ get => LevelManager.Entities; }
 		private MapEntity PlayerEntity
 		{ get; }
-		public int SizeJ
-		{ get => LevelManager.Map.SizeJ; }
-		public int SizeI
-		{ get => LevelManager.Map.SizeI; }
 
 		public GameManager()
 		{
@@ -78,24 +74,6 @@ namespace Game
 			};
 
 			return directionDict[input];
-		}
-
-		public char[,] Render()
-		{
-			var map = new char[SizeJ, SizeI];
-
-			for (int j = 0; j < SizeJ; j++)
-			{
-				for (int i = 0; i < SizeI; i++)
-				{
-					map[j, i] = LevelManager.Map.TileMap[j, i];
-				}
-			}
-
-			foreach (var entity in Entities)
-				map[entity.posJ, entity.posI] = '@';
-
-			return map;
 		}
 	}
 }
