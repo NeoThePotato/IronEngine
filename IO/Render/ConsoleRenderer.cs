@@ -94,7 +94,7 @@ namespace IO.Render
 
 		private void UpdateFrameBufferSize(int sizeJ, int sizeI)
 		{
-			FrameBuffer = new char[BufferSizeJ, BufferSizeI];
+			(int newSizeJ, int newSizeI) = Size;
 		}
 
 		private void ValidateStringBufferCapacity()
