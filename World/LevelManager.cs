@@ -62,7 +62,7 @@
 
 		private bool TileOutOfBounds(int posJ, int posI)
 		{
-			return posJ > Map.SizeJ || posI > Map.SizeI;
+			return (posJ > Map.SizeJ || posJ < 0) || (posI > Map.SizeI || posI < 0);
 		}
 
 		private bool TileOccupied(int posJ, int posI)
