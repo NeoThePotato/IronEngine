@@ -1,40 +1,66 @@
 ﻿using Game.World;
 using System.Diagnostics;
+using System.Drawing;
 using static Game.World.Map;
 
 namespace IO.Render
 {
 	class MapRenderer : Renderer
 	{
+		private FrameBuffer _mapCache;
 		private Map Map
 		{ get; set; }
 		public override int SizeJ
 		{ get => Map.SizeJ; }
 		public override int SizeI
 		{ get => Map.SizeI*2; }
+		public (int, int) Size
+		{ get => (SizeJ, SizeI); }
+		public (int, int) CacheSize
+		{ get => (_mapCache.SizeJ, _mapCache.SizeI); }
 
 		public MapRenderer(Map map)
 		{
 			Map = map;
+			UpdateCacheSize();
+			RenderToCache();
 		}
 
 		public override void Render(ref FrameBuffer buffer)
 		{
+			FrameBuffer.Copy(buffer, _mapCache);
+		}
+
+		private void RenderToCache()
+		{
+			ValidateCacheSize();
+
 			for (int j = 0; j < Map.SizeJ; j++)
 			{
 				for (int i = 0; i < Map.SizeI; i++)
 				{
 					var info = VisualTileInfo.GetFrameBufferTuple(VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]));
-					buffer[j, i*2] = info;
-					buffer[j, i*2+1] = info;
+					_mapCache[j, i * 2] = info;
+					_mapCache[j, i * 2 + 1] = info;
 				}
 			}
+		}
+
+		private void ValidateCacheSize()
+		{
+			if (CacheSize != Size)
+				UpdateCacheSize();
+		}
+
+		private void UpdateCacheSize()
+		{
+			_mapCache = new FrameBuffer(SizeJ, SizeI);
 		}
 
 		public struct VisualTileInfo
 		{
 			public static readonly Dictionary<char, VisualTileInfo> VISUAL_TILE_INFO = new Dictionary<char, VisualTileInfo>(){
-			{'?', new VisualTileInfo(new TileInfo("Missing VISUAL_TILE_INFO", false), '▒', 163, 0)},
+			{'?', new VisualTileInfo(TileInfo.GetTileInfo('?'), '▒', 163, 0)},
 			{' ', new VisualTileInfo(TileInfo.GetTileInfo(' '), ' ', 15, 0)},
 			{'w', new VisualTileInfo(TileInfo.GetTileInfo('w'), '█', 237, 242)}
 			};
@@ -69,7 +95,7 @@ namespace IO.Render
 					return info;
 				else
 				{
-					Debug.Write($"No VISUAL_TILE_INFO found for character '{c}'.");
+					Debug.WriteLine($"No VISUAL_TILE_INFO found for character '{c}'.");
 					return VISUAL_TILE_INFO['?'];
 				}
 			}

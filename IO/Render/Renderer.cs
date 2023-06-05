@@ -21,9 +21,9 @@
 		public OffsetBuffer<byte> Background;
 
 		public int SizeJ
-		{ get => _sizeJ; }
+		{ get => _sizeJ - OffsetJ; }
 		public int SizeI
-		{ get => _sizeI; }
+		{ get => _sizeI - OffsetI; }
 		public int OffsetJ
 		{ get => _offsetJ; }
 		public int OffsetI
@@ -56,13 +56,27 @@
 
 		public FrameBuffer(FrameBuffer other, int offsetJ = 0, int offsetI = 0)
 		{
-            _sizeJ = other.SizeJ;
-            _sizeI = other.SizeI;
-            _offsetJ = other.OffsetJ + offsetJ;
-            _offsetI = other.OffsetI + offsetI;
+            _sizeJ = other._sizeJ;
+            _sizeI = other._sizeI;
+            _offsetJ = other._offsetJ + offsetJ;
+            _offsetI = other._offsetI + offsetI;
 			Char = new OffsetBuffer<char>(other.Char, offsetJ, offsetI);
 			Foreground = new OffsetBuffer<byte>(other.Foreground, offsetJ, offsetI);
 			Background = new OffsetBuffer<byte>(other.Background, offsetJ, offsetI);
+		}
+
+		public static void Copy(FrameBuffer destination, FrameBuffer source)
+		{
+			var sizeJ = Math.Min(source.SizeJ, destination._sizeJ);
+			var sizeI = Math.Min(source.SizeI, destination._sizeI);
+
+			for (int j = 0; j < sizeJ; j++)
+			{
+				for (int i = 0; i < sizeI; i++)
+				{
+					destination[j, i] = source[j, i];
+				}
+			}
 		}
 
 		public struct OffsetBuffer<T>

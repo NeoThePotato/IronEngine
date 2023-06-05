@@ -21,7 +21,7 @@
 
 		public static PlayerInputs WaitForKey()
 		{
-			return KeyToInput(Console.ReadKey().Key);
+			return KeyToInput(Console.ReadKey(true).Key);
 		}
 
 		private static PlayerInputs KeyToInput(ConsoleKey consoleKey)

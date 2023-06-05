@@ -1,4 +1,6 @@
-﻿using System.Runtime.Versioning;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using static System.Console;
 
@@ -39,15 +41,17 @@ namespace IO.Render
 		{
 			ChildRenderer = childRenderer;
 			UpdateFrameBufferSize();
-			ValidateStringBufferCapacity();
-			AdjustConsoleBufferSize();
+			UpdateStringBufferCapacity();
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+				AdjustConsoleBufferSize();
 		}
 
 		public void RenderFrame()
 		{
 			UpdateFrameBuffer();
 			UpdateStringBuffer();
-			AdjustConsoleWindow(); // TODO Find a way to fix the issue causing this to not render the first line
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+				AdjustConsoleWindow();
 			Write(StringBuffer);
 		}
 
@@ -71,8 +75,8 @@ namespace IO.Render
 		private void ParseFrameBufferToStringBuffer()
 		{
 			StringBuffer.Clear();
-			byte previousFGColor = FrameBuffer.Foreground[0, 0];
-			byte previousBGColor = FrameBuffer.Background[0, 0];
+			byte previousFGColor = 0;
+			byte previousBGColor = 0;
 
 			for (int j = 0; j < BufferSizeJ; j++)
 			{
@@ -92,6 +96,7 @@ namespace IO.Render
 				}
 				StringBuffer.Append('\n');
 			}
+			StringBuffer.Remove(StringBuffer.Length-1, 1);
 		}
 
 		#region BUFFER_SIZE_MANIPULATION
@@ -105,6 +110,7 @@ namespace IO.Render
 		{
 			(int sizeJ, int sizeI) = Size;
 			UpdateFrameBufferSize(sizeJ, sizeI);
+			Debug.WriteLine($"Updated ConsoleRenderer.FrameBuffer.size to {BufferSizeJ}, {BufferSizeI}.");
 		}
 
 		private void UpdateFrameBufferSize(int sizeJ, int sizeI)
@@ -126,9 +132,14 @@ namespace IO.Render
 		private void UpdateStringBufferCapacity(int capacity)
 		{
 			if (StringBuffer != null)
+			{
 				StringBuffer.Capacity = capacity;
+				Debug.WriteLine($"Updated ConsoleRenderer.StringBuffer.capacity to {StringBuffer.Capacity}.");
+			}
 			else
+			{
 				StringBuffer = new StringBuilder(capacity);
+			}
 		}
 		#endregion
 
@@ -146,21 +157,28 @@ namespace IO.Render
 		[SupportedOSPlatform("windows")]
 		private void AdjustConsoleWindowSize()
 		{
-			if (WindowWidth != BufferSizeI || WindowHeight != BufferSizeJ)
-				AdjustConsoleWindowSize(BufferSizeI, BufferSizeJ);
+			int desiredWindowWidth = Math.Min(LargestWindowWidth, BufferSizeI);
+			int desiredWindowHeight = Math.Min(LargestWindowHeight, BufferSizeJ);
+
+			if (WindowWidth != desiredWindowWidth || WindowHeight != desiredWindowHeight)
+				AdjustConsoleWindowSize(desiredWindowWidth, desiredWindowHeight);
 		}
 
 		[SupportedOSPlatform("windows")]
 		private static void AdjustConsoleWindowSize(int sizeI, int sizeJ)
 		{
 			SetWindowSize(sizeI, sizeJ);
+			Debug.WriteLine($"Updated Console.Window's size to {WindowHeight}, {WindowWidth}.");
 		}
 
 		[SupportedOSPlatform("windows")]
 		private void AdjustConsoleBufferSize()
 		{
-			if (BufferWidth != BufferSizeI || BufferHeight != BufferSizeJ)
-				AdjustConsoleBufferSize(BufferSizeI, BufferSizeJ);
+			int desiredBufferWidth = Math.Min(WindowWidth, BufferSizeI);
+			int desiredBufferHeight = Math.Min(WindowHeight, BufferSizeJ);
+
+			if (BufferWidth != desiredBufferWidth || BufferHeight != desiredBufferHeight)
+				AdjustConsoleBufferSize(desiredBufferWidth, desiredBufferHeight);
 		}
 		
 		[SupportedOSPlatform("windows")]
@@ -172,6 +190,7 @@ namespace IO.Render
 				SetCursorPosition(0, 0);
 			}
 			SetBufferSize(sizeI, sizeJ);
+			Debug.WriteLine($"Updated Console.Buffer's size to {BufferHeight}, {BufferWidth}.");
 		}
 		#endregion
 	}
