@@ -39,7 +39,7 @@ namespace IO.Render
 		{
 			ChildRenderer = childRenderer;
 			UpdateFrameBufferSize();
-			ValidateStringBufferCapacity();
+			UpdateStringBufferCapacity();
 			AdjustConsoleBufferSize();
 		}
 
