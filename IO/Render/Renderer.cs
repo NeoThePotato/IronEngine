@@ -65,6 +65,20 @@
 			Background = new OffsetBuffer<byte>(other.Background, offsetJ, offsetI);
 		}
 
+		public static void Copy(FrameBuffer destination, FrameBuffer source)
+		{
+			var sizeJ = Math.Min(source.SizeJ, destination._sizeJ);
+			var sizeI = Math.Min(source.SizeI, destination._sizeI);
+
+			for (int j = 0; j < sizeJ; j++)
+			{
+				for (int i = 0; i < sizeI; i++)
+				{
+					destination[j, i] = source[j, i];
+				}
+			}
+		}
+
 		public struct OffsetBuffer<T>
 		{
 			private T[,] _buffer;

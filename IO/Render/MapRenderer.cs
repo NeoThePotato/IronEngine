@@ -1,32 +1,58 @@
 ﻿using Game.World;
 using System.Diagnostics;
+using System.Drawing;
 using static Game.World.Map;
 
 namespace IO.Render
 {
 	class MapRenderer : Renderer
 	{
+		private FrameBuffer _mapCache;
 		private Map Map
 		{ get; set; }
 		public override int SizeJ
 		{ get => Map.SizeJ; }
 		public override int SizeI
 		{ get => Map.SizeI; }
+		public (int, int) Size
+		{ get => (SizeJ, SizeI); }
+		public (int, int) CacheSize
+		{ get => (_mapCache.SizeJ, _mapCache.SizeI); }
 
 		public MapRenderer(Map map)
 		{
 			Map = map;
+			UpdateCacheSize();
+			RenderToCache();
 		}
 
 		public override void Render(ref FrameBuffer buffer)
 		{
+			FrameBuffer.Copy(buffer, _mapCache);
+		}
+
+		private void RenderToCache()
+		{
+			ValidateCacheSize();
+
 			for (int j = 0; j < SizeJ; j++)
 			{
 				for (int i = 0; i < SizeI; i++)
 				{
-					buffer[j, i] = VisualTileInfo.GetFrameBufferTuple(VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]));
+					_mapCache[j, i] = VisualTileInfo.GetFrameBufferTuple(VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]));
 				}
 			}
+		}
+
+		private void ValidateCacheSize()
+		{
+			if (CacheSize != Size)
+				UpdateCacheSize();
+		}
+
+		private void UpdateCacheSize()
+		{
+			_mapCache = new FrameBuffer(SizeJ, SizeI);
 		}
 
 		public struct VisualTileInfo
