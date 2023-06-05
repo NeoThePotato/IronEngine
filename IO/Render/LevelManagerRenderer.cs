@@ -19,14 +19,14 @@ namespace IO.Render
 			MapRenderer = new MapRenderer(LevelManager.Map);
 		}
 
-		public override void Render(ref char[,] buffer)
+		public override void Render(ref FrameBuffer buffer)
 		{
 			// Render level
 			MapRenderer.Render(ref buffer);
 
 			// Render entities
 			foreach (var entity in LevelManager.Entities)
-				buffer[OffsetJ+entity.posJ, OffsetI+entity.posI] = '@';
+				buffer.Char[OffsetJ+entity.posJ, OffsetI+entity.posI] = '@';
 		}
 	}
 }

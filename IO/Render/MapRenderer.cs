@@ -16,13 +16,13 @@ namespace IO.Render
 			Map = map;
 		}
 
-		public override void Render(ref char[,] buffer)
+		public override void Render(ref FrameBuffer buffer)
 		{
 			for (int j = 0; j < SizeJ; j++)
 			{
 				for (int i = 0; i < SizeI; i++)
 				{
-					buffer[OffsetJ+j, OffsetI+i] = Map.TileMap[j, i];
+					buffer.Char[OffsetJ+j, OffsetI+i] = Map.TileMap[j, i];
 				}
 			}
 		}

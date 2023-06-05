@@ -19,7 +19,7 @@ namespace IO.Render
 			LevelManagerRenderer = new LevelManagerRenderer(GameManager.LevelManager);
 		}
 
-		public override void Render(ref char[,] buffer)
+		public override void Render(ref FrameBuffer buffer)
 		{
 			LevelManagerRenderer.Render(ref buffer);
 		}

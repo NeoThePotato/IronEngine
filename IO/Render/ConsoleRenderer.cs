@@ -10,9 +10,9 @@ namespace IO.Render
 	/// </summary>
 	class ConsoleRenderer : Renderer
 	{
-		private char[,] _frameBuffer;
+		private FrameBuffer _frameBuffer;
 
-		private char[,] FrameBuffer {
+		private FrameBuffer FrameBuffer {
 			get => _frameBuffer;
 			set => _frameBuffer = value;
 		}
@@ -21,9 +21,9 @@ namespace IO.Render
 		private Renderer ChildRenderer
 		{ get; set; }
 		private int BufferSizeJ
-		{ get => GetSizeJ(FrameBuffer); }
+		{ get => FrameBuffer.SizeJ; }
 		private int BufferSizeI
-		{ get => GetSizeI(FrameBuffer); }
+		{ get => FrameBuffer.SizeI; }
 		private (int, int) BufferSize
 		{ get => (BufferSizeJ, BufferSizeI); }
 		private int BufferLength
@@ -51,7 +51,7 @@ namespace IO.Render
 			Write(StringBuffer);
 		}
 
-		public override void Render(ref char[,] buffer)
+		public override void Render(ref FrameBuffer buffer)
 		{
 			ChildRenderer.Render(ref buffer);
 		}
@@ -71,7 +71,7 @@ namespace IO.Render
 			{
 				for (int i = 0; i < BufferSizeI; i++)
 				{
-					char c = FrameBuffer[j, i];
+					char c = FrameBuffer.Char[j, i];
 					StringBuffer.Append(c == 0 ? ' ' : c);
 				}
 				StringBuffer.Append('\n');
@@ -81,7 +81,7 @@ namespace IO.Render
 		#region BUFFER_SIZE_MANIPULATION
 		private void ValidateFrameBufferSize()
 		{
-			if (FrameBuffer == null || BufferSize != Size)
+			if (BufferSize != Size)
 				UpdateFrameBufferSize();
 		}
 
@@ -93,8 +93,7 @@ namespace IO.Render
 
 		private void UpdateFrameBufferSize(int sizeJ, int sizeI)
 		{
-			(int newSizeJ, int newSizeI) = Size;
-			FrameBuffer = new char[newSizeJ, newSizeI];
+			FrameBuffer = new FrameBuffer(sizeJ, sizeI);
 		}
 
 		private void ValidateStringBufferCapacity()
