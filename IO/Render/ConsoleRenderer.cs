@@ -65,14 +65,30 @@ namespace IO.Render
 		private void UpdateStringBuffer()
 		{
 			ValidateStringBufferCapacity();
+			ParseFrameBufferToStringBuffer();
+		}
+
+		private void ParseFrameBufferToStringBuffer()
+		{
 			StringBuffer.Clear();
+			ConsoleColor previousFGColor = FrameBuffer.Foreground[0, 0];
+			ConsoleColor previousBGColor = FrameBuffer.Background[0, 0];
 
 			for (int j = 0; j < BufferSizeJ; j++)
 			{
 				for (int i = 0; i < BufferSizeI; i++)
 				{
-					char c = FrameBuffer.Char[j, i];
-					StringBuffer.Append(c == 0 ? ' ' : c);
+					(char currentChar, ConsoleColor currentFGColor, ConsoleColor currentBGColor) = FrameBuffer[j, i];
+
+					if (currentFGColor != previousFGColor)
+						StringBuffer.Append($"\x1b[38;5;{(int)currentFGColor}m");
+
+					if (currentBGColor != previousBGColor)
+						StringBuffer.Append($"\x1b[48;5;{(int)currentBGColor}m");
+
+					StringBuffer.Append(currentChar != 0 ? currentChar : ' ');
+					previousFGColor = currentFGColor;
+					previousBGColor = currentBGColor;
 				}
 				StringBuffer.Append('\n');
 			}

@@ -22,7 +22,7 @@ namespace IO.Render
 			{
 				for (int i = 0; i < SizeI; i++)
 				{
-					buffer.Char[j, i] = Map.TileMap[j, i];
+					buffer[j, i] = (Map.TileMap[j, i], ConsoleColor.White, ConsoleColor.Black); // TODO Set different color to different tiles
 				}
 			}
 		}

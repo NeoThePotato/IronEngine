@@ -66,9 +66,9 @@ namespace IO.Render
 			}
 			set
 			{
-				Char[j, i] = Char[j, i];
-				Foreground[j, i] = Foreground[j, i];
-				Background[j, i] = Background[j, i];
+				Char[j, i] = value.Item1;
+				Foreground[j, i] = value.Item2;
+				Background[j, i] = value.Item3;
 			}
 		}
 
