@@ -26,7 +26,10 @@ namespace IO.Render
 
 			// Render entities
 			foreach (var entity in LevelManager.Entities)
+			{
 				buffer.Char[entity.posJ, entity.posI] = '@';
+				buffer.Foreground[entity.posJ, entity.posI] = 15;
+			}
 		}
 	}
 }

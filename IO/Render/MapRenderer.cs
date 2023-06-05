@@ -1,4 +1,6 @@
 ﻿using Game.World;
+using System.Diagnostics;
+using static Game.World.Map;
 
 namespace IO.Render
 {
@@ -22,7 +24,51 @@ namespace IO.Render
 			{
 				for (int i = 0; i < SizeI; i++)
 				{
-					buffer[j, i] = (Map.TileMap[j, i], 15, 0); // TODO Set different color to different tiles
+					buffer[j, i] = VisualTileInfo.GetFrameBufferTuple(VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]));
+				}
+			}
+		}
+
+		public struct VisualTileInfo
+		{
+			public static readonly Dictionary<char, VisualTileInfo> VISUAL_TILE_INFO = new Dictionary<char, VisualTileInfo>(){
+			{'?', new VisualTileInfo(new TileInfo("Missing VISUAL_TILE_INFO", false), '▒', 163, 0)},
+			{' ', new VisualTileInfo(TileInfo.GetTileInfo(' '), ' ', 15, 0)},
+			{'w', new VisualTileInfo(TileInfo.GetTileInfo('w'), '█', 237, 242)}
+			};
+
+			public TileInfo tileInfo;
+			public char character;
+			public byte foregroundColor;
+			public byte backgroundColor;
+
+
+			public VisualTileInfo(TileInfo tileInfo, char character, byte foregroundColor, byte backgroundColor)
+			{
+				this.tileInfo = tileInfo;
+				this.character = character;
+				this.foregroundColor = foregroundColor;
+				this.backgroundColor = backgroundColor;
+			}
+
+			public (char, byte, byte) GetFrameBufferTuple()
+			{
+				return GetFrameBufferTuple(this);
+			}
+
+			public static (char, byte, byte) GetFrameBufferTuple(VisualTileInfo info)
+			{
+				return (info.character, info.foregroundColor, info.backgroundColor);
+			}
+
+			public static VisualTileInfo GetVisualTileInfo(char c)
+			{
+				if (VISUAL_TILE_INFO.TryGetValue(c, out var info))
+					return info;
+				else
+				{
+					Debug.Write($"No VISUAL_TILE_INFO found for character '{c}'.");
+					return VISUAL_TILE_INFO['?'];
 				}
 			}
 		}

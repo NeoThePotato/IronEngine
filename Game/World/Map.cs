@@ -39,7 +39,8 @@
         public struct TileInfo
         {
             public static readonly Dictionary<char, TileInfo> TILE_INFO = new Dictionary<char, TileInfo>(){
-            {' ', new TileInfo("Ground", true)},
+			{'?', new TileInfo("Missing TILE_INFO", false)},
+			{' ', new TileInfo("Ground", true)},
             {'w', new TileInfo("Wall", false)}
             };
 
