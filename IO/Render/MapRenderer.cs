@@ -22,7 +22,7 @@ namespace IO.Render
 			{
 				for (int i = 0; i < SizeI; i++)
 				{
-					buffer.Char[OffsetJ+j, OffsetI+i] = Map.TileMap[j, i];
+					buffer.Char[j, i] = Map.TileMap[j, i];
 				}
 			}
 		}

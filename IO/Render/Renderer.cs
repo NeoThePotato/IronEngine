@@ -9,16 +9,6 @@ namespace IO.Render
 		{ get; }
 		public abstract int SizeI
 		{ get; }
-		public int OffsetJ
-		{ get; private set; }
-		public int OffsetI
-		{ get; private set; }
-
-		public Renderer(int offsetJ = 0, int offsetI = 0)
-		{
-			OffsetJ = offsetJ;
-			OffsetI = offsetI;
-		}
 
 		public abstract void Render(ref FrameBuffer buffer);
 
@@ -35,7 +25,7 @@ namespace IO.Render
 
 		public (int, int) RequiredBufferSize()
 		{
-			return (OffsetJ + SizeJ, OffsetI + SizeI);
+			return (SizeJ, SizeI);
 		}
 
 		public static int GetSizeJ(char[,] arr)
