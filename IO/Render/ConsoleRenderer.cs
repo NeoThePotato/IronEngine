@@ -75,8 +75,8 @@ namespace IO.Render
 		private void ParseFrameBufferToStringBuffer()
 		{
 			StringBuffer.Clear();
-			byte previousFGColor = FrameBuffer.Foreground[0, 0];
-			byte previousBGColor = FrameBuffer.Background[0, 0];
+			byte previousFGColor = 0;
+			byte previousBGColor = 0;
 
 			for (int j = 0; j < BufferSizeJ; j++)
 			{
