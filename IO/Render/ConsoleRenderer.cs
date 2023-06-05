@@ -146,8 +146,11 @@ namespace IO.Render
 		[SupportedOSPlatform("windows")]
 		private void AdjustConsoleWindowSize()
 		{
-			if (WindowWidth != BufferSizeI || WindowHeight != BufferSizeJ)
-				AdjustConsoleWindowSize(BufferSizeI, BufferSizeJ);
+			int desiredWindowWidth = Math.Min(LargestWindowWidth, BufferSizeI);
+			int desiredWindowHeight = Math.Min(LargestWindowHeight, BufferSizeJ);
+
+			if (WindowWidth != desiredWindowWidth || WindowHeight != desiredWindowHeight)
+				AdjustConsoleWindowSize(desiredWindowWidth, desiredWindowHeight);
 		}
 
 		[SupportedOSPlatform("windows")]
@@ -159,8 +162,11 @@ namespace IO.Render
 		[SupportedOSPlatform("windows")]
 		private void AdjustConsoleBufferSize()
 		{
-			if (BufferWidth != BufferSizeI || BufferHeight != BufferSizeJ)
-				AdjustConsoleBufferSize(BufferSizeI, BufferSizeJ);
+			int desiredBufferWidth = Math.Min(WindowWidth, BufferSizeI);
+			int desiredBufferHeight = Math.Min(WindowHeight, BufferSizeJ);
+
+			if (BufferWidth != desiredBufferWidth || BufferHeight != desiredBufferHeight)
+				AdjustConsoleBufferSize(desiredBufferWidth, desiredBufferHeight);
 		}
 		
 		[SupportedOSPlatform("windows")]
