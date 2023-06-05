@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using static System.Console;
@@ -41,14 +42,16 @@ namespace IO.Render
 			ChildRenderer = childRenderer;
 			UpdateFrameBufferSize();
 			UpdateStringBufferCapacity();
-			AdjustConsoleBufferSize();
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+				AdjustConsoleBufferSize();
 		}
 
 		public void RenderFrame()
 		{
 			UpdateFrameBuffer();
 			UpdateStringBuffer();
-			AdjustConsoleWindow();
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+				AdjustConsoleWindow();
 			Write(StringBuffer);
 		}
 
