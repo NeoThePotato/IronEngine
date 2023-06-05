@@ -48,7 +48,7 @@ namespace IO.Render
 		{
 			UpdateFrameBuffer();
 			UpdateStringBuffer();
-			AdjustConsoleWindow(); // TODO Find a way to fix the issue causing this to not render the first line
+			AdjustConsoleWindow();
 			Write(StringBuffer);
 		}
 
@@ -93,6 +93,7 @@ namespace IO.Render
 				}
 				StringBuffer.Append('\n');
 			}
+			StringBuffer.Remove(StringBuffer.Length-1, 1);
 		}
 
 		#region BUFFER_SIZE_MANIPULATION
