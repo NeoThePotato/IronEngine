@@ -58,6 +58,20 @@ namespace IO.Render
 		public int OffsetI
 		{ get => _offsetI; }
 
+		public (char, ConsoleColor, ConsoleColor) this[int j, int i]
+		{
+			get
+			{
+				return (Char[j, i], Foreground[j, i], Background[j, i]);
+			}
+			set
+			{
+				Char[j, i] = Char[j, i];
+				Foreground[j, i] = Foreground[j, i];
+				Background[j, i] = Background[j, i];
+			}
+		}
+
 		public FrameBuffer(int sizeJ, int sizeI, int offsetJ = 0, int offsetI = 0)
 		{
 			_sizeJ = sizeJ;
