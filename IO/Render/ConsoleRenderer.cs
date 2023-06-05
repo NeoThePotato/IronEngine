@@ -71,14 +71,14 @@ namespace IO.Render
 		private void ParseFrameBufferToStringBuffer()
 		{
 			StringBuffer.Clear();
-			ConsoleColor previousFGColor = FrameBuffer.Foreground[0, 0];
-			ConsoleColor previousBGColor = FrameBuffer.Background[0, 0];
+			byte previousFGColor = FrameBuffer.Foreground[0, 0];
+			byte previousBGColor = FrameBuffer.Background[0, 0];
 
 			for (int j = 0; j < BufferSizeJ; j++)
 			{
 				for (int i = 0; i < BufferSizeI; i++)
 				{
-					(char currentChar, ConsoleColor currentFGColor, ConsoleColor currentBGColor) = FrameBuffer[j, i];
+					(char currentChar, byte currentFGColor, byte currentBGColor) = FrameBuffer[j, i];
 
 					if (currentFGColor != previousFGColor)
 						StringBuffer.Append($"\x1b[38;5;{(int)currentFGColor}m");

@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using static IO.Render.FrameBuffer;
+﻿using static IO.Render.FrameBuffer;
 
 namespace IO.Render
 {
@@ -46,8 +45,8 @@ namespace IO.Render
 		private readonly int _offsetJ;
         private readonly int _offsetI;
 		public OffsetBuffer<char> Char;
-		public OffsetBuffer<ConsoleColor> Foreground;
-		public OffsetBuffer<ConsoleColor> Background;
+		public OffsetBuffer<byte> Foreground;
+		public OffsetBuffer<byte> Background;
 
 		public int SizeJ
 		{ get => _sizeJ; }
@@ -58,7 +57,7 @@ namespace IO.Render
 		public int OffsetI
 		{ get => _offsetI; }
 
-		public (char, ConsoleColor, ConsoleColor) this[int j, int i]
+		public (char, byte, byte) this[int j, int i]
 		{
 			get
 			{
@@ -79,8 +78,8 @@ namespace IO.Render
 			_offsetJ = offsetJ;
 			_offsetI = offsetI;
 			Char = new OffsetBuffer<char>(sizeJ, sizeI, offsetJ, offsetI);
-			Foreground = new OffsetBuffer<ConsoleColor>(sizeJ, sizeI, offsetJ, offsetI);
-			Background = new OffsetBuffer<ConsoleColor>(sizeJ, sizeI, offsetJ, offsetI);
+			Foreground = new OffsetBuffer<byte>(sizeJ, sizeI, offsetJ, offsetI);
+			Background = new OffsetBuffer<byte>(sizeJ, sizeI, offsetJ, offsetI);
 		}
 
 		public FrameBuffer(FrameBuffer other, int offsetJ = 0, int offsetI = 0)
@@ -90,8 +89,8 @@ namespace IO.Render
             _offsetJ = other.OffsetJ + offsetJ;
             _offsetI = other.OffsetI + offsetI;
 			Char = new OffsetBuffer<char>(other.Char, offsetJ, offsetI);
-			Foreground = new OffsetBuffer<ConsoleColor>(other.Foreground, offsetJ, offsetI);
-			Background = new OffsetBuffer<ConsoleColor>(other.Background, offsetJ, offsetI);
+			Foreground = new OffsetBuffer<byte>(other.Foreground, offsetJ, offsetI);
+			Background = new OffsetBuffer<byte>(other.Background, offsetJ, offsetI);
 		}
 
 		public struct OffsetBuffer<T>
