@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 
 namespace IO
 {
@@ -6,7 +7,7 @@ namespace IO
 	{
 		public static char[,]? LoadMapCharData(string pathName)
 		{
-			StreamReader sr;
+            StreamReader sr;
 
             try
             {
