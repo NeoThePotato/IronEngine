@@ -1,5 +1,4 @@
-﻿using IO.Render;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Game.World;
 using static IO.PlayerInput;
 using static Game.World.Direction;
@@ -25,7 +24,7 @@ namespace Game
 		public void Start()
 		{
 			Debug.WriteLine("GameManager started.");
-			ConsoleRenderer consoleRenderer = new ConsoleRenderer(new GameManagerRenderer(this));
+			IO.Render.ConsoleRenderer consoleRenderer = new IO.Render.ConsoleRenderer(new IO.Render.GameManagerRenderer(this));
 
 			while (true)
 			{

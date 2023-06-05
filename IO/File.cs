@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Reflection.PortableExecutable;
-using static System.IO.File;
 
 namespace IO
 {

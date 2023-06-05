@@ -1,6 +1,4 @@
-﻿using static IO.Render.FrameBuffer;
-
-namespace IO.Render
+﻿namespace IO.Render
 {
 	abstract class Renderer
 	{
