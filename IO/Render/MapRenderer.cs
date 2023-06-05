@@ -11,7 +11,7 @@ namespace IO.Render
 		public override int SizeJ
 		{ get => Map.SizeJ; }
 		public override int SizeI
-		{ get => Map.SizeI; }
+		{ get => Map.SizeI*2; }
 
 		public MapRenderer(Map map)
 		{
@@ -20,11 +20,13 @@ namespace IO.Render
 
 		public override void Render(ref FrameBuffer buffer)
 		{
-			for (int j = 0; j < SizeJ; j++)
+			for (int j = 0; j < Map.SizeJ; j++)
 			{
-				for (int i = 0; i < SizeI; i++)
+				for (int i = 0; i < Map.SizeI; i++)
 				{
-					buffer[j, i] = VisualTileInfo.GetFrameBufferTuple(VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]));
+					var info = VisualTileInfo.GetFrameBufferTuple(VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]));
+					buffer[j, i*2] = info;
+					buffer[j, i*2+1] = info;
 				}
 			}
 		}
