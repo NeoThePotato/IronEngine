@@ -32,7 +32,7 @@ namespace IO.Render
 		public struct VisualTileInfo
 		{
 			public static readonly Dictionary<char, VisualTileInfo> VISUAL_TILE_INFO = new Dictionary<char, VisualTileInfo>(){
-			{'?', new VisualTileInfo(new TileInfo("Missing VISUAL_TILE_INFO", false), '▒', 163, 0)},
+			{'?', new VisualTileInfo(TileInfo.GetTileInfo('?'), '▒', 163, 0)},
 			{' ', new VisualTileInfo(TileInfo.GetTileInfo(' '), ' ', 15, 0)},
 			{'w', new VisualTileInfo(TileInfo.GetTileInfo('w'), '█', 237, 242)}
 			};
@@ -67,7 +67,7 @@ namespace IO.Render
 					return info;
 				else
 				{
-					Debug.Write($"No VISUAL_TILE_INFO found for character '{c}'.");
+					Debug.WriteLine($"No VISUAL_TILE_INFO found for character '{c}'.");
 					return VISUAL_TILE_INFO['?'];
 				}
 			}

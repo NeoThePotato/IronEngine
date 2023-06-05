@@ -1,4 +1,6 @@
-﻿namespace Game.World
+﻿using System.Diagnostics;
+
+namespace Game.World
 {
     class Map
     {
@@ -54,8 +56,14 @@
             }
 
             public static TileInfo GetTileInfo(char c)
-            {
-                return TILE_INFO[c];
+			{
+				if (TILE_INFO.TryGetValue(c, out var info))
+					return info;
+                else
+				{
+					Debug.WriteLine($"No TILE_INFO found for character '{c}'.");
+					return TILE_INFO['?'];
+				}
             }
         }
     }
