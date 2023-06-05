@@ -10,32 +10,6 @@ namespace IO.Render
 		{ get; }
 
 		public abstract void Render(ref FrameBuffer buffer);
-
-		public static void CopyFrom(char[,] source, ref char[,] destination, int offsetJ, int offsetI)
-		{
-			for (int j = 0; j < source.GetLength(0); j++) // Row iteration
-			{
-				for (int i = 0; i < source.GetLength(1); i++) // Char iteration
-				{
-					destination[j + offsetJ, i + offsetI] = source[j, i];
-				}
-			}
-		}
-
-		public (int, int) RequiredBufferSize()
-		{
-			return (SizeJ, SizeI);
-		}
-
-		public static int GetSizeJ(char[,] arr)
-		{
-			return arr.GetLength(0);
-		}
-
-		public static int GetSizeI(char[,] arr)
-		{
-			return arr.GetLength(1);
-		}
 	}
 
 	struct FrameBuffer

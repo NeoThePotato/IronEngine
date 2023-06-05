@@ -29,11 +29,11 @@ namespace IO.Render
 		private int BufferLength
 		{ get => BufferSizeJ * BufferSizeI; }
 		public override int SizeJ
-		{ get => Size.Item1; }
+		{ get => ChildRenderer.SizeJ; }
 		public override int SizeI
-		{ get => Size.Item2; }
+		{ get => ChildRenderer.SizeI; }
 		public (int, int) Size
-		{ get => ChildRenderer.RequiredBufferSize(); }
+		{ get => (SizeJ, SizeI); }
 
 		public ConsoleRenderer(Renderer childRenderer)
 		{
