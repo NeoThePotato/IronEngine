@@ -52,7 +52,7 @@
 
         private bool TileTraversable(int posJ, int posI)
         {
-            return !(TileImpassable(posJ, posI) || TileOccupied(posJ, posI) || TileOutOfBounds(posJ, posI));
+            return !(TileOutOfBounds(posJ, posI) || TileImpassable(posJ, posI) || TileOccupied(posJ, posI));
         }
 
         private bool TileImpassable(int posJ, int posI)
@@ -62,7 +62,7 @@
 
         private bool TileOutOfBounds(int posJ, int posI)
         {
-            return posJ > Map.SizeJ || posJ < 0 || posI > Map.SizeI || posI < 0;
+            return posJ >= Map.SizeJ || posJ < 0 || posI >= Map.SizeI || posI < 0;
         }
 
         private bool TileOccupied(int posJ, int posI)
