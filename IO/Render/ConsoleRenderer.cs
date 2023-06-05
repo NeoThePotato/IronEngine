@@ -1,4 +1,5 @@
-﻿using System.Runtime.Versioning;
+﻿using System.Diagnostics;
+using System.Runtime.Versioning;
 using System.Text;
 using static System.Console;
 
@@ -105,6 +106,7 @@ namespace IO.Render
 		{
 			(int sizeJ, int sizeI) = Size;
 			UpdateFrameBufferSize(sizeJ, sizeI);
+			Debug.WriteLine($"Updated ConsoleRenderer.FrameBuffer.size to {BufferSizeJ}, {BufferSizeI}.");
 		}
 
 		private void UpdateFrameBufferSize(int sizeJ, int sizeI)
@@ -126,9 +128,14 @@ namespace IO.Render
 		private void UpdateStringBufferCapacity(int capacity)
 		{
 			if (StringBuffer != null)
+			{
 				StringBuffer.Capacity = capacity;
+				Debug.WriteLine($"Updated ConsoleRenderer.StringBuffer.capacity to {StringBuffer.Capacity}.");
+			}
 			else
+			{
 				StringBuffer = new StringBuilder(capacity);
+			}
 		}
 		#endregion
 
@@ -157,6 +164,7 @@ namespace IO.Render
 		private static void AdjustConsoleWindowSize(int sizeI, int sizeJ)
 		{
 			SetWindowSize(sizeI, sizeJ);
+			Debug.WriteLine($"Updated Console.Window's size to {WindowHeight}, {WindowWidth}.");
 		}
 
 		[SupportedOSPlatform("windows")]
@@ -178,6 +186,7 @@ namespace IO.Render
 				SetCursorPosition(0, 0);
 			}
 			SetBufferSize(sizeI, sizeJ);
+			Debug.WriteLine($"Updated Console.Buffer's size to {BufferHeight}, {BufferWidth}.");
 		}
 		#endregion
 	}
