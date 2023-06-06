@@ -13,7 +13,7 @@ namespace IO.Render
 		public override int SizeJ
 		{ get => Map.SizeJ; }
 		public override int SizeI
-		{ get => Map.SizeI; }
+		{ get => Map.SizeI*2; }
 		public (int, int) Size
 		{ get => (SizeJ, SizeI); }
 		public (int, int) CacheSize
@@ -35,11 +35,13 @@ namespace IO.Render
 		{
 			ValidateCacheSize();
 
-			for (int j = 0; j < SizeJ; j++)
+			for (int j = 0; j < Map.SizeJ; j++)
 			{
-				for (int i = 0; i < SizeI; i++)
+				for (int i = 0; i < Map.SizeI; i++)
 				{
-					_mapCache[j, i] = VisualTileInfo.GetFrameBufferTuple(VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]));
+					var info = VisualTileInfo.GetFrameBufferTuple(VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]));
+					_mapCache[j, i * 2] = info;
+					_mapCache[j, i * 2 + 1] = info;
 				}
 			}
 		}
