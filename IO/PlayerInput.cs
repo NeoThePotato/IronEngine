@@ -60,7 +60,7 @@ namespace IO
 
 		private static (int, int) AddVectors((int, int) vector1, (int, int) vector2)
 		{
-			return (vector1.Item1 + vector2.Item1, vector2.Item1 + vector2.Item2);
+			return (vector1.Item1 + vector2.Item1, vector1.Item2 + vector2.Item2);
 		}
 
 		private static (int, int) NormalizeVector((int, int) vector)
