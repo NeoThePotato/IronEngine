@@ -28,8 +28,7 @@ namespace Game
 
 			while (true)
 			{
-				
-				Thread.Sleep(1000/16);
+				Thread.Sleep(1000/60);
 				consoleRenderer.RenderFrame();
 				var dir = InputToDirection(PollKeyBoard());
 				var moved = LevelManager.MoveEntity(PlayerEntity, dir);
