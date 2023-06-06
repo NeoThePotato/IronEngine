@@ -8,20 +8,16 @@ namespace IO
 	{
 		static readonly Dictionary<Key, PlayerInputs> INPUT_BINDING = new Dictionary<Key, PlayerInputs>()
 		{
-			{Key.NumPad6,   PlayerInputs.Right},
-			{Key.NumPad9,   PlayerInputs.UpRight},
-			{Key.NumPad8,   PlayerInputs.Up},
-			{Key.NumPad7,   PlayerInputs.UpLeft},
-			{Key.NumPad4,   PlayerInputs.Left},
-			{Key.NumPad1,   PlayerInputs.DownLeft},
-			{Key.NumPad2,   PlayerInputs.Down},
-			{Key.NumPad3,   PlayerInputs.DownRight},
 			{Key.Right,     PlayerInputs.Right},
+			{Key.PageUp,	PlayerInputs.UpRight},
 			{Key.Up,        PlayerInputs.Up},
+			{Key.Home,		PlayerInputs.UpLeft},
 			{Key.Left,      PlayerInputs.Left},
+			{Key.End,		PlayerInputs.DownLeft},
 			{Key.Down,      PlayerInputs.Down},
-			{Key.Enter,     PlayerInputs.Confirm},
-			{Key.Back,      PlayerInputs.Back},
+			{Key.PageDown,	PlayerInputs.DownRight},
+			{Key.Enter,		PlayerInputs.Confirm},
+			{Key.Back,		PlayerInputs.Back},
 		};
 
 		static readonly Dictionary<PlayerInputs, Directions> DIRECTIONS = new Dictionary<PlayerInputs, Directions>()
