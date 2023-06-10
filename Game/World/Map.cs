@@ -40,7 +40,7 @@ namespace Game.World
 
         public struct TileInfo
         {
-            public static readonly Dictionary<char, TileInfo> TILE_INFO = new Dictionary<char, TileInfo>(){
+            private static readonly Dictionary<char, TileInfo> TILE_INFO = new Dictionary<char, TileInfo>(){
 			{'?', new TileInfo("Missing TILE_INFO", false)},
 			{' ', new TileInfo("Ground", true)},
 			{'s', new TileInfo("Stone Brick Floor", true)},
