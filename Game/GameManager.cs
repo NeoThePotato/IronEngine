@@ -28,8 +28,9 @@ namespace Game
 
 			while (true)
 			{
+				Thread.Sleep(1000/60);
 				consoleRenderer.RenderFrame();
-				var dir = InputToDirection(WaitForKey());
+				var dir = InputToDirection(PollKeyBoard());
 				var moved = LevelManager.MoveEntity(PlayerEntity, dir);
 				Debug.WriteLine($"Moved: {moved}, {PlayerEntity.posJ}, {PlayerEntity.posI}");
 				Debug.Assert(PlayerEntity.Equals(LevelManager.Entities[0]));
@@ -54,25 +55,6 @@ namespace Game
 			{
 				return false;
 			}
-		}
-
-		private Directions InputToDirection(PlayerInputs input)
-		{
-			var directionDict = new Dictionary<PlayerInputs, Directions>()
-			{
-				{ PlayerInputs.Right, Directions.E},
-				{ PlayerInputs.UpRight, Directions.NE},
-				{ PlayerInputs.Up, Directions.N },
-				{ PlayerInputs.UpLeft, Directions.NW },
-				{ PlayerInputs.Left, Directions.W },
-				{ PlayerInputs.DownLeft, Directions.SW },
-				{ PlayerInputs.Down, Directions.S },
-				{ PlayerInputs.DownRight, Directions.SE },
-				{ PlayerInputs.Any, Directions.None },
-				{ PlayerInputs.Confirm, Directions.None },
-			};
-
-			return directionDict[input];
 		}
 	}
 }

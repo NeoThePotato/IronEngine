@@ -126,7 +126,12 @@
             return DIRECTION_VECTORS[(int)direction];
         }
 
-        public enum Directions
+		public static Directions TranslateDirection((int, int) vector)
+		{
+			return (Directions)Array.IndexOf(DIRECTION_VECTORS, vector);
+		}
+
+		public enum Directions
         {
             E = 0,
             NE = 1,

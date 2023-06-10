@@ -189,7 +189,14 @@ namespace IO.Render
 				AdjustConsoleWindowSize(sizeI, sizeJ);
 				SetCursorPosition(0, 0);
 			}
-			SetBufferSize(sizeI, sizeJ);
+			try
+			{
+				SetBufferSize(sizeI, sizeJ);
+			}
+			catch
+			{
+				return;
+			}
 			Debug.WriteLine($"Updated Console.Buffer's size to {BufferHeight}, {BufferWidth}.");
 		}
 		#endregion

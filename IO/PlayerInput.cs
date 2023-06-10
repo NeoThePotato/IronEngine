@@ -1,34 +1,72 @@
-﻿namespace IO
+﻿using System.Runtime.Versioning;
+using System.Windows.Input;
+using static Game.World.Direction;
+
+namespace IO
 {
 	static class PlayerInput
 	{
-		static readonly Dictionary<ConsoleKey, PlayerInputs> INPUT_BINDING = new Dictionary<ConsoleKey, PlayerInputs>(){
-			{ConsoleKey.NumPad6,	PlayerInputs.Right},
-			{ConsoleKey.NumPad9,	PlayerInputs.UpRight},
-			{ConsoleKey.NumPad8,	PlayerInputs.Up},
-			{ConsoleKey.NumPad7,	PlayerInputs.UpLeft},
-			{ConsoleKey.NumPad4,	PlayerInputs.Left},
-			{ConsoleKey.NumPad1,	PlayerInputs.DownLeft},
-			{ConsoleKey.NumPad2,	PlayerInputs.Down},
-			{ConsoleKey.NumPad3,	PlayerInputs.DownRight},
-			{ConsoleKey.RightArrow,	PlayerInputs.Right},
-			{ConsoleKey.UpArrow,	PlayerInputs.Up},
-			{ConsoleKey.LeftArrow,	PlayerInputs.Left},
-			{ConsoleKey.DownArrow,	PlayerInputs.Down},
-			{ConsoleKey.Enter,		PlayerInputs.Confirm},
-			{ConsoleKey.Backspace,	PlayerInputs.Back},
+		static readonly Dictionary<Key, PlayerInputs> INPUT_BINDING = new Dictionary<Key, PlayerInputs>()
+		{
+			{Key.Right,     PlayerInputs.Right},
+			{Key.PageUp,	PlayerInputs.UpRight},
+			{Key.Up,        PlayerInputs.Up},
+			{Key.Home,		PlayerInputs.UpLeft},
+			{Key.Left,      PlayerInputs.Left},
+			{Key.End,		PlayerInputs.DownLeft},
+			{Key.Down,      PlayerInputs.Down},
+			{Key.PageDown,	PlayerInputs.DownRight},
+			{Key.Enter,		PlayerInputs.Confirm},
+			{Key.Back,		PlayerInputs.Back},
 		};
 
-		public static PlayerInputs WaitForKey()
+		static readonly Dictionary<PlayerInputs, Directions> DIRECTIONS = new Dictionary<PlayerInputs, Directions>()
 		{
-			return KeyToInput(Console.ReadKey(true).Key);
+			{ PlayerInputs.Right,		Directions.E},
+			{ PlayerInputs.UpRight,		Directions.NE},
+			{ PlayerInputs.Up,			Directions.N },
+			{ PlayerInputs.UpLeft,		Directions.NW },
+			{ PlayerInputs.Left,		Directions.W },
+			{ PlayerInputs.DownLeft,	Directions.SW },
+			{ PlayerInputs.Down,		Directions.S },
+			{ PlayerInputs.DownRight,	Directions.SE },
+		};
+
+		static private Dictionary<PlayerInputs, bool> KeyboardState = new Dictionary<PlayerInputs, bool>(INPUT_BINDING.Count);
+
+		[SupportedOSPlatform("windows")]
+		public static Dictionary<PlayerInputs, bool> PollKeyBoard()
+		{
+			foreach (var kvp in INPUT_BINDING)
+				KeyboardState[kvp.Value] = Keyboard.IsKeyDown(kvp.Key);
+
+			return KeyboardState;
 		}
 
-		private static PlayerInputs KeyToInput(ConsoleKey consoleKey)
+		public static Directions InputToDirection(Dictionary<PlayerInputs, bool> keyboardState)
 		{
-			PlayerInputs input;
+			(int, int) movementVector = (0, 0);
 
-			return (INPUT_BINDING.TryGetValue(consoleKey, out input)) ? input : PlayerInputs.Any;
+			foreach(var kvp in DIRECTIONS)
+				movementVector = AddVectors(movementVector, keyboardState[kvp.Key] ? TranslateDirection(kvp.Value) : (0, 0));
+			movementVector = NormalizeVector(movementVector);
+
+			return TranslateDirection(movementVector);
+		}
+
+		private static (int, int) AddVectors((int, int) vector1, (int, int) vector2)
+		{
+			return (vector1.Item1 + vector2.Item1, vector1.Item2 + vector2.Item2);
+		}
+
+		private static (int, int) NormalizeVector((int, int) vector)
+		{
+			return (Normalize(vector.Item1), Normalize(vector.Item2));
+		}
+
+		private static int Normalize(int num)
+		{
+			return Utility.ClampRange(num, -1, 1);
 		}
 
 		public enum PlayerInputs

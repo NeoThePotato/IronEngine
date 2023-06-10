@@ -7,7 +7,7 @@ namespace IO
 	{
 		public static char[,]? LoadMapCharData(string pathName)
 		{
-			StreamReader sr;
+            StreamReader sr;
 
             try
             {
