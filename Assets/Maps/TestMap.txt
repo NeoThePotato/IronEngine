@@ -12,7 +12,7 @@ S                     SSSSSSSSSSSSSSSSS
 S                               wwwWWWS
 S                                wwwWWS
 S                               wwwWWWS
-S                             wwwwWWWWS
-S                            wwwwwWWWWS
-S                             wwwWWWWWS
+S                    ppPpP    wwwwWWWWS
+S                    PPPpP   wwwwwWWWWS
+S                    PPppP    wwwWWWWWS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
