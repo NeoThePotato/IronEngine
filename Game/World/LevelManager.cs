@@ -46,7 +46,7 @@
         private bool CanEntityMoveTo(MapEntity entity, Direction.Directions direction, out MapEntity? occupiedBy)
         {
             (int offsetJ, int offsetI) = Direction.TranslateDirection(direction);
-            var isTraversable = TileTraversable(entity.posJ + offsetJ, entity.posI + offsetI, out occupiedBy);
+            var isTraversable = TileTraversable(entity.PosJ + offsetJ, entity.PosI + offsetI, out occupiedBy);
 
             if (occupiedBy == entity)
                 occupiedBy = null;
@@ -82,7 +82,7 @@
         {
             foreach (var entity in Entities)
             {
-                if (entity.posJ == posJ && entity.posI == posI)
+                if (entity.PosJ == posJ && entity.PosI == posI)
                     return entity;
             }
 
@@ -92,14 +92,18 @@
 
     class MapEntity
     {
-        public Entity entity;
-        public int posJ, posI;
+        public Entity Entity
+        { get; set; }
+        public int PosJ
+        { get; set; }
+		public int PosI
+		{ get; set; }
 
-        public MapEntity(Entity entity, int posJ, int posI)
+		public MapEntity(Entity entity, int posJ, int posI)
         {
-            this.entity = entity;
-            this.posJ = posJ;
-            this.posI = posI;
+            Entity = entity;
+            PosJ = posJ;
+            PosI = posI;
         }
 
         public void Move(Direction.Directions direction)
@@ -110,8 +114,8 @@
 
         public void Move(int movJ, int movI)
         {
-            posJ += movJ;
-            posI += movI;
+            PosJ += movJ;
+            PosI += movI;
         }
     }
 

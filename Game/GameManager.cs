@@ -37,7 +37,7 @@ namespace Game
 				var dir = InputToDirection(PollKeyBoard());
 
 				var moved = LevelManager.MoveEntity(PlayerEntity, dir, out encounteredEntity);
-				Debug.WriteLine($"Moved: {moved}, {PlayerEntity.posJ}, {PlayerEntity.posI}");
+				Debug.WriteLine($"Moved: {moved}, {PlayerEntity.PosJ}, {PlayerEntity.PosI}");
 				Debug.Assert(PlayerEntity.Equals(LevelManager.Entities[0]));
 
 				try

@@ -33,10 +33,10 @@ namespace IO.Render
 
 		public void RenderEntity(ref FrameBuffer buffer, MapEntity entity, char c = 'x', byte color = 15)
 		{
-			buffer.Char[entity.posJ, entity.posI * 2] = c;
-			buffer.Foreground[entity.posJ, entity.posI * 2] = color;
-			buffer.Char[entity.posJ, entity.posI * 2 +1] = c;
-			buffer.Foreground[entity.posJ, entity.posI * 2+1] = color;
+			buffer.Char[entity.PosJ, entity.PosI * 2] = c;
+			buffer.Foreground[entity.PosJ, entity.PosI * 2] = color;
+			buffer.Char[entity.PosJ, entity.PosI * 2 +1] = c;
+			buffer.Foreground[entity.PosJ, entity.PosI * 2+1] = color;
 		}
 	}
 }
