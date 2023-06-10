@@ -33,10 +33,22 @@ namespace Game
 			{
 				Thread.Sleep(1000/GLOBAL_TICK_RATE);
 				consoleRenderer.RenderFrame();
+				MapEntity? encounteredEntity;
 				var dir = InputToDirection(PollKeyBoard());
-				var moved = LevelManager.MoveEntity(PlayerEntity, dir);
+
+				var moved = LevelManager.MoveEntity(PlayerEntity, dir, out encounteredEntity);
 				Debug.WriteLine($"Moved: {moved}, {PlayerEntity.posJ}, {PlayerEntity.posI}");
 				Debug.Assert(PlayerEntity.Equals(LevelManager.Entities[0]));
+
+				try
+				{
+					if (encounteredEntity != null)
+						Encounter(PlayerEntity, encounteredEntity);
+				}
+				catch (NotImplementedException)
+				{
+					Debug.WriteLine($"Encountered {encounteredEntity}.");
+				}
 			}
 		}
 

@@ -29,9 +29,9 @@
             Entities.Add(entity);
         }
 
-        public bool MoveEntity(MapEntity entity, Direction.Directions direction)
+        public bool MoveEntity(MapEntity entity, Direction.Directions direction, out MapEntity? otherEntity)
         {
-            if (CanEntityMoveTo(entity, direction))
+            if (CanEntityMoveTo(entity, direction, out otherEntity))
             {
                 entity.Move(direction);
 
@@ -43,16 +43,22 @@
             }
         }
 
-        private bool CanEntityMoveTo(MapEntity entity, Direction.Directions direction)
+        private bool CanEntityMoveTo(MapEntity entity, Direction.Directions direction, out MapEntity? occupiedBy)
         {
             (int offsetJ, int offsetI) = Direction.TranslateDirection(direction);
+            var isTraversable = TileTraversable(entity.posJ + offsetJ, entity.posI + offsetI, out occupiedBy);
 
-            return TileTraversable(entity.posJ + offsetJ, entity.posI + offsetI);
+            if (occupiedBy == entity)
+                occupiedBy = null;
+
+            return isTraversable;
         }
 
-        private bool TileTraversable(int posJ, int posI)
+        private bool TileTraversable(int posJ, int posI, out MapEntity? occupiedBy)
         {
-            return !(TileOutOfBounds(posJ, posI) || TileImpassable(posJ, posI) || TileOccupied(posJ, posI));
+			occupiedBy = null;
+
+            return !(TileOutOfBounds(posJ, posI) || TileImpassable(posJ, posI) || TileOccupied(posJ, posI, out occupiedBy));
         }
 
         private bool TileImpassable(int posJ, int posI)
@@ -65,9 +71,11 @@
             return posJ >= Map.SizeJ || posJ < 0 || posI >= Map.SizeI || posI < 0;
         }
 
-        private bool TileOccupied(int posJ, int posI)
+        private bool TileOccupied(int posJ, int posI, out MapEntity? occupiedBy)
         {
-            return GetEntityAt(posJ, posI) != null;
+			occupiedBy = GetEntityAt(posJ, posI);
+
+			return occupiedBy != null;
         }
 
         private MapEntity? GetEntityAt(int posJ, int posI)
