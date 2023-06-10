@@ -11,7 +11,7 @@ namespace Game
 		{ get; private set; }
 		public List<MapEntity> Entities
 		{ get => LevelManager.Entities; }
-		private MapEntity PlayerEntity
+		public MapEntity PlayerEntity
 		{ get; }
 
 		public GameManager()
@@ -19,6 +19,7 @@ namespace Game
 			LoadMap("../../../Assets/Maps/TestMap.txt");
 			PlayerEntity = new MapEntity(new Entity(), 2, 2);
 			LevelManager.AddEntity(PlayerEntity);
+			LevelManager.AddEntity(new MapEntity(new Entity(), 3, 3));
 		}
 
 		public void Start()

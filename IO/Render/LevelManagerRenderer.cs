@@ -27,16 +27,16 @@ namespace IO.Render
 			// Render entities
 			foreach (var entity in LevelManager.Entities)
 			{
-				RenderEntity(ref buffer, entity);
+				RenderEntity(ref buffer, entity, 'x');
 			}
 		}
 
-		public void RenderEntity(ref FrameBuffer buffer, MapEntity entity)
+		public void RenderEntity(ref FrameBuffer buffer, MapEntity entity, char c = 'x', byte color = 15)
 		{
-			buffer.Char[entity.posJ, entity.posI * 2] = '@';
-			buffer.Foreground[entity.posJ, entity.posI * 2] = 15;
-			buffer.Char[entity.posJ, entity.posI * 2 +1] = '@';
-			buffer.Foreground[entity.posJ, entity.posI * 2+1] = 15;
+			buffer.Char[entity.posJ, entity.posI * 2] = c;
+			buffer.Foreground[entity.posJ, entity.posI * 2] = color;
+			buffer.Char[entity.posJ, entity.posI * 2 +1] = c;
+			buffer.Foreground[entity.posJ, entity.posI * 2+1] = color;
 		}
 	}
 }

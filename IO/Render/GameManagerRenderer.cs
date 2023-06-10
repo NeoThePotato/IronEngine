@@ -22,6 +22,12 @@ namespace IO.Render
 		public override void Render(ref FrameBuffer buffer)
 		{
 			LevelManagerRenderer.Render(ref buffer);
+			RenderPlayer(ref buffer);
+		}
+
+		private void RenderPlayer(ref FrameBuffer buffer)
+		{
+			LevelManagerRenderer.RenderEntity(ref buffer, GameManager.PlayerEntity, '@', 15);
 		}
 	}
 }
