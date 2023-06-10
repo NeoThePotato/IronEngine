@@ -7,6 +7,8 @@ namespace Game
 {
 	class GameManager
 	{
+		public const int GLOBAL_TICK_RATE = 60;
+
 		public LevelManager LevelManager
 		{ get; private set; }
 		public List<MapEntity> Entities
@@ -29,7 +31,7 @@ namespace Game
 
 			while (true)
 			{
-				Thread.Sleep(1000/60);
+				Thread.Sleep(1000/GLOBAL_TICK_RATE);
 				consoleRenderer.RenderFrame();
 				var dir = InputToDirection(PollKeyBoard());
 				var moved = LevelManager.MoveEntity(PlayerEntity, dir);
