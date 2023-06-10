@@ -167,8 +167,15 @@ namespace IO.Render
 		[SupportedOSPlatform("windows")]
 		private static void AdjustConsoleWindowSize(int sizeI, int sizeJ)
 		{
-			SetWindowSize(sizeI, sizeJ);
-			Debug.WriteLine($"Updated Console.Window's size to {WindowHeight}, {WindowWidth}.");
+			try
+			{
+				SetWindowSize(sizeI, sizeJ);
+				Debug.WriteLine($"Updated Console.Window's size to {WindowHeight}, {WindowWidth}.");
+			}
+			catch
+			{
+				Debug.WriteLine($"Failed to set Console.Window's size to {WindowHeight}, {WindowWidth}.");
+			}
 		}
 
 		[SupportedOSPlatform("windows")]
@@ -192,12 +199,12 @@ namespace IO.Render
 			try
 			{
 				SetBufferSize(sizeI, sizeJ);
+				Debug.WriteLine($"Updated Console.Buffer's size to {BufferHeight}, {BufferWidth}.");
 			}
 			catch
 			{
-				return;
+				Debug.WriteLine($"Failed to set Console.Buffer's size to {BufferHeight}, {BufferWidth}.");
 			}
-			Debug.WriteLine($"Updated Console.Buffer's size to {BufferHeight}, {BufferWidth}.");
 		}
 		#endregion
 	}
