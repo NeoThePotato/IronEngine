@@ -45,13 +45,18 @@ namespace IO
 
 		public static Directions InputToDirection(Dictionary<PlayerInputs, bool> keyboardState)
 		{
+			return TranslateDirection(InputToVector(keyboardState));
+		}
+
+		public static (int, int) InputToVector(Dictionary<PlayerInputs, bool> keyboardState)
+		{
 			(int, int) movementVector = (0, 0);
 
-			foreach(var kvp in DIRECTIONS)
+			foreach (var kvp in DIRECTIONS)
 				movementVector = AddVectors(movementVector, keyboardState[kvp.Key] ? TranslateDirection(kvp.Value) : (0, 0));
 			movementVector = NormalizeVector(movementVector);
 
-			return TranslateDirection(movementVector);
+			return movementVector;
 		}
 
 		private static (int, int) AddVectors((int, int) vector1, (int, int) vector2)
