@@ -62,7 +62,15 @@ namespace IO.Render
 			public static readonly Dictionary<char, VisualTileInfo> VISUAL_TILE_INFO = new Dictionary<char, VisualTileInfo>(){
 			{'?', new VisualTileInfo(TileInfo.GetTileInfo('?'), '▒', 163, 0)},
 			{' ', new VisualTileInfo(TileInfo.GetTileInfo(' '), ' ', 15, 0)},
-			{'w', new VisualTileInfo(TileInfo.GetTileInfo('w'), '█', 237, 242)}
+			{'s', new VisualTileInfo(TileInfo.GetTileInfo('s'), '▓', 244, 239)},
+			{'S', new VisualTileInfo(TileInfo.GetTileInfo('S'), '█', 237, 242)},
+			{'g', new VisualTileInfo(TileInfo.GetTileInfo('g'), '░', 34, 28)},
+			{'r', new VisualTileInfo(TileInfo.GetTileInfo('r'), '░', 250, 247)},
+			{'R', new VisualTileInfo(TileInfo.GetTileInfo('R'), '⌂', 241, 238)},
+			{'w', new VisualTileInfo(TileInfo.GetTileInfo('w'), '▒', 91, 80)},
+			{'W', new VisualTileInfo(TileInfo.GetTileInfo('W'), '▒', 33, 32)},
+			{'p', new VisualTileInfo(TileInfo.GetTileInfo('p'), '≡', 52, 137)},
+			{'P', new VisualTileInfo(TileInfo.GetTileInfo('P'), '=', 240, 180)},
 			};
 
 			public TileInfo tileInfo;
