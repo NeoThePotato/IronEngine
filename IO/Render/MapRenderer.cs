@@ -7,13 +7,15 @@ namespace IO.Render
 {
 	class MapRenderer : Renderer
 	{
+		private const int STRECH_I = 2;
 		private FrameBuffer _mapCache;
+
 		private Map Map
 		{ get; set; }
 		public override int SizeJ
 		{ get => Map.SizeJ; }
 		public override int SizeI
-		{ get => Map.SizeI*2; }
+		{ get => Map.SizeI*STRECH_I; }
 		public (int, int) Size
 		{ get => (SizeJ, SizeI); }
 		public (int, int) CacheSize
@@ -40,8 +42,8 @@ namespace IO.Render
 				for (int i = 0; i < Map.SizeI; i++)
 				{
 					var info = VisualTileInfo.GetFrameBufferTuple(VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]));
-					_mapCache[j, i * 2] = info;
-					_mapCache[j, i * 2 + 1] = info;
+					_mapCache[j, i * STRECH_I] = info;
+					_mapCache[j, i * STRECH_I + 1] = info;
 				}
 			}
 		}
