@@ -35,8 +35,13 @@ class ProgramManager
 			// Frame Timing
 			TimeSpan totalUpdateTime = renderTime - startTime;
 			TimeSpan timeDelta = FRAMETIME > totalUpdateTime ? FRAMETIME - totalUpdateTime : new TimeSpan(0);
-			Debug.WriteLine($"Logic Time: {(logicTime-startTime).Milliseconds}ms\nRender Time: {(renderTime - logicTime).Milliseconds}ms\nTotal update time: {totalUpdateTime}");
+			Debug.WriteLine($"Logic Time: {TimeSpanToMilliseconds(logicTime-startTime)}ms\nRender Time: {TimeSpanToMilliseconds(renderTime - logicTime)}ms\nTotal update time: {TimeSpanToMilliseconds(totalUpdateTime)}ms");
 			Thread.Sleep(timeDelta);
 		}
+	}
+
+	private static float TimeSpanToMilliseconds(TimeSpan ts)
+	{
+		return (float)ts.Ticks/TimeSpan.TicksPerMillisecond;
 	}
 }
