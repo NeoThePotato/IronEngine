@@ -1,11 +1,11 @@
-﻿using Combat;
-using Combat.Equipment;
+﻿using Game.Combat;
+using Game.Combat.Equipment;
 using System.Text;
-using Templates;
+using Assets.CombatTemplates;
 
-namespace Adventure
+namespace Game
 {
-	class RewardsMerchant
+    class RewardsMerchant
 	{
 
 		private Unit _unit;

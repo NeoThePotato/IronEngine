@@ -1,10 +1,10 @@
-﻿using Combat;
-using Combat.Equipment;
+﻿using Game.Combat;
+using Game.Combat.Equipment;
 
-namespace Templates
+namespace Assets.CombatTemplates
 {
 
-	static class Units
+    static class Units
 	{
 		public static Unit hero = new Unit("Hero", 50, 5, 0.2f, 0.5f, 0.5f, Weapons.rustedBlade, Armors.rustedBuckler, Armors.rustedChestplate);
 		public static Unit antiHero = new Unit("Anti-Hero", 45, 4, 0.15f, 0.45f, 0.55f, Weapons.rustedBlade, Armors.rustedBuckler, Armors.rustedChestplate);

@@ -1,11 +1,10 @@
-﻿using Combat;
-using System;
-using System.Text;
-using Templates;
+﻿using System.Text;
+using Assets.CombatTemplates;
+using Game.Combat;
 
-namespace Adventure
+namespace Game
 {
-	class AdventureManager
+    class AdventureManager
 	{
 
 		private Unit _playerUnit;
