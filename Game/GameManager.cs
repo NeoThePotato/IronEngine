@@ -31,24 +31,22 @@ namespace Game
 
 			while (true)
 			{
-				Thread.Sleep(1000/GLOBAL_TICK_RATE);
-				consoleRenderer.RenderFrame();
-				MapEntity? encounteredEntity;
-				var dir = InputToDirection(PollKeyBoard());
+				var movementDirection = InputToDirection(PollKeyBoard());
+				LevelManager.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
 
-				var moved = LevelManager.MoveEntity(PlayerEntity, dir, out encounteredEntity);
-				Debug.WriteLine($"Moved: {moved}, {PlayerEntity.PosJ}, {PlayerEntity.PosI}");
-				Debug.Assert(PlayerEntity.Equals(LevelManager.Entities[0]));
-
-				try
+				if (encounteredEntity != null)
 				{
-					if (encounteredEntity != null)
+					try
+					{
 						Encounter(PlayerEntity, encounteredEntity);
+					}
+					catch (NotImplementedException)
+					{
+						Debug.WriteLine($"Encountered {encounteredEntity}.");
+					}
 				}
-				catch (NotImplementedException)
-				{
-					Debug.WriteLine($"Encountered {encounteredEntity}.");
-				}
+				consoleRenderer.RenderFrame();
+				Thread.Sleep(1000 / GLOBAL_TICK_RATE);
 			}
 		}
 
