@@ -43,32 +43,50 @@
             }
         }
 
-        private bool CanEntityMoveTo(MapEntity entity, Direction.Directions direction, out MapEntity? occupiedBy)
-        {
-            (int offsetJ, int offsetI) = Direction.TranslateDirection(direction);
-            var isTraversable = TileTraversable(entity.PosJ + offsetJ, entity.PosI + offsetI, out occupiedBy);
-
-            if (occupiedBy == entity)
-                occupiedBy = null;
-
-            return isTraversable;
-        }
-
-        private bool TileTraversable(int posJ, int posI, out MapEntity? occupiedBy)
-        {
+		private bool CanEntityMoveTo(MapEntity entity, Direction.Directions direction, out MapEntity? occupiedBy)
+		{
+			(int offsetJ, int offsetI) = Direction.TranslateDirection(direction);
+			int newPosJ = entity.PosJ + offsetJ, newPosI = entity.PosI + offsetI;
 			occupiedBy = null;
 
-            return !(TileOutOfBounds(posJ, posI) || TileImpassable(posJ, posI) || TileOccupied(posJ, posI, out occupiedBy));
-        }
+			if (TileTraversable(newPosJ, newPosI))
+            {
+                if (TileOccupied(newPosJ, newPosI, out occupiedBy))
+                {
+                    if (occupiedBy == entity)
+                    {
+                        occupiedBy = null;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+		}
 
-        private bool TileImpassable(int posJ, int posI)
+		private bool TileTraversable(int posJ, int posI)
+        {
+			return !(TileOutOfBounds(posJ, posI) || TileImpassable(posJ, posI));
+		}
+
+		private bool TileOutOfBounds(int posJ, int posI)
+		{
+			return posJ >= Map.SizeJ || posJ < 0 || posI >= Map.SizeI || posI < 0;
+		}
+
+		private bool TileImpassable(int posJ, int posI)
         {
             return !Map.GetTileInfo(posJ, posI).passable;
-        }
-
-        private bool TileOutOfBounds(int posJ, int posI)
-        {
-            return posJ >= Map.SizeJ || posJ < 0 || posI >= Map.SizeI || posI < 0;
         }
 
         private bool TileOccupied(int posJ, int posI, out MapEntity? occupiedBy)
