@@ -4,7 +4,7 @@ using Game.Combat;
 
 namespace Game
 {
-    class AdventureManager
+    class AdventureManager // TODO Mark this for deletion. Implementation will integrate into GameManager
 	{
 
 		private Unit _playerUnit;

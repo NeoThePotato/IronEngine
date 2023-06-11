@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
 using Game.World;
 using static IO.PlayerInput;
-using static Game.World.Direction;
+using Assets.CombatTemplates;
+using Game.Combat;
 
 namespace Game
 {
-	class GameManager
+	class GameManager // TODO Clean the class GameManager. This entire class is messy.
 	{
 		public const int GLOBAL_TICK_RATE = 60;
 
@@ -19,9 +20,9 @@ namespace Game
 		public GameManager()
 		{
 			LoadMap("../../../Assets/Maps/TestMap.txt");
-			PlayerEntity = new MapEntity(new Entity(), 2, 2);
+			PlayerEntity = new MapEntity(new Unit(Units.hero), 2, 2);
 			LevelManager.AddEntity(PlayerEntity);
-			LevelManager.AddEntity(new MapEntity(new Entity(), 3, 3));
+			LevelManager.AddEntity(new MapEntity(Units.slime, 3, 3));
 		}
 
 		public void Start()
@@ -36,14 +37,7 @@ namespace Game
 
 				if (encounteredEntity != null)
 				{
-					try
-					{
-						Encounter(PlayerEntity, encounteredEntity);
-					}
-					catch (NotImplementedException)
-					{
-						Debug.WriteLine($"Encountered {encounteredEntity}.");
-					}
+					Encounter(PlayerEntity, encounteredEntity);
 				}
 				consoleRenderer.RenderFrame();
 				Thread.Sleep(1000 / GLOBAL_TICK_RATE);
@@ -52,7 +46,7 @@ namespace Game
 
 		private void Encounter(MapEntity player, MapEntity other)
 		{
-			throw new NotImplementedException();
+			new CombatManager((Unit)player.Entity, (Unit)other.Entity).Combat();
 		}
 
 		private bool LoadMap(string pathName)

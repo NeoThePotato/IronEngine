@@ -2,7 +2,6 @@
 {
     class CombatManager
     {
-
         private Unit _playerUnit;
         private Unit _cpuUnit;
 
@@ -27,11 +26,9 @@
         }
 
         private void CombatInitiate()
-        {
-            _playerUnit.ResetTempStats();
-            _cpuUnit.ResetTempStats();
-            Console.Clear();
-            Console.WriteLine($"{_playerUnit} has encountered a {_cpuUnit}.");
+		{
+			Console.Clear();
+			Console.WriteLine($"{_playerUnit} has encountered a {_cpuUnit}.");
             Utility.BlockUntilKeyDown();
         }
 
@@ -139,7 +136,6 @@
 
     struct CPUAI
     {
-
         private Unit PlayerUnit;
         private Unit CPUUnit;
 
@@ -206,6 +202,5 @@
             else
                 return UnitAction.Attack; // Desperate efforts
         }
-
     }
 }

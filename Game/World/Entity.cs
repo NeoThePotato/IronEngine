@@ -1,6 +1,6 @@
 ﻿namespace Game.World
 {
-    class Entity
+    abstract class Entity
     {
 
     }

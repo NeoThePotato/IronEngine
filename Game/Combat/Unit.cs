@@ -1,11 +1,10 @@
-﻿using Game.Combat.Equipment;
+﻿using Game.World;
+using Game.Combat.Equipment;
 using Assets.CombatTemplates;
-using System.Text;
 
 namespace Game.Combat
 {
-
-    class Unit
+    class Unit : Entity
     {
         // Permanent Stats
         private string _name = "";
@@ -269,7 +268,6 @@ namespace Game.Combat
             if (Dead)
                 throw new InvalidOperationException($"{this} is dead and cannot act.");
         }
-
     }
 
     enum UnitStat
@@ -297,7 +295,6 @@ namespace Game.Combat
 
         public string ParseFeedback()
         {
-            StringBuilder sb = new StringBuilder();
             switch (type)
             {
                 case FeedbackType.Hit: return $"{actor} attacked {other} and dealt {numericAmount} damage.";
@@ -318,5 +315,4 @@ namespace Game.Combat
             Heal
         }
     }
-
 }
