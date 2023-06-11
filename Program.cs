@@ -1,10 +1,11 @@
 ﻿using Game;
+using IO.Render;
 
 static class Program
 {
 	[STAThread]
 	static void Main(string[] args)
 	{
-		new GameManager().Start();
+		new ProgramManager().Run();
 	}
 }
