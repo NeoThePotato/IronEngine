@@ -21,9 +21,9 @@ namespace Game
 		public void Start() // TODO Clean the class GameManager. This entire class is messy.
 		{
 			Debug.WriteLine("GameManager started.");
-			LoadMap("../../../Assets/Maps/TestMap.txt");
-			PlayerEntity = new MapEntity(new Unit(Units.hero), 2, 2);
-			LevelManager.AddEntity(PlayerEntity);
+			var playerUnit = new Unit(Units.hero);
+            LevelManager = LevelFactory.MakeLevel("TestMap");
+			PlayerEntity = LevelManager.AddEntityAtEntryPoint(playerUnit);
 			LevelManager.AddEntity(new MapEntity(Units.slime, 3, 3));
 		}
 
@@ -41,21 +41,6 @@ namespace Game
 		private void Encounter(MapEntity player, MapEntity other)
 		{
 			new CombatManager((Unit)player.Entity, (Unit)other.Entity).Combat();
-		}
-
-		private bool LoadMap(string pathName)
-		{
-			var charData = IO.File.LoadMapCharData(pathName);
-
-			if (charData != null)
-			{
-				LevelManager = new LevelManager(new Map(charData));
-				return true;
-			}
-			else
-			{
-				return false;
-			}
 		}
 	}
 }

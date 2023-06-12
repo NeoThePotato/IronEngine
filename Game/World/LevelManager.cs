@@ -4,16 +4,20 @@
 	{
 		private Map _map;
 		private List<MapEntity> _entities;
+		private LevelMetadata _metadata;
 
 		public Map Map
 		{ get => _map; private set => _map = value; }
 		public List<MapEntity> Entities
 		{ get => _entities; private set => _entities = value; }
+        public LevelMetadata Metadata
+		{ get => _metadata; private set => _metadata = value; }
 
-		public LevelManager(Map map)
+        public LevelManager(Map map, LevelMetadata metadata)
 		{
 			_map = map;
 			_entities = new List<MapEntity>();
+			_metadata = metadata;
 		}
 
 		public MapEntity AddEntity(Entity entity, int posJ, int posI)
@@ -27,9 +31,22 @@
 		public void AddEntity(MapEntity entity)
 		{
 			Entities.Add(entity);
+        }
+
+        public MapEntity AddEntityAtEntryPoint(Entity entity)
+        {
+            (int entryJ, int EntryI) = Metadata.entryPoint;
+
+
+            return AddEntity(entity, entryJ, EntryI);
+        }
+
+		public MapEntity AddEntityAtRandomValidPoint()
+		{
+			throw new NotImplementedException(); // TODO Implement
 		}
 
-		public bool MoveEntity(MapEntity entity, Direction.Directions direction, out MapEntity? otherEntity)
+        public bool MoveEntity(MapEntity entity, Direction.Directions direction, out MapEntity? otherEntity)
 		{
 			if (CanEntityMoveTo(entity, direction, out otherEntity))
 			{
@@ -183,4 +200,43 @@
 			None = 8
 		}
 	}
+
+	static class LevelFactory
+	{
+		public static LevelManager MakeLevel(string levelName)
+        {
+			var levelMetadata = LevelMetadata.GetMetadata(levelName);
+
+            return MakeLevel(levelMetadata);
+        }
+
+        public static LevelManager MakeLevel(LevelMetadata levelMetadata)
+        {
+            var charData = IO.File.LoadMapCharData(levelMetadata.filePath);
+
+            if (charData != null)
+                return new LevelManager(new Map(charData), levelMetadata);
+            else
+                throw new NullReferenceException();
+        }
+    }
+
+	struct LevelMetadata
+	{
+		public string filePath;
+		public (int, int) entryPoint;
+		public (int, int) exitPoint;
+
+		public LevelMetadata(string filePath, (int, int) entryPoint, (int, int) exitPoint)
+		{
+			this.filePath = filePath;
+			this.entryPoint = entryPoint;
+			this.exitPoint = exitPoint;
+        }
+
+        public static LevelMetadata GetMetadata(string levelName)
+        {
+            return Assets.WorldTemplates.Levels.LEVELS_DICTIONARY[levelName];
+        }
+    }
 }
