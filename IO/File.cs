@@ -28,7 +28,7 @@ namespace IO.File
 
 		private static char[,] ParseStreamReader(StreamReader sr)
         {
-            (int dimJ, int dimI) = GetDimentions(sr);
+            (int dimJ, int dimI) = GetDimensions(sr);
             ResetStreamReader(sr);
             var charData = new char[dimJ, dimI];
             string? line;
@@ -44,13 +44,14 @@ namespace IO.File
             return charData;
         }
 
-        private static (int, int) GetDimentions(StreamReader sr)
+        private static (int, int) GetDimensions(StreamReader sr)
         {
             ResetStreamReader(sr);
-            return GetDimentions(GetStringList(sr));
+
+            return GetDimensions(GetStringList(sr));
         }
 
-        private static (int, int) GetDimentions(List<string> lines)
+        private static (int, int) GetDimensions(List<string> lines)
         {
             int sizeJ = lines.Count, sizeI = 0;
 
@@ -58,7 +59,6 @@ namespace IO.File
                 sizeI = Math.Max(sizeI, line.Length);
 
             return (sizeJ, sizeI);
-
         }
 
         private static List<string> GetStringList(StreamReader sr)
