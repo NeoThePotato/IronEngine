@@ -1,7 +1,7 @@
-﻿using Game.World;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Game.World;
+using Assets;
 using static Game.World.Map;
-using static IO.Render.MapRenderer.VisualTileInfo;
 
 namespace IO.Render
 {
@@ -53,7 +53,7 @@ namespace IO.Render
 			{
 				for (int i = 0; i < Map.SizeI; i++)
 				{
-					var info = GetVisualTileInfo(Map.TileMap[j, i]);
+					var info = VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]);
 					RenderToCache(j, i, info);
 				}
 			}
@@ -69,8 +69,8 @@ namespace IO.Render
 
 		private void RenderToCache(int j, int i, VisualTileInfo info)
 		{
-			_mapCache[j, i * STRECH_I] = GetFrameBufferTuple(info);
-			_mapCache[j, i * STRECH_I + 1] = GetFrameBufferTuple(info);
+			_mapCache[j, i * STRECH_I] = VisualTileInfo.GetFrameBufferTuple(info);
+			_mapCache[j, i * STRECH_I + 1] = VisualTileInfo.GetFrameBufferTuple(info);
 		}
 
 		private void RenderToCache(int j, int i, char c, byte fg)
@@ -110,20 +110,6 @@ namespace IO.Render
 
 		public struct VisualTileInfo
 		{
-			public static readonly Dictionary<char, VisualTileInfo> VISUAL_TILE_INFO = new Dictionary<char, VisualTileInfo>(){
-			{'?', new VisualTileInfo(TileInfo.GetTileInfo('?'), '▒', 163, 0)},
-			{' ', new VisualTileInfo(TileInfo.GetTileInfo(' '), ' ', 15, 0)},
-			{'s', new VisualTileInfo(TileInfo.GetTileInfo('s'), '▓', 244, 239)},
-			{'S', new VisualTileInfo(TileInfo.GetTileInfo('S'), '█', 237, 242)},
-			{'g', new VisualTileInfo(TileInfo.GetTileInfo('g'), '░', 34, 28)},
-			{'r', new VisualTileInfo(TileInfo.GetTileInfo('r'), '░', 250, 247)},
-			{'R', new VisualTileInfo(TileInfo.GetTileInfo('R'), '⌂', 241, 238)},
-			{'w', new VisualTileInfo(TileInfo.GetTileInfo('w'), '░', 91, 80)},
-			{'W', new VisualTileInfo(TileInfo.GetTileInfo('W'), '≈', 33, 32)},
-			{'p', new VisualTileInfo(TileInfo.GetTileInfo('p'), '≡', 240, 180)},
-			{'P', new VisualTileInfo(TileInfo.GetTileInfo('P'), '▒', 52, 137)},
-			};
-
 			public TileInfo tileInfo;
 			public char character;
 			public byte foregroundColor;
@@ -150,12 +136,12 @@ namespace IO.Render
 
 			public static VisualTileInfo GetVisualTileInfo(char c)
 			{
-				if (VISUAL_TILE_INFO.TryGetValue(c, out var info))
+				if (Tiles.VISUAL_TILE_INFO.TryGetValue(c, out var info))
 					return info;
 				else
 				{
 					Debug.WriteLine($"No VISUAL_TILE_INFO found for character '{c}'.");
-					return VISUAL_TILE_INFO['?'];
+					return Tiles.VISUAL_TILE_INFO['?'];
 				}
 			}
 		}
