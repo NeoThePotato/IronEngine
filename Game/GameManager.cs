@@ -24,7 +24,7 @@ namespace Game
 			var playerUnit = new Unit(Units.hero);
             LevelManager = LevelFactory.MakeLevel("TestMap");
 			PlayerEntity = LevelManager.AddEntityAtEntryTile(playerUnit);
-			LevelManager.AddEntity(new MapEntity(Units.slime, 3, 3));
+			LevelManager.AddEntityAtRandomValidTile(Units.slime);
 		}
 
 		public void Update()

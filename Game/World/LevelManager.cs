@@ -37,13 +37,22 @@
         {
             (int entryJ, int EntryI) = Metadata.entryTile;
 
-
             return AddEntity(entity, entryJ, EntryI);
         }
 
-		public MapEntity AddEntityAtRandomValidTile()
+		public MapEntity AddEntityAtRandomValidTile(Entity entity)
 		{
-			throw new NotImplementedException(); // TODO Implement
+			int randJ = Random.Shared.Next(0, Map.SizeJ);
+			int randI = Random.Shared.Next(0, Map.SizeI);
+
+			do
+			{
+				randJ = Random.Shared.Next(0, Map.SizeJ);
+				randI = Random.Shared.Next(0, Map.SizeI);
+			}
+			while (!TileTraversable(randJ, randI));
+
+			return AddEntity(entity, randJ, randI);
 		}
 
         public bool MoveEntity(MapEntity entity, Direction.Directions direction, out MapEntity? otherEntity)
