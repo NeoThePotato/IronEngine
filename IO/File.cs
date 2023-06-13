@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.IO;
 
-namespace IO
+namespace IO.File
 {
-	static class File
+	static class Map
 	{
 		public static char[,]? LoadMapCharData(string pathName)
 		{

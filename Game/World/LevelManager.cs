@@ -212,7 +212,7 @@
 
         public static LevelManager MakeLevel(LevelMetadata levelMetadata)
         {
-            var charData = IO.File.LoadMapCharData(levelMetadata.filePath);
+            var charData = IO.File.Map.LoadMapCharData(levelMetadata.filePath);
 
             if (charData != null)
                 return new LevelManager(new Map(charData), levelMetadata);
