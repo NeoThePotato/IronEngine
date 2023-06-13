@@ -33,16 +33,12 @@ namespace IO.File
             var charData = new char[dimJ, dimI];
             string? line;
             
-            int j = 0; // TODO Maybe make this a for loop
-            while ((line = sr.ReadLine()) != null)
+            for (int j = 0; (line = sr.ReadLine()) != null; j++)
             {
-                int i = 0;
-                foreach (char c in line)
+                for (int i = 0; i < line.Length; i++)
                 {
-                    charData[j, i] = c;
-                    i++;
+                    charData[j, i] = line[i];
                 }
-                j++;
             }
 
             return charData;
