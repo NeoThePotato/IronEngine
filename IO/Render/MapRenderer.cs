@@ -61,8 +61,8 @@ namespace IO.Render
 
 		private void RenderEntryExitToCache()
 		{
-			(int entJ, int entI) = LevelMetadata.entryPoint;
-			(int extJ, int extI) = LevelMetadata.exitPoint;
+			(int entJ, int entI) = LevelMetadata.entryTile;
+			(int extJ, int extI) = LevelMetadata.exitTile;
 			RenderToCache(entJ, entI, ENTRY_CHAR, ENTRY_COLOR);
 			RenderToCache(extJ, extI, EXIT_CHAR, EXIT_COLOR);
 		}

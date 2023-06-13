@@ -33,15 +33,15 @@
 			Entities.Add(entity);
         }
 
-        public MapEntity AddEntityAtEntryPoint(Entity entity)
+        public MapEntity AddEntityAtEntryTile(Entity entity)
         {
-            (int entryJ, int EntryI) = Metadata.entryPoint;
+            (int entryJ, int EntryI) = Metadata.entryTile;
 
 
             return AddEntity(entity, entryJ, EntryI);
         }
 
-		public MapEntity AddEntityAtRandomValidPoint()
+		public MapEntity AddEntityAtRandomValidTile()
 		{
 			throw new NotImplementedException(); // TODO Implement
 		}
@@ -224,14 +224,14 @@
 	struct LevelMetadata
 	{
 		public string filePath;
-		public (int, int) entryPoint;
-		public (int, int) exitPoint;
+		public (int, int) entryTile;
+		public (int, int) exitTile;
 
-		public LevelMetadata(string filePath, (int, int) entryPoint, (int, int) exitPoint)
+		public LevelMetadata(string filePath, (int, int) entryTile, (int, int) exitTile)
 		{
 			this.filePath = filePath;
-			this.entryPoint = entryPoint;
-			this.exitPoint = exitPoint;
+			this.entryTile = entryTile;
+			this.exitTile = exitTile;
         }
 
         public static LevelMetadata GetMetadata(string levelName)

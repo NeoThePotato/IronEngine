@@ -23,7 +23,7 @@ namespace Game
 			Debug.WriteLine("GameManager started.");
 			var playerUnit = new Unit(Units.hero);
             LevelManager = LevelFactory.MakeLevel("TestMap");
-			PlayerEntity = LevelManager.AddEntityAtEntryPoint(playerUnit);
+			PlayerEntity = LevelManager.AddEntityAtEntryTile(playerUnit);
 			LevelManager.AddEntity(new MapEntity(Units.slime, 3, 3));
 		}
 
