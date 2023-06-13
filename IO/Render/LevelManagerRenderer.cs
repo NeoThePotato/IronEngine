@@ -16,7 +16,7 @@ namespace IO.Render
 		public LevelManagerRenderer(LevelManager levelManager)
 		{
 			LevelManager = levelManager;
-			MapRenderer = new MapRenderer(LevelManager.Map);
+			MapRenderer = new MapRenderer(LevelManager.Map, LevelManager.Metadata);
 		}
 
 		public override void Render(ref FrameBuffer buffer)
