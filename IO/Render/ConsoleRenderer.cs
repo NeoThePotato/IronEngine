@@ -42,8 +42,12 @@ namespace IO.Render
 			ChildRenderer = childRenderer;
 			UpdateFrameBufferSize();
 			UpdateStringBufferCapacity();
+
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				Utility.EnableVirtualTerminalProcessing();
 				AdjustConsoleBufferSize();
+			}
 		}
 
 		public void RenderFrame()

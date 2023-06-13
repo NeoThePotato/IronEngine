@@ -1,4 +1,8 @@
-﻿static class Utility
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
+
+static class Utility
 {
 	public static void Swap<T>(ref T obj1, ref T obj2)
 	{
@@ -74,6 +78,38 @@
 
 		Console.WriteLine(objArr[objArr.Length-1]);
 	}
+
+	[SupportedOSPlatform("windows")]
+	public static void EnableVirtualTerminalProcessing()
+	{
+		const int STD_OUTPUT_HANDLE = -11;
+		const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 4;
+
+		var handle = GetStdHandle(STD_OUTPUT_HANDLE);
+		GetConsoleMode(handle, out uint mode);
+		mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
+		try
+		{
+			SetConsoleMode(handle, mode);
+		}
+		catch (Exception ex)
+		{
+			Debug.WriteLine(ex.ToString());
+		}
+	}
+
+	[SupportedOSPlatform("windows")]
+	[DllImport("kernel32.dll")]
+	static private extern IntPtr GetStdHandle(int nStdHandle);
+
+	[SupportedOSPlatform("windows")]
+	[DllImport("kernel32.dll")]
+	static private extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+
+	[SupportedOSPlatform("windows")]
+	[DllImport("kernel32.dll")]
+	static private extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 }
 enum Separator
 {
