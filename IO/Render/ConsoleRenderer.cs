@@ -36,6 +36,8 @@ namespace IO.Render
 		{ get => ChildRenderer.SizeI; }
 		public (int, int) Size
 		{ get => (SizeJ, SizeI); }
+		public ulong CurrentTick
+		{ get; private set; }
 
 		public ConsoleRenderer(Renderer childRenderer)
 		{
@@ -50,8 +52,9 @@ namespace IO.Render
 			}
 		}
 
-		public void RenderFrame()
+		public void RenderFrame(ulong currentTick)
 		{
+			CurrentTick = currentTick;
 			UpdateFrameBuffer();
 			UpdateStringBuffer();
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

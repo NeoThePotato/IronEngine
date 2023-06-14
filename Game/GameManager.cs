@@ -19,6 +19,8 @@ namespace Game
 		{ get; private set; }
 		public DataLog DataLog
 		{ get => _dataLog; private set => _dataLog = value; }
+		public ulong CurrentTick
+		{ get; private set; }
 
 		public GameManager()
 		{
@@ -35,8 +37,9 @@ namespace Game
 			LevelManager.AddEntityAtRandomValidTile(Units.slime);
 		}
 
-		public void Update()
+		public void Update(ulong currentTick)
 		{
+			CurrentTick = currentTick;
 			var movementDirection = PlayerInput.InputToDirection(PlayerInput.PollKeyBoard());
 			LevelManager.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
 

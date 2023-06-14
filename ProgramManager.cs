@@ -15,6 +15,7 @@ class ProgramManager
 	#endregion
 	private GameManager _gameManager;
 	private ConsoleRenderer _consoleRenderer;
+	private ulong _currentTick;
 
 	#region TIMING_PROPERTIES
 	private TimeSpan LogicUpdateTime
@@ -29,6 +30,7 @@ class ProgramManager
 
 	public ProgramManager()
 	{
+		_currentTick = 0;
 		_gameManager = new GameManager();
 		_gameManager.Start();
 		_consoleRenderer = new ConsoleRenderer(new GameManagerRenderer(_gameManager));
@@ -42,19 +44,20 @@ class ProgramManager
 			UpdateRender();
 			PrintFrameTimes();
 			SleepUntilNextFrame();
+			++_currentTick;
 		}
 	}
 
 	private void UpdateLogic()
 	{
 		_startTime = DateTime.Now;
-		_gameManager.Update();
+		_gameManager.Update(_currentTick);
 		_logicFinishTime = DateTime.Now;
 	}
 
 	private void UpdateRender()
 	{
-		_consoleRenderer.RenderFrame();
+		_consoleRenderer.RenderFrame(_currentTick);
 		_renderFinishTime = DateTime.Now;
 	}
 
