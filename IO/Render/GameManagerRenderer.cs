@@ -50,13 +50,21 @@ namespace IO.Render
 		{
 			int dataLogWindowStartLine = _borderLinesJ[1]+1;
 			int dataLogWindowStartChar = _borderLinesI[0]+1;
+			int dataLogWindowEndChar = _borderLinesI[1]-1;
 			int j = dataLogWindowStartLine;
 
 			foreach (var line in GameManager.DataLog)
 			{
-				for (int i = 0; i < line.Length; i++)
+				int i;
+
+				for (i = 0; i < line.Length; i++)
 				{
 					buffer[j, i+dataLogWindowStartChar] = (line[i], 15, 0);
+				}
+
+				for (; i < dataLogWindowEndChar; i++)
+				{
+					buffer[j, i + dataLogWindowStartChar] = (' ', 15, 0);
 				}
 				j++;
 			}
