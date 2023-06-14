@@ -170,6 +170,11 @@
 			PosJ += movJ;
 			PosI += movI;
 		}
+
+		public override string ToString()
+		{
+			return Entity.ToString();
+		}
 	}
 
 	static class Direction
@@ -232,12 +237,14 @@
 
 	struct LevelMetadata
 	{
+		public string name;
 		public string filePath;
 		public (int, int) entryTile;
 		public (int, int) exitTile;
 
-		public LevelMetadata(string filePath, (int, int) entryTile, (int, int) exitTile)
+		public LevelMetadata(string name, string filePath, (int, int) entryTile, (int, int) exitTile)
 		{
+			this.name = name;
 			this.filePath = filePath;
 			this.entryTile = entryTile;
 			this.exitTile = exitTile;
@@ -247,5 +254,10 @@
         {
             return Assets.WorldTemplates.Levels.LEVELS_DICTIONARY[levelName];
         }
+
+		public override string ToString()
+		{
+			return name;
+		}
     }
 }

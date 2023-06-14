@@ -8,15 +8,22 @@ namespace Game
 {
 	class GameManager
 	{
+		public const int DATALOG_LENGTH = 5;
+		public DataLog _dataLog;
+
 		public LevelManager LevelManager
 		{ get; private set; }
 		public List<MapEntity> Entities
 		{ get => LevelManager.Entities; }
 		public MapEntity PlayerEntity
 		{ get; private set; }
+		public DataLog DataLog
+		{ get => _dataLog; private set => _dataLog = value; }
 
 		public GameManager()
-		{ }
+		{
+			_dataLog = new DataLog(DATALOG_LENGTH);
+		}
 
 		public void Start() // TODO Clean the class GameManager. This entire class is messy.
 		{
@@ -24,6 +31,7 @@ namespace Game
 			var playerUnit = new Unit(Units.hero);
             LevelManager = LevelFactory.MakeLevel("TestMap");
 			PlayerEntity = LevelManager.AddEntityAtEntryTile(playerUnit);
+			DataLog.WriteLine($"{PlayerEntity} has arrived at {LevelManager.Metadata.name}");
 			LevelManager.AddEntityAtRandomValidTile(Units.slime);
 		}
 
@@ -34,6 +42,7 @@ namespace Game
 
 			if (encounteredEntity != null)
 			{
+				DataLog.WriteLine($"{PlayerEntity} has encountered a {encounteredEntity}");
 				Encounter(PlayerEntity, encounteredEntity);
 			}
 		}
