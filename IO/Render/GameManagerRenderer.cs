@@ -7,6 +7,7 @@ namespace IO.Render
 	class GameManagerRenderer : Renderer
 	{
 		private readonly (char, byte, byte) BORDER_INFO = ('█', 15, 0);
+		private readonly (char, byte, byte) EMPTY_CHAR = (' ', 15, 0);
 		private int[] _borderLinesJ;
 		private int[] _borderLinesI;
 
@@ -32,7 +33,8 @@ namespace IO.Render
 			RenderBorders(ref buffer); // TODO Probably cache this
 			var levelBuffer = new FrameBuffer(buffer, 1, 1);
 			RenderLevelAndEntities(ref levelBuffer);
-			RenderDataLog(ref buffer);
+			var dataLogBuffer = new FrameBuffer(levelBuffer, _borderLinesJ[1], 0);
+			RenderDataLog(ref dataLogBuffer);
 		}
 
 		private void RenderLevelAndEntities(ref FrameBuffer buffer)
@@ -48,24 +50,17 @@ namespace IO.Render
 
 		private void RenderDataLog(ref FrameBuffer buffer) // TODO Ugly, remove magic numbers
 		{
-			int dataLogWindowStartLine = _borderLinesJ[1]+1;
-			int dataLogWindowStartChar = _borderLinesI[0]+1;
-			int dataLogWindowEndChar = _borderLinesI[1]-1;
-			int j = dataLogWindowStartLine;
+			int j = 0;
 
 			foreach (var line in GameManager.DataLog)
 			{
-				int i;
+				int i = 0;
 
-				for (i = 0; i < line.Length; i++)
-				{
-					buffer[j, i+dataLogWindowStartChar] = (line[i], 15, 0);
-				}
+				for (;  i < line.Length; i++)
+					buffer[j, i] = (line[i], 15, 0);
 
-				for (; i < dataLogWindowEndChar; i++)
-				{
-					buffer[j, i + dataLogWindowStartChar] = (' ', 15, 0);
-				}
+				for (; i < LevelManagerRenderer.SizeI; i++)
+					buffer[j, i] = EMPTY_CHAR;
 				j++;
 			}
 		}
