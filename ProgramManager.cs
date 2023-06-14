@@ -4,12 +4,28 @@ using System.Diagnostics;
 
 class ProgramManager
 {
-	public const int GLOBAL_TICK_RATE = 60;
-	public const double FRAMETIME_MILISEC = 1000.0 / GLOBAL_TICK_RATE;
+	#region TIMING_FIELDS
+	public const int GLOBAL_UPDATE_RATE = 60;
+	public const double FRAMETIME_MILISEC = 1000.0 / GLOBAL_UPDATE_RATE;
 	public const long FRAMETIME_TICKS = (long)(TimeSpan.TicksPerMillisecond * FRAMETIME_MILISEC);
 	public readonly TimeSpan FRAMETIME = new TimeSpan(FRAMETIME_TICKS);
+	private DateTime _startTime;
+	private DateTime _logicFinishTime;
+	private DateTime _renderFinishTime;
+	#endregion
 	private GameManager _gameManager;
 	private ConsoleRenderer _consoleRenderer;
+
+	#region TIMING_PROPERTIES
+	private TimeSpan LogicUpdateTime
+	{ get => _logicFinishTime - _startTime; }
+	private TimeSpan RenderUpdateTime
+	{ get => _renderFinishTime - _logicFinishTime; }
+	private TimeSpan TotalUpdateTime
+	{ get => _renderFinishTime - _startTime; }
+	private TimeSpan TimeUntilNextFrame
+	{ get => FRAMETIME > TotalUpdateTime ? FRAMETIME - TotalUpdateTime : new TimeSpan(0); }
+	#endregion
 
 	public ProgramManager()
 	{
@@ -22,22 +38,35 @@ class ProgramManager
 	{
 		while (true)
 		{
-			DateTime startTime = DateTime.Now;
-
-			// Logic
-			_gameManager.Update();
-			DateTime logicTime = DateTime.Now;
-
-			// Render
-			_consoleRenderer.RenderFrame();
-			DateTime renderTime = DateTime.Now;
-
-			// Frame Timing
-			TimeSpan totalUpdateTime = renderTime - startTime;
-			TimeSpan timeDelta = FRAMETIME > totalUpdateTime ? FRAMETIME - totalUpdateTime : new TimeSpan(0);
-			Debug.WriteLine($"Logic Time: {TimeSpanToMilliseconds(logicTime-startTime)}ms\nRender Time: {TimeSpanToMilliseconds(renderTime - logicTime)}ms\nTotal update time: {TimeSpanToMilliseconds(totalUpdateTime)}ms");
-			Thread.Sleep(timeDelta);
+			UpdateLogic();
+			UpdateRender();
+			PrintFrameTimes();
+			SleepUntilNextFrame();
 		}
+	}
+
+	private void UpdateLogic()
+	{
+		_startTime = DateTime.Now;
+		_gameManager.Update();
+		_logicFinishTime = DateTime.Now;
+	}
+
+	private void UpdateRender()
+	{
+		_consoleRenderer.RenderFrame();
+		_renderFinishTime = DateTime.Now;
+	}
+
+	private void SleepUntilNextFrame()
+	{
+		Thread.Sleep(TimeUntilNextFrame);
+	}
+
+	[Conditional("DEBUG")]
+	private void PrintFrameTimes()
+	{
+		Debug.WriteLine($"Logic Time: {TimeSpanToMilliseconds(LogicUpdateTime)}ms\nRender Time: {TimeSpanToMilliseconds(RenderUpdateTime)}ms\nTotal update time: {TimeSpanToMilliseconds(TotalUpdateTime)}ms");
 	}
 
 	private static float TimeSpanToMilliseconds(TimeSpan ts)
