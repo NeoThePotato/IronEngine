@@ -6,7 +6,8 @@ namespace IO.Render
 {
 	class GameManagerRenderer : Renderer
 	{
-		private readonly (char, byte, byte) BORDER_INFO = ('█', 15, 0);
+		private readonly (char, byte, byte) BORDER_INFO_V = ('║', 15, 0);
+		private readonly (char, byte, byte) BORDER_INFO_H = ('═', 15, 0);
 		private readonly (char, byte, byte) EMPTY_CHAR = (' ', 15, 0);
 		private int[] _borderLinesJ;
 		private int[] _borderLinesI;
@@ -67,23 +68,31 @@ namespace IO.Render
 
 		private void RenderBorders(ref FrameBuffer buffer)
 		{
-			// Render horizontal borders
-			foreach (var border in _borderLinesJ)
-			{
-				for (int i = 0; i < SizeI; i++)
-				{
-					buffer[border, i] = BORDER_INFO;
-				}
-			}
-
 			// Render vertical borders
 			foreach (var border in _borderLinesI)
 			{
 				for (int j = 0; j < SizeJ; j++)
 				{
-					buffer[j, border] = BORDER_INFO;
+					buffer[j, border] = BORDER_INFO_V;
 				}
 			}
+
+			// Render horizontal borders
+			foreach (var border in _borderLinesJ)
+			{
+				for (int i = 0; i < SizeI; i++)
+				{
+					buffer[border, i] = BORDER_INFO_H;
+				}
+			}
+
+			// Corners
+			buffer.Char[_borderLinesJ[0], _borderLinesI[0]] = '╔';
+			buffer.Char[_borderLinesJ[1], _borderLinesI[0]] = '╠';
+			buffer.Char[_borderLinesJ[2], _borderLinesI[0]] = '╚';
+			buffer.Char[_borderLinesJ[0], _borderLinesI[1]] = '╗';
+			buffer.Char[_borderLinesJ[1], _borderLinesI[1]] = '╣';
+			buffer.Char[_borderLinesJ[2], _borderLinesI[1]] = '╝';
 		}
 	}
 }
