@@ -13,6 +13,8 @@ namespace Game
 
 		public LevelManager LevelManager
 		{ get; private set; }
+		public EncounterManager? EncounterManager
+		{ get; private set; }
 		public List<MapEntity> Entities
 		{ get => LevelManager.Entities; }
 		public MapEntity PlayerEntity
@@ -40,19 +42,27 @@ namespace Game
 		public void Update(ulong currentTick)
 		{
 			CurrentTick = currentTick;
-			var movementDirection = PlayerInput.InputToDirection(PlayerInput.PollKeyBoard());
-			LevelManager.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
 
-			if (encounteredEntity != null)
+			if (EncounterManager != null) // In-encounter
 			{
-				DataLog.WriteLine($"{PlayerEntity} has encountered a {encounteredEntity}");
-				Encounter(PlayerEntity, encounteredEntity);
+				EncounterManager.Update();
+
+				if (EncounterManager.Done)
+					EncounterManager = null;
+			}
+			else // World movement
+			{
+				var movementDirection = PlayerInput.InputToDirection(PlayerInput.PollKeyBoard());
+				LevelManager.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
+
+				if (encounteredEntity != null)
+					StartEncounter(encounteredEntity);
 			}
 		}
 
-		private void Encounter(MapEntity player, MapEntity other)
+		private void StartEncounter(MapEntity other)
 		{
-			new CombatManager((Unit)player.Entity, (Unit)other.Entity).Combat();
+			EncounterManager = new EncounterManager((Unit)PlayerEntity.Entity, other.Entity, ref _dataLog);
 		}
 	}
 }
