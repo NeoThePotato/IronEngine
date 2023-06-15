@@ -9,7 +9,7 @@ namespace Game
 	class GameManager
 	{
 		public const int DATALOG_LENGTH = 5;
-		public DataLog _dataLog;
+		private DataLog _dataLog;
 
 		public LevelManager LevelManager
 		{ get; private set; }
