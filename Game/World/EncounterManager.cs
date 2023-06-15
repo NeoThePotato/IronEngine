@@ -36,7 +36,8 @@ namespace Game.World
 					_dataLog.WriteLine($"{_unit} has encountered a {_encounteredEntity}");
 					_combatManager = new CombatManager(_unit, (Unit)_encounteredEntity);
 					break;
-				case EncounterType.Chest:
+				case EncounterType.Container:
+					_dataLog.WriteLine($"{_unit} has found {_encounteredEntity}");
 					throw new NotImplementedException();
 					break;
 				case EncounterType.Trap:
@@ -56,8 +57,8 @@ namespace Game.World
 					_combatManager.Combat(); // TODO Make CombatManager an "Update" function and call it here
 					Done = true;
 					break;
-				case EncounterType.Chest:
-					throw new NotImplementedException();
+				case EncounterType.Container:
+					throw new NotImplementedException(); // TODO Maybe add a class InventoryMenu here to be called here
 					break;
 				case EncounterType.Trap:
 					throw new NotImplementedException();
@@ -71,7 +72,7 @@ namespace Game.World
         public enum EncounterType
         {
             Combat,
-            Chest,
+            Container,
             Trap,
             Door
         }

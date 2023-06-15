@@ -22,10 +22,9 @@ namespace Game.Combat
         private Armor? _equippedShield;
         private Armor? _equippedBodyArmor;
 
-        public string Name
+        public override string Name
         {
             get => _name;
-            private set => _name = value;
         }
         public int MaxHP
         {
@@ -110,7 +109,7 @@ namespace Game.Combat
 
 		public Unit(string name, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Armor shield, Armor bodyArmor)
         {
-            Name = name;
+            _name = name;
             MaxHP = HP;
             Strength = strength;
             Evasion = evasion;
@@ -124,7 +123,7 @@ namespace Game.Combat
 
         public Unit(Unit other)
         {
-            Name = other.Name;
+            _name = other.Name;
             MaxHP = other.MaxHP;
             Strength = other.Strength;
             Evasion = other.Evasion;
