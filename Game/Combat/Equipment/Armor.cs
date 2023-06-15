@@ -1,8 +1,8 @@
 ﻿namespace Game.Combat.Equipment
 {
-    class Armor
+    class Armor : Equipment
     {
-        public string Name { get; private set; }
+        public override string Name { get; }
         public int Defense { get; private set; }
 
         public Armor(string name, int shield)

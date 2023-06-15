@@ -1,8 +1,8 @@
 ﻿namespace Game.Combat.Equipment
 {
-    class Weapon
+    class Weapon : Equipment
     {
-        public string Name { get; private set; }
+        public override string Name { get; }
         public int Damage { get; private set; }
 
         public Weapon(string name, int damage)
