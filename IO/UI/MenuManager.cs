@@ -20,12 +20,12 @@
         public int CursorJ
         {
             get => _cursorJ;
-            private set => _cursorJ = value % DimJ;
+            private set => _cursorJ = Utility.Modulo(value, DimJ);
         }
         public int CursorI
         {
             get => _cursorI;
-            private set => _cursorI = value % DimI;
+            private set => _cursorI = Utility.Modulo(value, DimI);
 		}
 		public bool CursorJValidPosition
 		{ get => 0 <= CursorJ && CursorJ < DimJ; }
@@ -70,7 +70,7 @@
                 CursorJ += vector.Item1;
                 CursorI += vector.Item2;
             }
-            while (GetOptionAtCursor != null);
+            while (GetOptionAtCursor() == null);
         }
 
         private void SetOptions(string[] options)
