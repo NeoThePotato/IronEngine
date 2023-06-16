@@ -47,14 +47,23 @@ namespace Game
 			CurrentTick = currentTick;
 			InputManager.PollKeyBoard();
 
-			if (EncounterManager != null) // In-encounter
+			if (EncounterManager != null) // Encounter
 			{
-				EncounterManager.Update();
-
-				if (EncounterManager.Done)
-					EncounterManager = null;
+				UpdateEncounter();
 			}
-			else // World movement
+			else // World
+			{
+				UpdateWorld();
+			}
+		}
+
+		private void UpdateWorld()
+		{
+			UpdatePlayerMovement();
+			// UpdateOtherEntitiesMovement();
+			}
+
+		private void UpdatePlayerMovement()
 			{
 				var movementDirection = InputManager.GetMovementDirection();
 				LevelManager.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
@@ -62,6 +71,19 @@ namespace Game
 				if (encounteredEntity != null)
 					StartEncounter(encounteredEntity);
 			}
+
+		private void UpdateOtherEntitiesMovement()
+		{
+			throw new NotImplementedException(); // TODO Implement entity auto-movement
+		}
+
+		private void UpdateEncounter()
+		{
+			Debug.Assert(EncounterManager != null);
+			EncounterManager.Update();
+
+			if (EncounterManager.Done)
+				EncounterManager = null;
 		}
 
 		private void StartEncounter(MapEntity other)
