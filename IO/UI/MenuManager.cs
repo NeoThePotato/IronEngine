@@ -2,8 +2,6 @@
 {
     class MenuManager
     {
-        //private const byte NORMAL_BG_COLOR = 0; // TODO Move theses to MenuRenderer
-        //private const byte HIGHLIGHTED_BG_COLOR = 240;
         private int _cursorJ = 0;
         private int _cursorI = 0;
 
@@ -28,7 +26,13 @@
         {
             get => _cursorI;
             private set => _cursorI = value % DimI;
-        }
+		}
+		public bool CursorJValidPosition
+		{ get => 0 <= CursorJ && CursorJ < DimJ; }
+		public bool CursorIValidPosition
+		{ get => 0 <= CursorI && CursorI < DimI; }
+		public bool CursorValidPosition
+        { get => CursorIValidPosition && CursorJValidPosition; }
 
         public MenuManager(PlayerInputManager inputManager, string[] options, int dimJ, int dimI)
         {
