@@ -21,31 +21,29 @@ namespace IO.Render
 			MenuManager = menuManager;
 		}
 
-		public override void Render(ref FrameBuffer frameBuffer)
+		public override void Render(FrameBuffer frameBuffer)
 		{
-			RenderBaseMenu(ref frameBuffer);
+			RenderBaseMenu(frameBuffer);
 
 			if (MenuManager.CursorValidPosition)
-				HighlightSelection(ref frameBuffer);
+				HighlightSelection(frameBuffer);
 		}
 
-		private void RenderBaseMenu(ref FrameBuffer frameBuffer)
+		private void RenderBaseMenu(FrameBuffer frameBuffer)
 		{
 			for (int col = 0; col < MenuManager.DimI; col++)
-				RenderCol(ref frameBuffer, col);
+				RenderCol(frameBuffer, col);
 		}
 
-		private void RenderCol(ref FrameBuffer frameBuffer, int col)
+		private void RenderCol(FrameBuffer frameBuffer, int col)
 		{
-			var fb = new FrameBuffer(frameBuffer, 0, LengthPerString * col);
 			var rowEnum = Enumerable.Range(0, MenuManager.DimJ).Select(row => MenuManager.Options[row, col] != null ? MenuManager.Options[row, col] : "");
-			RenderText(ref fb, rowEnum, LengthPerString);
+			RenderText(new FrameBuffer(frameBuffer, 0, LengthPerString * col), rowEnum, LengthPerString);
 		}
 
-		private void HighlightSelection(ref FrameBuffer frameBuffer)
+		private void HighlightSelection(FrameBuffer frameBuffer)
 		{
-			var fb = new FrameBuffer(frameBuffer, MenuManager.CursorJ, LengthPerString * MenuManager.CursorI);
-			RenderText(ref fb, MenuManager.GetOptionAtCursor(), LengthPerString, COLOR_WHITE, HIGHLIGHTED_BG_COLOR);
+			RenderText(new FrameBuffer(frameBuffer, MenuManager.CursorJ, LengthPerString * MenuManager.CursorI), MenuManager.GetOptionAtCursor(), LengthPerString, COLOR_WHITE, HIGHLIGHTED_BG_COLOR);
 		}
 	}
 }

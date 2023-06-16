@@ -13,9 +13,9 @@ namespace IO.Render
 		public abstract int SizeI
 		{ get; }
 
-		public abstract void Render(ref FrameBuffer buffer);
+		public abstract void Render(FrameBuffer buffer);
 
-		public static void RenderText(ref FrameBuffer buffer, string str, int length, byte textColor = COLOR_WHITE, byte bgColor = COLOR_BLACK)
+		public static void RenderText(FrameBuffer buffer, string str, int length, byte textColor = COLOR_WHITE, byte bgColor = COLOR_BLACK)
 		{
 			int i = 0;
 
@@ -26,14 +26,14 @@ namespace IO.Render
 				buffer[0, i] = EMPTY_CHAR;
 		}
 
-		public static void RenderText(ref FrameBuffer buffer, IEnumerable<string> str, int length, byte textColor = COLOR_WHITE, byte fgColor = COLOR_BLACK)
+		public static void RenderText(FrameBuffer buffer, IEnumerable<string> str, int length, byte textColor = COLOR_WHITE, byte fgColor = COLOR_BLACK)
 		{
 			int j = 0;
 
 			foreach (var line in str)
 			{
 				var fb = new FrameBuffer(buffer, j, 0);
-				RenderText(ref fb, line, length);
+				RenderText(fb, line, length);
 				j++;
 			}
 		}

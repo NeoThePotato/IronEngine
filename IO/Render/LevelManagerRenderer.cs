@@ -19,19 +19,19 @@ namespace IO.Render
 			MapRenderer = new MapRenderer(LevelManager.Map, LevelManager.Metadata);
 		}
 
-		public override void Render(ref FrameBuffer buffer)
+		public override void Render(FrameBuffer buffer)
 		{
 			// Render level
-			MapRenderer.Render(ref buffer);
+			MapRenderer.Render(buffer);
 
 			// Render entities
 			foreach (var entity in LevelManager.Entities)
 			{
-				RenderEntity(ref buffer, entity, 'x');
+				RenderEntity(buffer, entity, 'x');
 			}
 		}
 
-		public void RenderEntity(ref FrameBuffer buffer, MapEntity entity, char c = 'x', byte color = 15)
+		public void RenderEntity(FrameBuffer buffer, MapEntity entity, char c = 'x', byte color = 15)
 		{
 			buffer.Char[entity.PosJ, entity.PosI * 2] = c;
 			buffer.Foreground[entity.PosJ, entity.PosI * 2] = color;

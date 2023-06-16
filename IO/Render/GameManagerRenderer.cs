@@ -8,7 +8,6 @@ namespace IO.Render
 	{
 		private readonly (char, byte, byte) BORDER_INFO_V = ('║', 15, 0);
 		private readonly (char, byte, byte) BORDER_INFO_H = ('═', 15, 0);
-		private readonly (char, byte, byte) EMPTY_CHAR = (' ', 15, 0);
 		private int[] _borderLinesJ;
 		private int[] _borderLinesI;
 
@@ -29,32 +28,32 @@ namespace IO.Render
 			_borderLinesI = new int[] {0, LevelManagerRenderer.SizeI + 1};
 		}
 
-		public override void Render(ref FrameBuffer buffer)
+		public override void Render(FrameBuffer buffer)
 		{
-			RenderBorders(ref buffer); // TODO Probably cache this
+			RenderBorders(buffer); // TODO Probably cache this
 			var levelBuffer = new FrameBuffer(buffer, 1, 1);
-			RenderLevelAndEntities(ref levelBuffer);
+			RenderLevelAndEntities(levelBuffer);
 			var dataLogBuffer = new FrameBuffer(levelBuffer, _borderLinesJ[1], 0);
-			RenderDataLog(ref dataLogBuffer);
+			RenderDataLog(dataLogBuffer);
 		}
 
-		private void RenderLevelAndEntities(ref FrameBuffer buffer)
+		private void RenderLevelAndEntities(FrameBuffer buffer)
 		{
-			LevelManagerRenderer.Render(ref buffer);
-			RenderPlayer(ref buffer);
+			LevelManagerRenderer.Render(buffer);
+			RenderPlayer(buffer);
 		}
 
-		private void RenderPlayer(ref FrameBuffer buffer)
+		private void RenderPlayer(FrameBuffer buffer)
 		{
-			LevelManagerRenderer.RenderEntity(ref buffer, GameManager.PlayerEntity, '@', 15);
+			LevelManagerRenderer.RenderEntity(buffer, GameManager.PlayerEntity, '@', 15);
 		}
 
-		private void RenderDataLog(ref FrameBuffer buffer)
+		private void RenderDataLog(FrameBuffer buffer)
 		{
-			RenderText(ref buffer, GameManager.DataLog, LevelManagerRenderer.SizeI);
+			RenderText(buffer, GameManager.DataLog, LevelManagerRenderer.SizeI);
 		}
 
-		private void RenderBorders(ref FrameBuffer buffer)
+		private void RenderBorders(FrameBuffer buffer)
 		{
 			// Render vertical borders
 			foreach (var border in _borderLinesI)

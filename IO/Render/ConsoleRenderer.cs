@@ -62,15 +62,15 @@ namespace IO.Render
 			Write(StringBuffer);
 		}
 
-		public override void Render(ref FrameBuffer buffer)
+		public override void Render(FrameBuffer buffer)
 		{
-			ChildRenderer.Render(ref buffer);
+			ChildRenderer.Render(buffer);
 		}
 
 		private void UpdateFrameBuffer()
 		{
 			ValidateFrameBufferSize();
-			Render(ref _frameBuffer);
+			Render(_frameBuffer);
 		}
 
 		private void UpdateStringBuffer()

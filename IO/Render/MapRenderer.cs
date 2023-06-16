@@ -35,7 +35,7 @@ namespace IO.Render
 			RenderToCache();
 		}
 
-		public override void Render(ref FrameBuffer buffer)
+		public override void Render(FrameBuffer buffer)
 		{
 			FrameBuffer.Copy(buffer, _mapCache);
 		}
