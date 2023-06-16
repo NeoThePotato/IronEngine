@@ -19,7 +19,6 @@ namespace IO
 			{Key.Enter,		PlayerInputs.Confirm},
 			{Key.Back,		PlayerInputs.Back},
 		};
-
 		static readonly Dictionary<PlayerInputs, Directions> DIRECTIONS = new Dictionary<PlayerInputs, Directions>()
 		{
 			{ PlayerInputs.Right,		Directions.E},
@@ -31,32 +30,63 @@ namespace IO
 			{ PlayerInputs.Down,		Directions.S },
 			{ PlayerInputs.DownRight,	Directions.SE },
 		};
-
-		static private Dictionary<PlayerInputs, bool> KeyboardState = new Dictionary<PlayerInputs, bool>(INPUT_BINDING.Count);
+		static private Dictionary<PlayerInputs, bool> _previousKeyboardState = new Dictionary<PlayerInputs, bool>(INPUT_BINDING.Count);
+		static private Dictionary<PlayerInputs, bool> _currentKeyboardState = new Dictionary<PlayerInputs, bool>(INPUT_BINDING.Count);
 
 		[SupportedOSPlatform("windows")]
-		public static Dictionary<PlayerInputs, bool> PollKeyBoard()
+		public static void PollKeyBoard()
 		{
+			_previousKeyboardState = _currentKeyboardState;
+
 			foreach (var kvp in INPUT_BINDING)
-				KeyboardState[kvp.Value] = Keyboard.IsKeyDown(kvp.Key);
-
-			return KeyboardState;
+				_currentKeyboardState[kvp.Value] = Keyboard.IsKeyDown(kvp.Key);
 		}
 
-		public static Directions InputToDirection(Dictionary<PlayerInputs, bool> keyboardState)
+		public static Directions GetMovementDirection()
 		{
-			return TranslateDirection(InputToVector(keyboardState));
+			return TranslateDirection(GetMovementVector());
 		}
 
-		public static (int, int) InputToVector(Dictionary<PlayerInputs, bool> keyboardState)
+		public static (int, int) GetMovementVector()
 		{
 			(int, int) movementVector = (0, 0);
 
 			foreach (var kvp in DIRECTIONS)
-				movementVector = AddVectors(movementVector, keyboardState[kvp.Key] ? TranslateDirection(kvp.Value) : (0, 0));
+				movementVector = AddVectors(movementVector, IsInputPressed(kvp.Key)? TranslateDirection(kvp.Value) : (0, 0));
 			movementVector = NormalizeVector(movementVector);
 
 			return movementVector;
+		}
+
+		public static Directions GetMenuDirection()
+		{
+			return TranslateDirection(GetMenuVector());
+		}
+
+		public static (int, int) GetMenuVector()
+		{
+			(int, int) movementVector = (0, 0);
+
+			foreach (var kvp in DIRECTIONS)
+				movementVector = AddVectors(movementVector, IsInputDown(kvp.Key) ? TranslateDirection(kvp.Value) : (0, 0));
+			movementVector = NormalizeVector(movementVector);
+
+			return movementVector;
+		}
+
+		public static bool IsInputPressed(PlayerInputs playerInput)
+		{
+			return _currentKeyboardState[playerInput];
+		}
+
+		public static bool IsInputDown(PlayerInputs playerInput)
+		{
+			return IsInputPressed(playerInput) & !_previousKeyboardState[playerInput];
+		}
+
+		public static bool IsInputUp(PlayerInputs playerInput)
+		{
+			return !IsInputPressed(playerInput) & _previousKeyboardState[playerInput];
 		}
 
 		private static (int, int) AddVectors((int, int) vector1, (int, int) vector2)
