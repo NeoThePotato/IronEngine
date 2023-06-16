@@ -51,14 +51,7 @@ namespace IO.Render
 
 		private void RenderDataLog(ref FrameBuffer buffer)
 		{
-			int j = 0;
-
-			foreach (var line in GameManager.DataLog)
-			{
-				var fb = new FrameBuffer(buffer, j, 0);
-				RenderText(ref fb, line, LevelManagerRenderer.SizeI);
-				j++;
-			}
+			RenderText(ref buffer, GameManager.DataLog, LevelManagerRenderer.SizeI);
 		}
 
 		private void RenderBorders(ref FrameBuffer buffer)

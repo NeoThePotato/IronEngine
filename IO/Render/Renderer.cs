@@ -1,12 +1,13 @@
-﻿using System.Windows.Shapes;
+﻿using Game;
+using System.Windows.Shapes;
 
 namespace IO.Render
 {
 	abstract class Renderer
 	{
-		private const byte COLOR_WHITE = 15;
-		private const byte COLOR_BLACK = 0;
-		private static readonly (char, byte, byte) EMPTY_CHAR = (' ', COLOR_WHITE, COLOR_BLACK);
+		public const byte COLOR_WHITE = 15;
+		public const byte COLOR_BLACK = 0;
+		public static readonly (char, byte, byte) EMPTY_CHAR = (' ', COLOR_WHITE, COLOR_BLACK);
 		public abstract int SizeJ
 		{ get; }
 		public abstract int SizeI
@@ -14,15 +15,27 @@ namespace IO.Render
 
 		public abstract void Render(ref FrameBuffer buffer);
 
-		public static void RenderText(ref FrameBuffer buffer, string str, int length, byte textColor = COLOR_WHITE, byte fgColor = COLOR_BLACK)
+		public static void RenderText(ref FrameBuffer buffer, string str, int length, byte textColor = COLOR_WHITE, byte bgColor = COLOR_BLACK)
 		{
 			int i = 0;
 
 			for (; i < str.Length; i++)
-				buffer[0, i] = (str[i], textColor, fgColor);
+				buffer[0, i] = (str[i], textColor, bgColor);
 
 			for (; i < length; i++)
 				buffer[0, i] = EMPTY_CHAR;
+		}
+
+		public static void RenderText(ref FrameBuffer buffer, IEnumerable<string> str, int length, byte textColor = COLOR_WHITE, byte fgColor = COLOR_BLACK)
+		{
+			int j = 0;
+
+			foreach (var line in str)
+			{
+				var fb = new FrameBuffer(buffer, j, 0);
+				RenderText(ref fb, line, length);
+				j++;
+			}
 		}
 	}
 
