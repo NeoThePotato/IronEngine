@@ -4,9 +4,9 @@ using static Game.World.Direction;
 
 namespace IO
 {
-	static class PlayerInput
+	class PlayerInputManager
 	{
-		static readonly Dictionary<Key, PlayerInputs> INPUT_BINDING = new Dictionary<Key, PlayerInputs>()
+		private static readonly Dictionary<Key, PlayerInputs> INPUT_BINDING = new Dictionary<Key, PlayerInputs>()
 		{
 			{Key.Right,     PlayerInputs.Right},
 			{Key.PageUp,	PlayerInputs.UpRight},
@@ -19,7 +19,7 @@ namespace IO
 			{Key.Enter,		PlayerInputs.Confirm},
 			{Key.Back,		PlayerInputs.Back},
 		};
-		static readonly Dictionary<PlayerInputs, Directions> DIRECTIONS = new Dictionary<PlayerInputs, Directions>()
+		private static readonly Dictionary<PlayerInputs, Directions> DIRECTIONS = new Dictionary<PlayerInputs, Directions>()
 		{
 			{ PlayerInputs.Right,		Directions.E},
 			{ PlayerInputs.UpRight,		Directions.NE},
@@ -30,24 +30,29 @@ namespace IO
 			{ PlayerInputs.Down,		Directions.S },
 			{ PlayerInputs.DownRight,	Directions.SE },
 		};
-		static private Dictionary<PlayerInputs, bool> _previousKeyboardState = new Dictionary<PlayerInputs, bool>(INPUT_BINDING.Count);
-		static private Dictionary<PlayerInputs, bool> _currentKeyboardState = new Dictionary<PlayerInputs, bool>(INPUT_BINDING.Count);
+		private Dictionary<PlayerInputs, bool> _previousKeyboardState;
+		private Dictionary<PlayerInputs, bool> _currentKeyboardState;
 
-		[SupportedOSPlatform("windows")]
-		public static void PollKeyBoard()
+		public PlayerInputManager()
 		{
-			_previousKeyboardState = _currentKeyboardState;
-
-			foreach (var kvp in INPUT_BINDING)
-				_currentKeyboardState[kvp.Value] = Keyboard.IsKeyDown(kvp.Key);
+			var emptyState = GetEmptyKeyboardState();
+			_previousKeyboardState = new Dictionary<PlayerInputs, bool>(emptyState);
+			_currentKeyboardState = new Dictionary<PlayerInputs, bool>(emptyState);
 		}
 
-		public static Directions GetMovementDirection()
+		[SupportedOSPlatform("windows")]
+		public void PollKeyBoard()
+		{
+			UpdatePreviousState();
+			UpdateCurrentState();
+		}
+
+		public Directions GetMovementDirection()
 		{
 			return TranslateDirection(GetMovementVector());
 		}
 
-		public static (int, int) GetMovementVector()
+		public (int, int) GetMovementVector()
 		{
 			(int, int) movementVector = (0, 0);
 
@@ -58,12 +63,12 @@ namespace IO
 			return movementVector;
 		}
 
-		public static Directions GetMenuDirection()
+		public Directions GetMenuDirection()
 		{
 			return TranslateDirection(GetMenuVector());
 		}
 
-		public static (int, int) GetMenuVector()
+		public (int, int) GetMenuVector()
 		{
 			(int, int) movementVector = (0, 0);
 
@@ -74,19 +79,41 @@ namespace IO
 			return movementVector;
 		}
 
-		public static bool IsInputPressed(PlayerInputs playerInput)
+		public bool IsInputPressed(PlayerInputs playerInput)
 		{
 			return _currentKeyboardState[playerInput];
 		}
 
-		public static bool IsInputDown(PlayerInputs playerInput)
+		public bool IsInputDown(PlayerInputs playerInput)
 		{
 			return IsInputPressed(playerInput) & !_previousKeyboardState[playerInput];
 		}
 
-		public static bool IsInputUp(PlayerInputs playerInput)
+		public bool IsInputUp(PlayerInputs playerInput)
 		{
 			return !IsInputPressed(playerInput) & _previousKeyboardState[playerInput];
+		}
+
+		private void UpdateCurrentState()
+		{
+			foreach (var kvp in INPUT_BINDING)
+				_currentKeyboardState[kvp.Value] = Keyboard.IsKeyDown(kvp.Key);
+		}
+
+		private void UpdatePreviousState()
+		{
+			foreach (var kvp in _currentKeyboardState)
+				_previousKeyboardState[kvp.Key] = kvp.Value;
+		}
+
+		private Dictionary<PlayerInputs, bool> GetEmptyKeyboardState()
+		{
+			var emptyState = new Dictionary<PlayerInputs, bool>();
+
+			foreach (var kvp in INPUT_BINDING)
+				emptyState[kvp.Value] = false;
+
+			return emptyState;
 		}
 
 		private static (int, int) AddVectors((int, int) vector1, (int, int) vector2)

@@ -11,6 +11,8 @@ namespace Game
 		public const int DATALOG_LENGTH = 5;
 		private DataLog _dataLog;
 
+		public PlayerInputManager InputManager
+		{ get; private set; }
 		public LevelManager LevelManager
 		{ get; private set; }
 		public EncounterManager? EncounterManager
@@ -32,6 +34,7 @@ namespace Game
 		public void Start() // TODO Clean the class GameManager. This entire class is messy.
 		{
 			Debug.WriteLine("GameManager started.");
+			InputManager = new PlayerInputManager();
 			var playerUnit = new Unit(Units.hero);
             LevelManager = LevelFactory.MakeLevel("TestMap");
 			PlayerEntity = LevelManager.AddEntityAtEntryTile(playerUnit);
@@ -42,6 +45,7 @@ namespace Game
 		public void Update(ulong currentTick)
 		{
 			CurrentTick = currentTick;
+			InputManager.PollKeyBoard();
 
 			if (EncounterManager != null) // In-encounter
 			{
@@ -52,7 +56,7 @@ namespace Game
 			}
 			else // World movement
 			{
-				var movementDirection = PlayerInput.InputToDirection(PlayerInput.PollKeyBoard());
+				var movementDirection = InputManager.GetMovementDirection();
 				LevelManager.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
 
 				if (encounteredEntity != null)
