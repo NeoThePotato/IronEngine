@@ -2,6 +2,6 @@
 {
 	abstract class Equipment : Item
 	{
-		public override int Count => 1;
+
 	}
 }
