@@ -49,19 +49,14 @@ namespace IO.Render
 			LevelManagerRenderer.RenderEntity(ref buffer, GameManager.PlayerEntity, '@', 15);
 		}
 
-		private void RenderDataLog(ref FrameBuffer buffer) // TODO Ugly, remove magic numbers
+		private void RenderDataLog(ref FrameBuffer buffer)
 		{
 			int j = 0;
 
 			foreach (var line in GameManager.DataLog)
 			{
-				int i = 0;
-
-				for (;  i < line.Length; i++)
-					buffer[j, i] = (line[i], 15, 0);
-
-				for (; i < LevelManagerRenderer.SizeI; i++)
-					buffer[j, i] = EMPTY_CHAR;
+				var fb = new FrameBuffer(buffer, j, 0);
+				RenderText(ref fb, line, LevelManagerRenderer.SizeI);
 				j++;
 			}
 		}
