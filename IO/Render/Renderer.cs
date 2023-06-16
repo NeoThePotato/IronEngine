@@ -1,13 +1,29 @@
-﻿namespace IO.Render
+﻿using System.Windows.Shapes;
+
+namespace IO.Render
 {
 	abstract class Renderer
 	{
+		private const byte COLOR_WHITE = 15;
+		private const byte COLOR_BLACK = 0;
+		private static readonly (char, byte, byte) EMPTY_CHAR = (' ', COLOR_WHITE, COLOR_BLACK);
 		public abstract int SizeJ
 		{ get; }
 		public abstract int SizeI
 		{ get; }
 
 		public abstract void Render(ref FrameBuffer buffer);
+
+		public static void RenderText(ref FrameBuffer buffer, string str, int length, byte textColor = COLOR_WHITE, byte fgColor = COLOR_BLACK)
+		{
+			int i = 0;
+
+			for (; i < str.Length; i++)
+				buffer[0, i] = (str[i], textColor, fgColor);
+
+			for (; i < length; i++)
+				buffer[0, i] = EMPTY_CHAR;
+		}
 	}
 
 	struct FrameBuffer
