@@ -38,8 +38,8 @@ namespace IO.Render
 		private void RenderCol(ref FrameBuffer frameBuffer, int col)
 		{
 			var fb = new FrameBuffer(frameBuffer, 0, LengthPerString * col);
-			var rowEnum = Enumerable.Range(0, MenuManager.DimJ).Select(row => MenuManager.Options[row, col]);
-			RenderText(ref frameBuffer, rowEnum, LengthPerString);
+			var rowEnum = Enumerable.Range(0, MenuManager.DimJ).Select(row => MenuManager.Options[row, col] != null ? MenuManager.Options[row, col] : "");
+			RenderText(ref fb, rowEnum, LengthPerString);
 		}
 
 		private void HighlightSelection(ref FrameBuffer frameBuffer)
