@@ -4,6 +4,11 @@ using System.Runtime.Versioning;
 
 static class Utility
 {
+	public static int Modulo(int a, int b)
+	{
+		return ((a %= b) < 0) ? a + b : a;
+	}
+
 	public static void Swap<T>(ref T obj1, ref T obj2)
 	{
 		var temp = obj1;
