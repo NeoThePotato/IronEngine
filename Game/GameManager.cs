@@ -9,6 +9,7 @@ namespace Game
 	class GameManager
 	{
 		public const int DATALOG_LENGTH = 5;
+		public const int PLAYER_INVENTORY_SIZE = 10;
 		private DataLog _dataLog;
 
 		public PlayerInputManager InputManager
@@ -20,6 +21,8 @@ namespace Game
 		public List<MapEntity> Entities
 		{ get => LevelManager.Entities; }
 		public MapEntity PlayerEntity
+		{ get; private set; }
+		public Container PlayerInventory
 		{ get; private set; }
 		public DataLog DataLog
 		{ get => _dataLog; private set => _dataLog = value; }
@@ -38,6 +41,7 @@ namespace Game
 			var playerUnit = new Unit(Units.hero);
             LevelManager = LevelFactory.MakeLevel("TestMap");
 			PlayerEntity = LevelManager.AddEntityAtEntryTile(playerUnit);
+			PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
 			DataLog.WriteLine($"{PlayerEntity} has arrived at {LevelManager.Metadata.name}");
 			LevelManager.AddEntityAtRandomValidTile(Units.slime);
 		}
@@ -61,16 +65,16 @@ namespace Game
 		{
 			UpdatePlayerMovement();
 			// UpdateOtherEntitiesMovement();
-			}
+		}
 
 		private void UpdatePlayerMovement()
-			{
-				var movementDirection = InputManager.GetMovementDirection();
-				LevelManager.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
+		{
+			var movementDirection = InputManager.GetMovementDirection();
+			LevelManager.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
 
-				if (encounteredEntity != null)
-					StartEncounter(encounteredEntity);
-			}
+			if (encounteredEntity != null)
+				StartEncounter(encounteredEntity);
+		}
 
 		private void UpdateOtherEntitiesMovement()
 		{
