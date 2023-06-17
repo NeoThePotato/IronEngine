@@ -36,7 +36,7 @@ namespace IO.Render
 		{
 			if (GameManager.StateEncounter) // Encounter
 			{
-				if (GameManager.StateInventoryMenu)
+				if (GameManager.EncounterManager._encounterType == Game.World.EncounterManager.EncounterType.Container)
 				{
 					if (ContainerMenuManagerRenderer == null)
 						ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(GameManager.EncounterManager._containerMenuManager);

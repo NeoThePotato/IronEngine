@@ -10,9 +10,9 @@ namespace Game.World
 		private Container _playerInventory;
 		private Unit _unit;
         private Entity _encounteredEntity;
-        private EncounterType _encounterType;
         private CombatManager? _combatManager;
 		private DataLog _dataLog;
+		public EncounterType _encounterType;
 		public ContainerMenuManager? _containerMenuManager;
 
 		public bool Exit
