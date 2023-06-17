@@ -96,7 +96,8 @@
         public void SetOptions(string?[,] options)
         {
             Options = options;
-        }
+            UpdateLongestString();
+		}
 
 		public void SetOptions(string[] options)
 		{
@@ -118,6 +119,12 @@
 					o++;
 				}
 			}
+		}
+
+        private void UpdateLongestString()
+        {
+            foreach (var str in Options)
+				LongestString = str != null ? Math.Max(LongestString, str.Length) : LongestString;
 		}
 
 		private void MoveCursor((int, int) vector)
