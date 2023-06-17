@@ -53,14 +53,7 @@
 		public MenuManager(PlayerInputManager inputManager, string?[,] options)
 		{
 			InputManager = inputManager;
-			if (options.GetLength(0) == DimJ && options.GetLength(1) == DimI)
-			{
-				SetOptions(options);
-			}
-			else
-			{
-				throw new ArgumentException($"Old and new arrays are of different sizes.");
-			}
+			SetOptions(options);
 		}
 
 		public void Start()

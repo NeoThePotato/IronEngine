@@ -12,9 +12,9 @@ namespace IO.UI
 		{ get; private set; }
 		public Container[] Containers
 		{ get; private set; }
-		public int SelectedItemJ
+		public int SelectedItemIndex
 		{ get; private set; }
-		public int SelectedItemI
+		public int SelectedContainerIndex
 		{ get; private set; }
 		public Item? SelectedItem
 		{ get; private set; }
@@ -32,7 +32,8 @@ namespace IO.UI
 		public void Update()
 		{
 			bool itemSelected = MenuManager.Update() != null;
-			Debug.Assert(itemSelected && !MenuManager.Exit);
+			
+			Debug.Assert(!(itemSelected && MenuManager.Exit));
 
 			if (MenuManager.Exit && !ItemSelected && !itemSelected)
 			{
@@ -58,8 +59,8 @@ namespace IO.UI
 
 		private void SelectedCurrentItem()
 		{
-			SelectedItemJ = MenuManager.CursorJ;
-			SelectedItemI = MenuManager.CursorI;
+			SelectedItemIndex = MenuManager.CursorJ;
+			SelectedContainerIndex = MenuManager.CursorI;
 			SelectedItem = GetItemAtSelection();
 
 			if (SelectedItem != null)
@@ -73,14 +74,14 @@ namespace IO.UI
 
 		private Item? GetItemAtSelection()
 		{
-			return Containers[SelectedItemJ].Items[SelectedItemI];
+			return Containers[SelectedContainerIndex].Items[SelectedItemIndex];
 		}
 
 		private void SwapSelectedWithCursor()
 		{
-			var item1 = Containers[SelectedItemJ].RemoveItem(SelectedItemI);
+			var item1 = Containers[SelectedContainerIndex].RemoveItem(SelectedItemIndex);
 			var item2 = Containers[MenuManager.CursorJ].RemoveItem(MenuManager.CursorI);
-			Containers[SelectedItemJ].TryAddItem(item2, SelectedItemI);
+			Containers[SelectedContainerIndex].TryAddItem(item2, SelectedItemIndex);
 			Containers[MenuManager.CursorJ].TryAddItem(item1, MenuManager.CursorI);
 		}
 
@@ -107,7 +108,7 @@ namespace IO.UI
 			{
 				for (int i = 0; i < strings.GetLength(1); i++)
 				{
-					var item = Containers[j].Items[i];
+					var item = Containers[i].Items[j];
 					strings[j, i] = item != null? item.ToString() : "Empty";
 				}
 			}

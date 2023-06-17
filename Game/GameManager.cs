@@ -21,6 +21,8 @@ namespace Game
 		{ get; private set; }
 		public EncounterManager? EncounterManager
 		{ get; private set; }
+		public ContainerMenuManager? ContainerMenuManager
+		{ get; private set; }
 		public List<MapEntity> Entities
 		{ get => LevelManager.Entities; }
 		public MapEntity PlayerEntity
@@ -35,6 +37,8 @@ namespace Game
 		{ get => EncounterManager != null; }
 		public bool StateMenu
 		{ get; private set; }
+		public bool StateInventoryMenu
+		{ get => ContainerMenuManager != null; }
 		public bool StartMenuCondition
 		{ get => InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Start) && !StateMenu; }
 		public bool Exit
@@ -119,30 +123,47 @@ namespace Game
 
 		private void UpdateInGameMenu()
 		{
-			var input = InGameMenu.Update();
-
-			if (InGameMenu.Exit)
+			if (StateInventoryMenu)
 			{
-				StateMenu = false;
-				return;
+				UpdateContainerManager();
+
+				if (ContainerMenuManager.Exit)
+					ContainerMenuManager = null;
 			}
-
-			switch (input)
+			else
 			{
-				case "Return":
+				var input = InGameMenu.Update();
+
+				if (InGameMenu.Exit)
+				{
 					StateMenu = false;
-					break;
-				case "Stats":
-					throw new NotImplementedException();
-					break;
-				case "Inventory":
-					throw new NotImplementedException();
-					break;
-				case "Quit":
-					Exit = true;
-					break;
+
+					return;
+				}
+				else
+				{
+					switch (input)
+					{
+						case "Return":
+							StateMenu = false;
+							break;
+						case "Stats":
+							throw new NotImplementedException();
+							break;
+						case "Inventory":
+							ContainerMenuManager = new ContainerMenuManager(InputManager, PlayerInventory);
+							break;
+						case "Quit":
+							Exit = true;
+							break;
+					}
+				}
 			}
-				
+		}
+
+		private void UpdateContainerManager()
+		{
+			ContainerMenuManager.Update();
 		}
 
 		private void StartInGameMenu()
