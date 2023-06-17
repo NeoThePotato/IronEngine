@@ -1,23 +1,28 @@
-﻿using Game.Combat;
+﻿using IO;
 using IO.UI;
+using Game.Combat;
 
 namespace Game.World
 {
     class EncounterManager
     {
-        private Unit _unit;
+		private PlayerInputManager _inputManager;
+		private Container _playerInventory;
+		private Unit _unit;
         private Entity _encounteredEntity;
         private EncounterType _encounterType;
         private CombatManager? _combatManager;
 		private DataLog _dataLog;
+		public ContainerMenuManager? _containerMenuManager;
 
-
-		public bool Done
+		public bool Exit
         { get; private set; }
 
-        public EncounterManager(Unit unit, Entity encounteredEntity, ref DataLog dataLog)
+        public EncounterManager(PlayerInputManager inputManager, Container playerInventory, Unit unit, Entity encounteredEntity, ref DataLog dataLog)
         {
-            _unit = unit;
+			_inputManager = inputManager;
+			_playerInventory = playerInventory;
+			_unit = unit;
             _encounteredEntity = encounteredEntity;
 			_encounterType = encounteredEntity.EncounterType;
 			_dataLog = dataLog;
@@ -39,7 +44,7 @@ namespace Game.World
 					break;
 				case EncounterType.Container:
 					_dataLog.WriteLine($"{_unit} has found {_encounteredEntity}");
-					throw new NotImplementedException();
+					_containerMenuManager = new ContainerMenuManager(_inputManager, _playerInventory, (Container)_encounteredEntity);
 					break;
 				case EncounterType.Trap:
 					throw new NotImplementedException();
@@ -56,10 +61,11 @@ namespace Game.World
 			{
 				case EncounterType.Combat:
 					_combatManager.Combat(); // TODO Make CombatManager an "Update" function and call it here
-					Done = true;
+					Exit = true;
 					break;
 				case EncounterType.Container:
-					throw new NotImplementedException(); // TODO Maybe add a class InventoryMenu here to be called here
+					_containerMenuManager.Update();
+					Exit = _containerMenuManager.Exit;
 					break;
 				case EncounterType.Trap:
 					throw new NotImplementedException();

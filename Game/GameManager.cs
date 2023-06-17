@@ -60,7 +60,7 @@ namespace Game
 			DataLog.WriteLine($"{PlayerEntity} has arrived at {LevelManager.Metadata.name}");
 
 			// TODO This is a test, remove this in the final release
-			LevelManager.AddEntityAtRandomValidTile(Units.slime);
+			//LevelManager.AddEntityAtRandomValidTile(Units.slime);
 			var treasureChest = new Container("Chest", 5);
 			treasureChest.TryAddItem(Armors.rustedChestplate);
 			treasureChest.TryAddItem(Weapons.rustedBlade);
@@ -112,13 +112,13 @@ namespace Game
 			Debug.Assert(EncounterManager != null);
 			EncounterManager.Update();
 
-			if (EncounterManager.Done)
+			if (EncounterManager.Exit)
 				EncounterManager = null;
 		}
 
 		private void StartEncounter(MapEntity other)
 		{
-			EncounterManager = new EncounterManager((Unit)PlayerEntity.Entity, other.Entity, ref _dataLog);
+			EncounterManager = new EncounterManager(InputManager, PlayerInventory, (Unit)PlayerEntity.Entity, other.Entity, ref _dataLog);
 		}
 
 		private void UpdateInGameMenu()

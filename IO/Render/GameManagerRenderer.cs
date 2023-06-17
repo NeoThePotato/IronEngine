@@ -32,23 +32,33 @@ namespace IO.Render
 			_borderLinesI = new int[] {0, LevelManagerRenderer.SizeI + 1};
 		}
 
-		public override void Render(FrameBuffer buffer)
+		public override void Render(FrameBuffer buffer) // TODO This is getting bloated, needs a cleaning
 		{
-			if (GameManager.StateMenu)
+			if (GameManager.StateEncounter) // Encounter
 			{
 				if (GameManager.StateInventoryMenu)
+				{
+					if (ContainerMenuManagerRenderer == null)
+						ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(GameManager.EncounterManager._containerMenuManager);
+
+					ContainerMenuManagerRenderer.Render(buffer);
+				}
+			}
+			else if (GameManager.StateMenu) // UI
+			{
+				if (GameManager.StateInventoryMenu) // Inventory
 				{
 					if (ContainerMenuManagerRenderer == null)
 						ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(GameManager.ContainerMenuManager);
 
 					ContainerMenuManagerRenderer.Render(buffer);
 				}
-				else
+				else //Main in-game menu
 				{
 					InGameMenuRenderer.Render(buffer);
 				}
 			}
-			else
+			else // World
 			{
 				RenderBorders(buffer); // TODO Probably cache this
 				var levelBuffer = new FrameBuffer(buffer, 1, 1);
