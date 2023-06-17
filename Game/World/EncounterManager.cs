@@ -18,7 +18,7 @@ namespace Game.World
 		public bool Exit
         { get; private set; }
 
-        public EncounterManager(PlayerInputManager inputManager, Container playerInventory, Unit unit, Entity encounteredEntity, ref DataLog dataLog)
+        public EncounterManager(PlayerInputManager inputManager, Container playerInventory, Unit unit, Entity encounteredEntity, DataLog dataLog)
         {
 			_inputManager = inputManager;
 			_playerInventory = playerInventory;

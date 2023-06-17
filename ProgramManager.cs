@@ -28,7 +28,7 @@ class ProgramManager
 	{ get => FRAMETIME > TotalUpdateTime ? FRAMETIME - TotalUpdateTime : new TimeSpan(0); }
 	#endregion
 	private bool Exit
-	{ get => _gameManager.Exit; }
+	{ get => _gameManager.PendingExit; }
 
 	public ProgramManager()
 	{

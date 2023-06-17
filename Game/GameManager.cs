@@ -9,19 +9,17 @@ namespace Game
 {
 	class GameManager
 	{
-		public const int DATALOG_LENGTH = 5;
 		public const int PLAYER_INVENTORY_SIZE = 10;
-		private DataLog _dataLog;
 
-		public MenuManager InGameMenu
+		public ulong CurrentTick
 		{ get; private set; }
 		public PlayerInputManager InputManager
+		{ get; private set; }
+		public GameUIManager UIManager
 		{ get; private set; }
 		public LevelManager LevelManager
 		{ get; private set; }
 		public EncounterManager? EncounterManager
-		{ get; private set; }
-		public ContainerMenuManager? ContainerMenuManager
 		{ get; private set; }
 		public List<MapEntity> Entities
 		{ get => LevelManager.Entities; }
@@ -30,33 +28,28 @@ namespace Game
 		public Container PlayerInventory
 		{ get; private set; }
 		public DataLog DataLog
-		{ get => _dataLog; private set => _dataLog = value; }
-		public ulong CurrentTick
+		{ get => UIManager.DataLog; private set => UIManager.DataLog = value; }
+		public GameState State
+		{ get => GetGameState(); }
+		public bool PendingExit
 		{ get; private set; }
-		public bool StateEncounter
+		private bool InMenu
+		{ get => UIManager.StateMenu; }
+		private bool InEncounter
 		{ get => EncounterManager != null; }
-		public bool StateMenu
-		{ get; private set; }
-		public bool StateInventoryMenu
-		{ get => ContainerMenuManager != null; }
-		public bool StartMenuCondition
-		{ get => InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Start) && !StateMenu; }
-		public bool Exit
-		{ get; private set; }
 
 		public GameManager()
 		{
-			_dataLog = new DataLog(DATALOG_LENGTH);
+			InputManager = new PlayerInputManager();
+			PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
+			UIManager = new GameUIManager(this);
 		}
 
 		public void Start()
 		{
-			InputManager = new PlayerInputManager();
-			InGameMenu = new MenuManager(InputManager, new string[] { "Return", "Stats", "Inventory", "Quit" }, 4, 1);
 			var playerUnit = new Unit(Units.hero);
 			LevelManager = LevelFactory.MakeLevel("TestMap");
 			PlayerEntity = LevelManager.AddEntityAtEntryTile(playerUnit);
-			PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
 			DataLog.WriteLine($"{PlayerEntity} has arrived at {LevelManager.Metadata.name}");
 
 			// TODO This is a test, remove this in the final release
@@ -72,25 +65,38 @@ namespace Game
 			CurrentTick = currentTick;
 			InputManager.PollKeyBoard();
 
-			if (StateEncounter) // Encounter
+			switch (State)
 			{
-				UpdateEncounter();
-			}
-			else
-			{
-				if (StartMenuCondition) // Enter menu
-					StartInGameMenu();
-				else if (StateMenu) // Update menu
-					UpdateInGameMenu();
-				else // World
+				case GameState.Exit:
+					return;
+				case GameState.Encounter:
+					UpdateEncounter();
+					break;
+				case GameState.Menu:
+					UpdateUIManager();
+					break;
+				case GameState.World:
 					UpdateWorld();
+					break;
 			}
+		}
+
+		public void Exit()
+		{
+			PendingExit = true;
 		}
 
 		private void UpdateWorld()
 		{
-			UpdatePlayerMovement();
-			// UpdateOtherEntitiesMovement();
+			Debug.Assert(State == GameState.World);
+
+			if (UIManager.StartMenuCondition) // Enter in-game menu
+				StartUIManager();
+			else // Update world's entities
+			{
+				UpdatePlayerMovement();
+				// UpdateOtherEntitiesMovement();
+			}
 		}
 
 		private void UpdatePlayerMovement()
@@ -109,7 +115,7 @@ namespace Game
 
 		private void UpdateEncounter()
 		{
-			Debug.Assert(EncounterManager != null);
+			Debug.Assert(State == GameState.Encounter);
 			EncounterManager.Update();
 
 			if (EncounterManager.Exit)
@@ -118,58 +124,40 @@ namespace Game
 
 		private void StartEncounter(MapEntity other)
 		{
-			EncounterManager = new EncounterManager(InputManager, PlayerInventory, (Unit)PlayerEntity.Entity, other.Entity, ref _dataLog);
+			EncounterManager = new EncounterManager(InputManager, PlayerInventory, (Unit)PlayerEntity.Entity, other.Entity, DataLog);
+			Debug.Assert(State == GameState.Encounter);
 		}
 
-		private void UpdateInGameMenu()
+		private void UpdateUIManager()
 		{
-			if (StateInventoryMenu)
-			{
-				UpdateContainerManager();
+			Debug.Assert(State == GameState.Menu);
+			UIManager.Update();
+		}
 
-				if (ContainerMenuManager.Exit)
-					ContainerMenuManager = null;
-			}
+		private void StartUIManager()
+		{
+			UIManager.StartInGameMenu();
+			Debug.Assert(State == GameState.Menu);
+		}
+
+		private GameState GetGameState()
+		{
+			if (PendingExit)
+				return GameState.Exit;
+			else if (InEncounter)
+				return GameState.Encounter;
+			else if (InMenu)
+				return GameState.Menu;
 			else
-			{
-				var input = InGameMenu.Update();
-
-				if (InGameMenu.Exit)
-				{
-					StateMenu = false;
-
-					return;
-				}
-				else
-				{
-					switch (input)
-					{
-						case "Return":
-							StateMenu = false;
-							break;
-						case "Stats":
-							throw new NotImplementedException();
-							break;
-						case "Inventory":
-							ContainerMenuManager = new ContainerMenuManager(InputManager, PlayerInventory);
-							break;
-						case "Quit":
-							Exit = true;
-							break;
-					}
-				}
-			}
+				return GameState.World;
 		}
 
-		private void UpdateContainerManager()
+		public enum GameState
 		{
-			ContainerMenuManager.Update();
-		}
-
-		private void StartInGameMenu()
-		{
-			StateMenu = true;
-			InGameMenu.Start();
+			Exit,
+			Encounter,
+			Menu,
+			World
 		}
 	}
 }
