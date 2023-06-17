@@ -53,13 +53,20 @@
 		public MenuManager(PlayerInputManager inputManager, string?[,] options)
 		{
 			InputManager = inputManager;
-			Options = options;
+			if (options.GetLength(0) == DimJ && options.GetLength(1) == DimI)
+			{
+				SetOptions(options);
+			}
+			else
+			{
+				throw new ArgumentException($"Old and new arrays are of different sizes.");
+			}
 		}
 
 		public void Start()
 		{
             ResetCursor();
-			Exit = false;
+            Continue();
 		}
 
         public string? Update()
@@ -88,6 +95,38 @@
 			CursorI = 0;
 		}
 
+        public void Continue()
+        {
+            Exit = false;
+		}
+
+        public void SetOptions(string?[,] options)
+        {
+            Options = options;
+        }
+
+		public void SetOptions(string[] options)
+		{
+			int o = 0;
+
+			for (int j = 0; j < DimJ; j++)
+			{
+				for (int i = 0; i < DimI; i++)
+				{
+					if (o < options.Length)
+					{
+						Options[j, i] = options[o];
+						LongestString = Math.Max(LongestString, options[o].Length);
+					}
+					else
+					{
+						Options[j, i] = null;
+					}
+					o++;
+				}
+			}
+		}
+
 		private void MoveCursor((int, int) vector)
         {
             do
@@ -96,28 +135,6 @@
                 CursorI += vector.Item2;
             }
             while (GetOptionAtCursor() == null);
-        }
-
-        private void SetOptions(string[] options)
-        {
-            int o = 0;
-
-            for (int j = 0; j < DimJ; j++)
-            {
-                for (int i = 0; i < DimI; i++)
-                {
-                    if (o < options.Length)
-                    {
-                        Options[j, i] = options[o];
-                        LongestString = Math.Max(LongestString, options[o].Length);
-                    }
-                    else
-                    {
-                        Options[j, i] = null;
-                    }
-                    o++;
-                }
-            }
         }
     }
 }
