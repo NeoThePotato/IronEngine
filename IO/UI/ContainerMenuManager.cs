@@ -104,12 +104,12 @@ namespace IO.UI
 		{
 			var strings = new string?[GetBiggestContainerSize(), Containers.Length];
 
-			for (int j = 0; j < strings.GetLength(0); j++)
+			for (int containerIndex = 0; containerIndex < Containers.Length; containerIndex++)
 			{
-				for (int i = 0; i < strings.GetLength(1); i++)
+				for (int itemIndex = 0; itemIndex < Containers[containerIndex].Capacity; itemIndex++)
 				{
-					var item = Containers[i].Items[j];
-					strings[j, i] = item != null? item.ToString() : "Empty";
+					var item = Containers[containerIndex].Items[itemIndex];
+					strings[itemIndex, containerIndex] = item != null? item.ToString() : "Empty";
 				}
 			}
 
