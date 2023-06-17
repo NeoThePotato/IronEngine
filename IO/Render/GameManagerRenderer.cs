@@ -1,4 +1,5 @@
 ﻿using Game;
+using IO.UI;
 
 namespace IO.Render
 {
@@ -14,6 +15,8 @@ namespace IO.Render
 		private LevelManagerRenderer LevelManagerRenderer
 		{ get; set; }
 		private MenuManagerRenderer InGameMenuRenderer
+		{ get; set; }
+		private ContainerMenuManagerRenderer? ContainerMenuManagerRenderer
 		{ get; set; }
 		public override int SizeJ
 		{ get => _borderLinesJ.Length + LevelManagerRenderer.SizeJ + GameManager.DATALOG_LENGTH; }
@@ -33,7 +36,17 @@ namespace IO.Render
 		{
 			if (GameManager.StateMenu)
 			{
-				InGameMenuRenderer.Render(buffer);
+				if (GameManager.StateInventoryMenu)
+				{
+					if (ContainerMenuManagerRenderer == null)
+						ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(GameManager.ContainerMenuManager);
+
+					ContainerMenuManagerRenderer.Render(buffer);
+				}
+				else
+				{
+					InGameMenuRenderer.Render(buffer);
+				}
 			}
 			else
 			{
