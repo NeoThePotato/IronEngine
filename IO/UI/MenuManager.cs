@@ -33,6 +33,8 @@
 		{ get => 0 <= CursorI && CursorI < DimI; }
 		public bool CursorValidPosition
         { get => CursorIValidPosition && CursorJValidPosition; }
+        public bool Exit
+        { get; private set; }
 
         public MenuManager(PlayerInputManager inputManager, string[] options, int dimJ, int dimI)
         {
@@ -48,8 +50,19 @@
             }
         }
 
+        public void Start()
+		{
+            ResetCursor();
+			Exit = false;
+		}
+
         public string? Update()
         {
+			if (InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Start) || InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Back))
+			{
+				Exit = true;
+                return null;
+			}
             MoveCursor(InputManager.GetMenuVector());
 
             if (InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Confirm))
@@ -61,9 +74,15 @@
         public string? GetOptionAtCursor()
         {
             return Options[CursorJ, CursorI];
-        }
+		}
 
-        private void MoveCursor((int, int) vector)
+		public void ResetCursor()
+		{
+			CursorJ = 0;
+			CursorI = 0;
+		}
+
+		private void MoveCursor((int, int) vector)
         {
             do
             {
