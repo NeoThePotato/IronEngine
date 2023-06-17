@@ -8,16 +8,21 @@ namespace IO
 	{
 		private static readonly Dictionary<Key, PlayerInputs> INPUT_BINDING = new Dictionary<Key, PlayerInputs>()
 		{
-			{Key.Right,     PlayerInputs.Right},
+			{Key.Right,		PlayerInputs.Right},
 			{Key.PageUp,	PlayerInputs.UpRight},
-			{Key.Up,        PlayerInputs.Up},
+			{Key.Up,		PlayerInputs.Up},
 			{Key.Home,		PlayerInputs.UpLeft},
-			{Key.Left,      PlayerInputs.Left},
+			{Key.Left,		PlayerInputs.Left},
 			{Key.End,		PlayerInputs.DownLeft},
-			{Key.Down,      PlayerInputs.Down},
+			{Key.Down,		PlayerInputs.Down},
 			{Key.PageDown,	PlayerInputs.DownRight},
 			{Key.Enter,		PlayerInputs.Confirm},
+			{Key.Space,		PlayerInputs.Confirm},
+			{Key.X,			PlayerInputs.Confirm},
 			{Key.Back,		PlayerInputs.Back},
+			{Key.Z,			PlayerInputs.Back},
+			{Key.C,			PlayerInputs.Start},
+			{Key.Escape,	PlayerInputs.Start},
 		};
 		private static readonly Dictionary<PlayerInputs, Directions> DIRECTIONS = new Dictionary<PlayerInputs, Directions>()
 		{
@@ -96,14 +101,15 @@ namespace IO
 
 		private void UpdateCurrentState()
 		{
+			ResetKeyboardState(_currentKeyboardState);
+
 			foreach (var kvp in INPUT_BINDING)
-				_currentKeyboardState[kvp.Value] = Keyboard.IsKeyDown(kvp.Key);
+				_currentKeyboardState[kvp.Value] = _currentKeyboardState[kvp.Value] | Keyboard.IsKeyDown(kvp.Key);
 		}
 
 		private void UpdatePreviousState()
 		{
-			foreach (var kvp in _currentKeyboardState)
-				_previousKeyboardState[kvp.Key] = kvp.Value;
+			Utility.Swap(ref _previousKeyboardState, ref _currentKeyboardState);
 		}
 
 		private Dictionary<PlayerInputs, bool> GetEmptyKeyboardState()
@@ -114,6 +120,12 @@ namespace IO
 				emptyState[kvp.Value] = false;
 
 			return emptyState;
+		}
+
+		private static void ResetKeyboardState(Dictionary<PlayerInputs, bool> keyboardState)
+		{
+			foreach (var kvp in keyboardState)
+				keyboardState[kvp.Key] = false;
 		}
 
 		private static (int, int) AddVectors((int, int) vector1, (int, int) vector2)
@@ -144,6 +156,7 @@ namespace IO
 			DownRight,
 			Confirm,
 			Back,
+			Start
 		}
 	}
 }
