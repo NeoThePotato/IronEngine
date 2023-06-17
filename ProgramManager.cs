@@ -27,6 +27,8 @@ class ProgramManager
 	private TimeSpan TimeUntilNextFrame
 	{ get => FRAMETIME > TotalUpdateTime ? FRAMETIME - TotalUpdateTime : new TimeSpan(0); }
 	#endregion
+	private bool Exit
+	{ get => _gameManager.Exit; }
 
 	public ProgramManager()
 	{
@@ -38,7 +40,7 @@ class ProgramManager
 
 	public void Run()
 	{
-		while (true)
+		while (!Exit)
 		{
 			UpdateLogic();
 			UpdateRender();

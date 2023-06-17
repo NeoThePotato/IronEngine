@@ -29,6 +29,8 @@ namespace Game
 		{ get => _dataLog; private set => _dataLog = value; }
 		public ulong CurrentTick
 		{ get; private set; }
+		public bool Exit
+		{ get; private set; }
 
 		public GameManager()
 		{
