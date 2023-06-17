@@ -23,8 +23,8 @@ namespace IO.UI
 		{ get => ContainerMenuManager != null; }
 		public bool StartMenuCondition
 		{ get => InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Start) && !StateMenu; }
-		private GameManager GameManager
-		{ get; set; }
+		public GameManager GameManager
+		{ get; private set; }
 
 		public GameUIManager(GameManager gameManager)
 		{
@@ -36,13 +36,9 @@ namespace IO.UI
 		public void Update()
 		{
 			if (StateInventoryMenu)
-			{
 				UpdateContainerManager();
-			}
 			else
-			{
 				UpdateInGameMenu();
-			}
 		}
 
 		public void StartInGameMenu()
