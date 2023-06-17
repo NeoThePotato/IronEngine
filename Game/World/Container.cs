@@ -45,13 +45,19 @@
 
 		public bool TryAddItem(Item item)
 		{
-			if (item == null || Full)
+			return TryAddItem(item, FindEmptySlot());
+		}
+
+		public bool TryAddItem(Item item, int index)
+		{
+			if (item == null || Full|| IndexOutOfBounds(index))
 			{
 				return false;
 			}
 			else
 			{
-				AddItem(item);
+				AddItem(item, index);
+
 				return true;
 			}
 		}
@@ -63,7 +69,9 @@
 			for (i = 0; i < items.Length;  i++)
 			{
 				if (!TryAddItem(items[i]))
+				{
 					break;
+				}
 			}
 
 			return i;
@@ -71,14 +79,42 @@
 
 		public Item? RemoveItem(int index)
 		{
-			--NumberOfItems;
-			return Items[index];
+			if (IndexOutOfBounds(index))
+			{
+				return null;
+			}
+			else
+			{
+				var item = Items[index];
+				Items[index] = null;
+				--NumberOfItems;
+
+				return item;
+			}
 		}
 
-		private void AddItem(Item item)
+		private void AddItem(Item item, int index)
 		{
-			Items.Append(item);
+			Items[index] = item;
 			++NumberOfItems;
+		}
+
+		private int FindEmptySlot()
+		{
+			for (int i = 0; i < Items.Length; i++)
+			{
+				if (Items[i] == null)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		private bool IndexOutOfBounds(int index)
+		{
+			return 0 > index || Items.Length <= index;
 		}
 	}
 }
