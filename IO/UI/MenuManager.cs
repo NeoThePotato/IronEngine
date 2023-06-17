@@ -50,7 +50,13 @@
             }
         }
 
-        public void Start()
+		public MenuManager(PlayerInputManager inputManager, string?[,] options)
+		{
+			InputManager = inputManager;
+			Options = options;
+		}
+
+		public void Start()
 		{
             ResetCursor();
 			Exit = false;
