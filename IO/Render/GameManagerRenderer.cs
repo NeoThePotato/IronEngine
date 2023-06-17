@@ -1,6 +1,4 @@
 ﻿using Game;
-using System;
-using System.Diagnostics;
 
 namespace IO.Render
 {
@@ -15,6 +13,8 @@ namespace IO.Render
 		{ get; set; }
 		private LevelManagerRenderer LevelManagerRenderer
 		{ get; set; }
+		private MenuManagerRenderer InGameMenuRenderer
+		{ get; set; }
 		public override int SizeJ
 		{ get => _borderLinesJ.Length + LevelManagerRenderer.SizeJ + GameManager.DATALOG_LENGTH; }
 		public override int SizeI
@@ -23,6 +23,7 @@ namespace IO.Render
 		public GameManagerRenderer(GameManager gameManager)
 		{
 			GameManager = gameManager;
+			InGameMenuRenderer = new MenuManagerRenderer (GameManager.InGameMenu);
 			LevelManagerRenderer = new LevelManagerRenderer(GameManager.LevelManager);
 			_borderLinesJ = new int[] {0, LevelManagerRenderer.SizeJ + 1, LevelManagerRenderer.SizeJ + GameManager.DATALOG_LENGTH + 2 };
 			_borderLinesI = new int[] {0, LevelManagerRenderer.SizeI + 1};
@@ -30,11 +31,18 @@ namespace IO.Render
 
 		public override void Render(FrameBuffer buffer)
 		{
-			RenderBorders(buffer); // TODO Probably cache this
-			var levelBuffer = new FrameBuffer(buffer, 1, 1);
-			RenderLevelAndEntities(levelBuffer);
-			var dataLogBuffer = new FrameBuffer(levelBuffer, _borderLinesJ[1], 0);
-			RenderDataLog(dataLogBuffer);
+			if (GameManager.StateMenu)
+			{
+				InGameMenuRenderer.Render(buffer);
+			}
+			else
+			{
+				RenderBorders(buffer); // TODO Probably cache this
+				var levelBuffer = new FrameBuffer(buffer, 1, 1);
+				RenderLevelAndEntities(levelBuffer);
+				var dataLogBuffer = new FrameBuffer(levelBuffer, _borderLinesJ[1], 0);
+				RenderDataLog(dataLogBuffer);
+			}
 		}
 
 		private void RenderLevelAndEntities(FrameBuffer buffer)

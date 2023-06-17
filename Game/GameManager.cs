@@ -13,6 +13,8 @@ namespace Game
 		public const int PLAYER_INVENTORY_SIZE = 10;
 		private DataLog _dataLog;
 
+		public MenuManager InGameMenu
+		{ get; private set; }
 		public PlayerInputManager InputManager
 		{ get; private set; }
 		public LevelManager LevelManager
@@ -29,6 +31,12 @@ namespace Game
 		{ get => _dataLog; private set => _dataLog = value; }
 		public ulong CurrentTick
 		{ get; private set; }
+		public bool StateEncounter
+		{ get => EncounterManager != null; }
+		public bool StateMenu
+		{ get; private set; }
+		public bool StartMenuCondition
+		{ get => InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Start) && !StateMenu; }
 		public bool Exit
 		{ get; private set; }
 
@@ -37,16 +45,22 @@ namespace Game
 			_dataLog = new DataLog(DATALOG_LENGTH);
 		}
 
-		public void Start() // TODO Clean the class GameManager. This entire class is messy.
+		public void Start()
 		{
-			Debug.WriteLine("GameManager started.");
 			InputManager = new PlayerInputManager();
+			InGameMenu = new MenuManager(InputManager, new string[] { "Return", "Stats", "Inventory", "Quit" }, 4, 1);
 			var playerUnit = new Unit(Units.hero);
-            LevelManager = LevelFactory.MakeLevel("TestMap");
+			LevelManager = LevelFactory.MakeLevel("TestMap");
 			PlayerEntity = LevelManager.AddEntityAtEntryTile(playerUnit);
 			PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
 			DataLog.WriteLine($"{PlayerEntity} has arrived at {LevelManager.Metadata.name}");
+
+			// TODO This is a test, remove this in the final release
 			LevelManager.AddEntityAtRandomValidTile(Units.slime);
+			var treasureChest = new Container("Chest", 5);
+			treasureChest.TryAddItem(Armors.rustedChestplate);
+			treasureChest.TryAddItem(Weapons.rustedBlade);
+			LevelManager.AddEntityAtRandomValidTile(treasureChest);
 		}
 
 		public void Update(ulong currentTick)
@@ -54,13 +68,18 @@ namespace Game
 			CurrentTick = currentTick;
 			InputManager.PollKeyBoard();
 
-			if (EncounterManager != null) // Encounter
+			if (StateEncounter) // Encounter
 			{
 				UpdateEncounter();
 			}
-			else // World
+			else
 			{
-				UpdateWorld();
+				if (StartMenuCondition) // Enter menu
+					StartInGameMenu();
+				else if (StateMenu) // Update menu
+					UpdateInGameMenu();
+				else // World
+					UpdateWorld();
 			}
 		}
 
@@ -96,6 +115,40 @@ namespace Game
 		private void StartEncounter(MapEntity other)
 		{
 			EncounterManager = new EncounterManager((Unit)PlayerEntity.Entity, other.Entity, ref _dataLog);
+		}
+
+		private void UpdateInGameMenu()
+		{
+			var input = InGameMenu.Update();
+
+			if (InGameMenu.Exit)
+			{
+				StateMenu = false;
+				return;
+			}
+
+			switch (input)
+			{
+				case "Return":
+					StateMenu = false;
+					break;
+				case "Stats":
+					throw new NotImplementedException();
+					break;
+				case "Inventory":
+					throw new NotImplementedException();
+					break;
+				case "Quit":
+					Exit = true;
+					break;
+			}
+				
+		}
+
+		private void StartInGameMenu()
+		{
+			StateMenu = true;
+			InGameMenu.Start();
 		}
 	}
 }
