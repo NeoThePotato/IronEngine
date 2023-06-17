@@ -80,14 +80,14 @@ namespace IO.UI
 		private void SwapSelectedWithCursor()
 		{
 			var item1 = Containers[SelectedContainerIndex].RemoveItem(SelectedItemIndex);
-			var item2 = Containers[MenuManager.CursorJ].RemoveItem(MenuManager.CursorI);
+			var item2 = Containers[MenuManager.CursorI].RemoveItem(MenuManager.CursorJ);
 			Containers[SelectedContainerIndex].TryAddItem(item2, SelectedItemIndex);
-			Containers[MenuManager.CursorJ].TryAddItem(item1, MenuManager.CursorI);
+			Containers[MenuManager.CursorI].TryAddItem(item1, MenuManager.CursorJ);
 		}
 
 		private void RefreshMenuStrings()
 		{
-			throw new NotImplementedException(); // TODO Implement
+			MenuManager.SetOptions(GetStrings());
 		}
 
 		private int GetBiggestContainerSize()
