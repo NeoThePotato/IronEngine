@@ -1,5 +1,6 @@
 ﻿using Game;
 using IO.UI;
+using System;
 
 namespace IO.Render
 {
@@ -38,16 +39,15 @@ namespace IO.Render
 		private void RenderInGameMenu(FrameBuffer buffer)
 		{
 			if (UIManager.StateInventoryMenu)
-			{
-				if (ContainerMenuManagerRenderer == null)
-					ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(UIManager.ContainerMenuManager);
-
-				ContainerMenuManagerRenderer.Render(buffer);
-			}
+				RenderInventoryMenu(buffer);
 			else
-			{
 				InGameMenuRenderer.Render(buffer);
-			}
+		}
+
+		private void RenderInventoryMenu(FrameBuffer buffer)
+		{
+			ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(UIManager.ContainerMenuManager);
+			ContainerMenuManagerRenderer.Render(buffer);
 		}
 
 		private void RenderDataLog(FrameBuffer buffer)

@@ -54,9 +54,7 @@ namespace IO.Render
 		{
 			if (GameManager.EncounterManager._encounterType == Game.World.EncounterManager.EncounterType.Container)
 			{
-				if (ContainerMenuManagerRenderer == null)
-					ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(GameManager.EncounterManager._containerMenuManager);
-
+				ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(GameManager.EncounterManager._containerMenuManager);
 				ContainerMenuManagerRenderer.Render(buffer);
 			}
 		}

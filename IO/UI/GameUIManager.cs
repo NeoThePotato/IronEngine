@@ -69,7 +69,7 @@ namespace IO.UI
 						throw new NotImplementedException();
 						break;
 					case "Inventory":
-						ContainerMenuManager = new ContainerMenuManager(InputManager, PlayerInventory);
+						StartContainerManager();
 						break;
 					case "Quit":
 						GameManager.Exit();
@@ -84,6 +84,11 @@ namespace IO.UI
 
 			if (ContainerMenuManager.Exit)
 				ContainerMenuManager = null;
+		}
+
+		private void StartContainerManager()
+		{
+			ContainerMenuManager = new ContainerMenuManager(InputManager, PlayerInventory);
 		}
 	}
 }
