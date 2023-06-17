@@ -57,6 +57,16 @@ namespace IO.UI
 			}
 		}
 
+		public Item? GetItemAtCursor()
+		{
+			return Containers[MenuManager.CursorJ].Items[MenuManager.CursorI];
+		}
+
+		public Item? GetItemAtSelection()
+		{
+			return Containers[SelectedContainerIndex].Items[SelectedItemIndex];
+		}
+
 		private void SelectedCurrentItem()
 		{
 			SelectedItemIndex = MenuManager.CursorJ;
@@ -65,16 +75,6 @@ namespace IO.UI
 
 			if (SelectedItem != null)
 				Debug.Assert(SelectedItem.ToString() == MenuManager.GetOptionAtCursor());
-		}
-
-		private Item? GetItemAtCursor()
-		{
-			return Containers[MenuManager.CursorJ].Items[MenuManager.CursorI];
-		}
-
-		private Item? GetItemAtSelection()
-		{
-			return Containers[SelectedContainerIndex].Items[SelectedItemIndex];
 		}
 
 		private void SwapSelectedWithCursor()

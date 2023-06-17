@@ -36,7 +36,7 @@ namespace IO.Render
 		
 		private void HighlightSelection(FrameBuffer frameBuffer)
 		{
-			RenderText(new FrameBuffer(frameBuffer, ContainerMenuManager.SelectedItemIndex, LengthPerString * ContainerMenuManager.SelectedContainerIndex), MenuManager.GetOptionAtCursor(), LengthPerString, COLOR_WHITE, HIGHLIGHTED_BG_COLOR);
+			RenderText(new FrameBuffer(frameBuffer, ContainerMenuManager.SelectedItemIndex, LengthPerString * ContainerMenuManager.SelectedContainerIndex), ContainerMenuManager.GetItemAtSelection().ToString(), LengthPerString, COLOR_WHITE, HIGHLIGHTED_BG_COLOR);
 		}
 	}
 }
