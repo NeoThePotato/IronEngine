@@ -4,6 +4,8 @@
     {
         public abstract string Name
         { get; }
+        public abstract bool Passable
+        { get; }
         public abstract EncounterManager.EncounterType EncounterType
         { get; }
 

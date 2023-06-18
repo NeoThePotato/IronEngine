@@ -7,6 +7,8 @@ namespace Game.World
 	{
 		public override string Name
 		{ get; }
+		public override bool Passable
+		{ get => true; }
 		public int Damage
 		{ get; private set; }
 		public bool Armed

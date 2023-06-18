@@ -104,7 +104,9 @@ namespace Game.Combat
             get => _equippedBodyArmor == null ? Armors.nothing : _equippedBodyArmor;
             set => _equippedBodyArmor = value;
         }
-        public override EncounterManager.EncounterType EncounterType
+		public override bool Passable
+        { get => Dead; }
+		public override EncounterManager.EncounterType EncounterType
         { get => EncounterManager.EncounterType.Combat; }
 
 		public Unit(string name, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Armor shield, Armor bodyArmor)

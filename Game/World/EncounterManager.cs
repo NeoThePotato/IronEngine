@@ -74,8 +74,17 @@ namespace Game.World
 
 		private void StartCombat()
 		{
-			_dataLog.WriteLine($"{_unit} has encountered a {_encounteredEntity}");
-			_combatManager = new CombatManager(_unit, (Unit)_encounteredEntity);
+			var unit = (Unit)_encounteredEntity;
+
+			if (!unit.Dead)
+			{
+				_dataLog.WriteLine($"{_unit} has encountered a {unit}");
+				_combatManager = new CombatManager(_unit, unit);
+			}
+			else
+			{
+				Exit = true;
+			}
 		}
 
 		private void UpdateCombat()
@@ -86,8 +95,9 @@ namespace Game.World
 
 		private void StartContainer()
 		{
-			_dataLog.WriteLine($"{_unit} has found {_encounteredEntity}");
-			_containerMenuManager = new ContainerMenuManager(_inputManager, _playerInventory, (Container)_encounteredEntity);
+			var container = (Container)_encounteredEntity;
+			_dataLog.WriteLine($"{_unit} has found {container}");
+			_containerMenuManager = new ContainerMenuManager(_inputManager, _playerInventory, container);
 		}
 
 		private void UpdateContainer()
@@ -102,7 +112,7 @@ namespace Game.World
 
 			if (trap.Armed)
 			{
-				_dataLog.WriteLine($"{_unit} has stepped on {_encounteredEntity}");
+				_dataLog.WriteLine($"{_unit} has stepped on {trap}");
 				trap.TriggerTrap(_unit, _dataLog);
 			}
 			Exit = true;

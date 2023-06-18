@@ -127,6 +127,9 @@ namespace Game
 		{
 			EncounterManager = new EncounterManager(InputManager, PlayerInventory, (Unit)PlayerEntity.Entity, other.Entity, DataLog);
 			Debug.Assert(State == GameState.Encounter);
+
+			if (EncounterManager.Exit)
+				EncounterManager = null;
 		}
 
 		private void UpdateUIManager()

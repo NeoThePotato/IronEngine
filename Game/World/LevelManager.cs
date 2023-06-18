@@ -42,8 +42,8 @@
 
 		public MapEntity AddEntityAtRandomValidTile(Entity entity)
 		{
-			int randJ = Random.Shared.Next(0, Map.SizeJ);
-			int randI = Random.Shared.Next(0, Map.SizeI);
+			int randJ;
+			int randI;
 
 			do
 			{
@@ -82,6 +82,10 @@
 					if (occupiedBy == entity)
 					{
 						occupiedBy = null;
+						return true;
+					}
+					else if (occupiedBy.Passable)
+					{
 						return true;
 					}
 					else
@@ -144,6 +148,8 @@
 		{ get; set; }
 		public Direction.Directions Dir
 		{ get; set; }
+		public bool Passable
+		{ get => Entity.Passable; }
 
 		public MapEntity(Entity entity, int posJ, int posI, Direction.Directions direction = Direction.Directions.None)
 		{

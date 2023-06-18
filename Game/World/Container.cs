@@ -12,8 +12,12 @@
 		{ get; private set; }
 		public Item?[] Items
 		{ get; private set; }
+		public bool Empty
+		{ get => NumberOfItems == 0; }
 		public bool Full
 		{ get => NumberOfItems == Capacity; }
+		public override bool Passable
+		{ get => true; }
 		public override EncounterManager.EncounterType EncounterType
 		{ get => EncounterManager.EncounterType.Container; }
 
