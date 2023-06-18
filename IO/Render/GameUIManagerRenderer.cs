@@ -52,7 +52,7 @@ namespace IO.Render
 
 		private void RenderDataLog(FrameBuffer buffer)
 		{
-			var dataLogBuffer = new FrameBuffer(buffer, GameManagerRenderer.LevelManagerRenderer.SizeJ + 1, 1);
+			var dataLogBuffer = new FrameBuffer(buffer, GameManagerRenderer.LevelManagerRenderer.SizeJ + 2, 1);
 			RenderText(dataLogBuffer, UIManager.DataLog, GameManagerRenderer.LevelManagerRenderer.SizeI);
 		}
 	}
