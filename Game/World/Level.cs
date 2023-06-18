@@ -1,6 +1,6 @@
 ﻿namespace Game.World
 {
-	class LevelManager
+	class Level
 	{
 		private Map _map;
 		private List<MapEntity> _entities;
@@ -13,7 +13,7 @@
         public LevelMetadata Metadata
 		{ get => _metadata; private set => _metadata = value; }
 
-        public LevelManager(Map map, LevelMetadata metadata)
+        public Level(Map map, LevelMetadata metadata)
 		{
 			_map = map;
 			_entities = new List<MapEntity>();
@@ -223,19 +223,19 @@
 
 	static class LevelFactory
 	{
-		public static LevelManager MakeLevel(string levelName)
+		public static Level MakeLevel(string levelName)
         {
 			var levelMetadata = LevelMetadata.GetMetadata(levelName);
 
             return MakeLevel(levelMetadata);
         }
 
-        public static LevelManager MakeLevel(LevelMetadata levelMetadata)
+        public static Level MakeLevel(LevelMetadata levelMetadata)
         {
             var charData = IO.File.Map.LoadMapCharData(levelMetadata.filePath);
 
             if (charData != null)
-                return new LevelManager(new Map(charData), levelMetadata);
+                return new Level(new Map(charData), levelMetadata);
             else
                 throw new NullReferenceException();
         }

@@ -17,7 +17,7 @@ namespace Game
 		{ get; private set; }
 		public GameUIManager UIManager
 		{ get; private set; }
-		public LevelManager LevelManager
+		public Level LevelManager
 		{ get; private set; }
 		public EncounterManager? EncounterManager
 		{ get; private set; }

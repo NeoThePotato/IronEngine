@@ -2,9 +2,9 @@
 
 namespace IO.Render
 {
-	class LevelManagerRenderer : Renderer
+	class LevelRenderer : Renderer
 	{
-		private LevelManager LevelManager
+		private Level LevelManager
 		{ get; set; }
 		private MapRenderer MapRenderer
 		{ get; set; }
@@ -13,7 +13,7 @@ namespace IO.Render
 		public override int SizeI
 		{ get => MapRenderer.SizeI; }
 
-		public LevelManagerRenderer(LevelManager levelManager)
+		public LevelRenderer(Level levelManager)
 		{
 			LevelManager = levelManager;
 			MapRenderer = new MapRenderer(LevelManager.Map, LevelManager.Metadata);

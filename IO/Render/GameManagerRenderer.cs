@@ -13,7 +13,7 @@ namespace IO.Render
 
 		public GameManager GameManager
 		{ get; private set; }
-		public LevelManagerRenderer LevelManagerRenderer
+		public LevelRenderer LevelManagerRenderer
 		{ get; private set; }
 		public GameUIManagerRenderer UIManagerRenderer
 		{ get; private set; }
@@ -27,7 +27,7 @@ namespace IO.Render
 		public GameManagerRenderer(GameManager gameManager)
 		{
 			GameManager = gameManager;
-			LevelManagerRenderer = new LevelManagerRenderer(GameManager.LevelManager);
+			LevelManagerRenderer = new LevelRenderer(GameManager.LevelManager);
 			UIManagerRenderer = new GameUIManagerRenderer(GameManager.UIManager, this);
 			_borderLinesJ = new int[] {0, LevelManagerRenderer.SizeJ + 1, LevelManagerRenderer.SizeJ + GameManager.UIManager.DataLog.MAX_SIZE + 2 };
 			_borderLinesI = new int[] {0, LevelManagerRenderer.SizeI + 1};
