@@ -53,7 +53,8 @@ namespace Game
 			DataLog.WriteLine($"{PlayerEntity} has arrived at {LevelManager.Metadata.name}");
 
 			// TODO This is a test, remove this in the final release
-			//LevelManager.AddEntityAtRandomValidTile(Units.slime);
+			LevelManager.AddEntityAtRandomValidTile(Units.slime);
+			LevelManager.AddEntityAtEntryTile(Assets.Traps.firePit);
 			var treasureChest = new Container("Chest", 5);
 			treasureChest.TryAddItem(Armors.rustedChestplate);
 			treasureChest.TryAddItem(Weapons.rustedBlade);

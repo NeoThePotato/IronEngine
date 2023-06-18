@@ -39,18 +39,16 @@ namespace Game.World
 			switch (encounterType)
 			{
 				case EncounterType.Combat:
-					_dataLog.WriteLine($"{_unit} has encountered a {_encounteredEntity}");
-					_combatManager = new CombatManager(_unit, (Unit)_encounteredEntity);
+					StartCombat();
 					break;
 				case EncounterType.Container:
-					_dataLog.WriteLine($"{_unit} has found {_encounteredEntity}");
-					_containerMenuManager = new ContainerMenuManager(_inputManager, _playerInventory, (Container)_encounteredEntity);
+					StartContainer();
 					break;
 				case EncounterType.Trap:
-					throw new NotImplementedException();
+					StartTrap();
 					break;
 				case EncounterType.Door:
-					throw new NotImplementedException();
+					StartDoor();
 					break;
 			}
 		}
@@ -60,23 +58,73 @@ namespace Game.World
             switch(encounterType)
 			{
 				case EncounterType.Combat:
-					_combatManager.Combat(); // TODO Make CombatManager an "Update" function and call it here
-					Exit = true;
+					UpdateCombat();
 					break;
 				case EncounterType.Container:
-					_containerMenuManager.Update();
-					Exit = _containerMenuManager.Exit;
+					UpdateContainer();
 					break;
 				case EncounterType.Trap:
-					throw new NotImplementedException();
+					UpdateTrap();
 					break;
 				case EncounterType.Door:
-					throw new NotImplementedException();
+					UpdateDoor();
 					break;
 			}
 		}
 
-        public enum EncounterType
+		private void StartCombat()
+		{
+			_dataLog.WriteLine($"{_unit} has encountered a {_encounteredEntity}");
+			_combatManager = new CombatManager(_unit, (Unit)_encounteredEntity);
+		}
+
+		private void UpdateCombat()
+		{
+			_combatManager.Combat(); // TODO Make CombatManager an "Update" function and call it here
+			Exit = true;
+		}
+
+		private void StartContainer()
+		{
+			_dataLog.WriteLine($"{_unit} has found {_encounteredEntity}");
+			_containerMenuManager = new ContainerMenuManager(_inputManager, _playerInventory, (Container)_encounteredEntity);
+		}
+
+		private void UpdateContainer()
+		{
+			_containerMenuManager.Update();
+			Exit = _containerMenuManager.Exit;
+		}
+
+		private void StartTrap()
+		{
+			var trap = (Trap)_encounteredEntity;
+
+			if (trap.Armed)
+			{
+				_dataLog.WriteLine($"{_unit} has stepped on {_encounteredEntity}");
+				trap.TriggerTrap(_unit, _dataLog);
+			}
+			Exit = true;
+		}
+
+		private void UpdateTrap()
+		{
+			return;
+		}
+
+		private void StartDoor()
+		{
+			throw new NotImplementedException();
+		}
+
+		private void UpdateDoor()
+		{
+			throw new NotImplementedException();
+		}
+
+
+		public enum EncounterType
         {
             Combat,
             Container,

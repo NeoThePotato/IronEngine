@@ -141,9 +141,30 @@ namespace Game.Combat
             feedback.actor = this;
             feedback.other = other;
             other.TakeDamage(EffectiveAttack, ref feedback);
-        }
+		}
 
-        public void HealSelf(ref CombatFeedback feedback)
+		public void TakeDamage(int damage, ref CombatFeedback feedback)
+		{
+			CheckValidState();
+			if (!AttemptDodge())
+			{
+				if (Blocking)
+					feedback.type = CombatFeedback.FeedbackType.Block;
+				else
+					feedback.type = CombatFeedback.FeedbackType.Hit;
+				int finalDamage = GetUnblockedDamage(damage);
+				feedback.numericAmount = finalDamage;
+				CurrentHP -= finalDamage;
+				Blocking = false;
+			}
+			else
+			{
+				feedback.type = CombatFeedback.FeedbackType.Evade;
+				feedback.numericAmount = 0;
+			}
+		}
+
+		public void HealSelf(ref CombatFeedback feedback)
         {
             CheckValidState();
             int previousHP = CurrentHP;
@@ -219,31 +240,6 @@ namespace Game.Combat
                 $"\nHealing Power: {EffectiveHealPower} ({CurrentHealingPower * 100f:0.00}%)";
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        private void TakeDamage(int damage, ref CombatFeedback feedback)
-        {
-            if (!AttemptDodge())
-            {
-                if (Blocking)
-                    feedback.type = CombatFeedback.FeedbackType.Block;
-                else
-                    feedback.type = CombatFeedback.FeedbackType.Hit;
-                int finalDamage = GetUnblockedDamage(damage);
-                feedback.numericAmount = finalDamage;
-                CurrentHP -= finalDamage;
-                Blocking = false;
-            }
-            else
-            {
-                feedback.type = CombatFeedback.FeedbackType.Evade;
-                feedback.numericAmount = 0;
-            }
-        }
-
         private void HealBy(int heal)
         {
             CurrentHP += heal;
@@ -289,8 +285,8 @@ namespace Game.Combat
 
     struct CombatFeedback
     {
-        public Unit actor;
-        public Unit other;
+        public Entity actor;
+        public Entity other;
         public FeedbackType type;
         public int numericAmount;
 
