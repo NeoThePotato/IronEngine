@@ -40,16 +40,11 @@ namespace IO.UI
 
 		public void Update()
 		{
-            if (InMenu)
-			{
-				while (GetCurrentMenu().Exit) // TODO Verify that this doesn't exit all menus because of a single ESC/Back keystroke
-					ExitCurrentMenu();
+            while (InMenu && GetCurrentMenu().Exit) // TODO Verify that this doesn't exit all menus because of a single ESC/Back keystroke
+				ExitCurrentMenu();
 
-				if (InMenu)
-				{
-					var ret = GetCurrentMenu().Update();
-				}
-			}
+			if (InMenu)
+				GetCurrentMenu().Update();
 		}
 
 		public void StackNewMenu(Menu menu)
