@@ -1,4 +1,5 @@
 ﻿using IO.Render;
+using System.Diagnostics;
 using static System.Windows.Forms.Design.AxImporter;
 
 namespace IO.UI.Menus
@@ -10,7 +11,7 @@ namespace IO.UI.Menus
 
         public string?[,] Strings
         { get; private set; }
-		public Dictionary<string, Action?> Actions
+		public Dictionary<string, Action?>? Actions
 		{ get; private set; }
 		public int DimJ
         { get => Strings.GetLength(0); }
@@ -82,7 +83,27 @@ namespace IO.UI.Menus
             MoveCursor(InputManager.GetMenuVector());
 
             if (InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Confirm))
-                return GetOptionAtCursor();
+			{
+				var option = GetOptionAtCursor();
+
+                if (option != null && Actions != null)
+				{
+					try
+					{
+						Actions[option](); // Call "Action" delegate
+					}
+					catch (KeyNotFoundException)
+					{
+						Debug.WriteLine($"Couldn't find Action delegate for string {option}");
+					}
+					catch (NullReferenceException)
+					{
+						Debug.WriteLine($"Couldn't find Action delegate for string {option}");
+					}
+				}
+
+				return option;
+			}
             else
                 return null;
         }
