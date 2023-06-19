@@ -10,9 +10,9 @@ namespace IO.Render
 		{ get; set; }
 		private GameManagerRenderer GameManagerRenderer
 		{ get; set; }
-		private MenuManagerRenderer InGameMenuRenderer
+		private SelectionMenuRenderer InGameMenuRenderer
 		{ get; set; }
-		public ContainerMenuManagerRenderer? ContainerMenuManagerRenderer
+		public ContainerMenuRenderer? ContainerMenuManagerRenderer
 		{ get; private set; }
 		public override int SizeJ
 		{ get => GameManagerRenderer.SizeJ; }
@@ -32,7 +32,7 @@ namespace IO.Render
 		{
 			RenderDataLog(buffer);
 
-			if (UIManager.StateMenu)
+			if (UIManager.InMenu)
 				RenderInGameMenu(buffer);
 		}
 

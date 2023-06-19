@@ -1,22 +1,20 @@
-﻿namespace IO.UI
+﻿namespace IO.UI.Menus
 {
-    class MenuManager
+    class SelectionMenu : Menu
     {
         private int _cursorJ = 0;
         private int _cursorI = 0;
 
-        public PlayerInputManager InputManager
-        { get; private set; }
         public string?[,] Options
         { get; private set; }
-        public int DimJ
+		public int DimJ
         { get => Options.GetLength(0); }
         public int DimI
         { get => Options.GetLength(1); }
-        public int DimSize
-        { get => DimJ * DimI; }
         public int LongestString
         { get; private set; }
+        public int ColumnLength
+        { get => LongestString + 1; }
         public int CursorJ
         {
             get => _cursorJ;
@@ -33,16 +31,20 @@
 		{ get => 0 <= CursorI && CursorI < DimI; }
 		public bool CursorValidPosition
         { get => CursorIValidPosition && CursorJValidPosition; }
-        public bool Exit
-        { get; private set; }
+		public override int LengthJ
+		{ get => DimJ; }
+		public override int LengthI
+		{ get => DimI * ColumnLength; }
+		public override bool Exit
+        { get; set; }
 
-        public MenuManager(PlayerInputManager inputManager, string[] options, int dimJ, int dimI)
+        public SelectionMenu(PlayerInputManager inputManager, string[] options, int dimJ, int dimI) : base(inputManager)
         {
-            InputManager = inputManager;
             if (dimJ * dimI >= options.Length)
             {
                 Options = new string[dimJ, dimI];
                 SetOptions(options);
+                Start();
             }
             else
             {
@@ -50,19 +52,19 @@
             }
         }
 
-		public MenuManager(PlayerInputManager inputManager, string?[,] options)
+		public SelectionMenu(PlayerInputManager inputManager, string?[,] options) : base(inputManager)
 		{
-			InputManager = inputManager;
 			SetOptions(options);
+            Start();
 		}
 
-		public void Start()
+		public override void Start()
 		{
             ResetCursor();
             Continue();
 		}
 
-        public string? Update()
+        public override string? Update()
         {
 			if (InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Start) || InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Back))
 			{

@@ -1,13 +1,11 @@
 ﻿using System.Diagnostics;
 using Game.Items;
 
-namespace IO.UI
+namespace IO.UI.Menus
 {
-    class ContainerMenuManager
+    class ContainerMenu : Menu
 	{
-		public PlayerInputManager InputManager
-		{ get => MenuManager.InputManager; }
-		public MenuManager MenuManager
+		public SelectionMenu Menu
 		{ get; private set; }
 		public Container[] Containers
 		{ get; private set; }
@@ -19,30 +17,39 @@ namespace IO.UI
 		{ get; private set; }
 		public bool ItemSelected
 		{ get => SelectedItem != null; }
-		public bool Exit
-		{ get; private set; }
+		public override int LengthJ
+		{ get => Menu.LengthJ; }
+		public override int LengthI
+		{ get => Menu.LengthI; }
+		public override bool Exit
+		{ get; set; }
 
-		public ContainerMenuManager(PlayerInputManager inputManager, params Container[] containers)
+		public ContainerMenu(PlayerInputManager inputManager, params Container[] containers) : base(inputManager)
 		{
 			Containers = containers;
-			MenuManager = new MenuManager(inputManager, GetStrings());
+			Menu = new SelectionMenu(inputManager, GetStrings());
 		}
 
-		public void Update()
+		public override void Start()
 		{
-			bool itemSelected = MenuManager.Update() != null;
-			
-			Debug.Assert(!(itemSelected && MenuManager.Exit));
 
-			if (MenuManager.Exit && !ItemSelected && !itemSelected)
+		}
+
+		public override void Update()
+		{
+			bool itemSelected = Menu.Update() != null;
+			
+			Debug.Assert(!(itemSelected && Menu.Exit));
+
+			if (Menu.Exit && !ItemSelected && !itemSelected)
 			{
 				Exit = true;
 				return;
 			}
-			else if (MenuManager.Exit && ItemSelected)
+			else if (Menu.Exit && ItemSelected)
 			{
 				SelectedItem = null;
-				MenuManager.Continue();
+				Menu.Continue();
 			}
 			else if (!ItemSelected && itemSelected)
 			{
@@ -58,7 +65,7 @@ namespace IO.UI
 
 		public Item? GetItemAtCursor()
 		{
-			return Containers[MenuManager.CursorJ].Items[MenuManager.CursorI];
+			return Containers[Menu.CursorJ].Items[Menu.CursorI];
 		}
 
 		public Item? GetItemAtSelection()
@@ -68,25 +75,25 @@ namespace IO.UI
 
 		private void SelectedCurrentItem()
 		{
-			SelectedItemIndex = MenuManager.CursorJ;
-			SelectedContainerIndex = MenuManager.CursorI;
+			SelectedItemIndex = Menu.CursorJ;
+			SelectedContainerIndex = Menu.CursorI;
 			SelectedItem = GetItemAtSelection();
 
 			if (SelectedItem != null)
-				Debug.Assert(SelectedItem.ToString() == MenuManager.GetOptionAtCursor());
+				Debug.Assert(SelectedItem.ToString() == Menu.GetOptionAtCursor());
 		}
 
 		private void SwapSelectedWithCursor()
 		{
 			var item1 = Containers[SelectedContainerIndex].RemoveItem(SelectedItemIndex);
-			var item2 = Containers[MenuManager.CursorI].RemoveItem(MenuManager.CursorJ);
+			var item2 = Containers[Menu.CursorI].RemoveItem(Menu.CursorJ);
 			Containers[SelectedContainerIndex].TryAddItem(item2, SelectedItemIndex);
-			Containers[MenuManager.CursorI].TryAddItem(item1, MenuManager.CursorJ);
+			Containers[Menu.CursorI].TryAddItem(item1, Menu.CursorJ);
 		}
 
 		private void RefreshMenuStrings()
 		{
-			MenuManager.SetOptions(GetStrings());
+			Menu.SetOptions(GetStrings());
 		}
 
 		private int GetBiggestContainerSize()

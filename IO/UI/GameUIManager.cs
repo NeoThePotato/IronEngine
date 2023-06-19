@@ -1,46 +1,76 @@
 ﻿using Game;
 using Game.Items;
+using IO.UI.Menus;
+using System.Diagnostics;
 
 namespace IO.UI
 {
     class GameUIManager
 	{
 		public const int DATALOG_LENGTH = 5;
+		public const int DEFAULT_MENU_STACK_SIZE = 5;
 
+		public Stack<Menu> MenuStack
+		{ get; private set; }
 		public DataLog DataLog
 		{ get; set; }
 		public PlayerInputManager InputManager
 		{ get => GameManager.InputManager; }
-		public MenuManager InGameMenu
+		public SelectionMenu InGameMenu
 		{ get; private set; }
-		public ContainerMenuManager? ContainerMenuManager
+		public ContainerMenu? ContainerMenuManager
 		{ get; private set; }
 		public Container PlayerInventory
 		{ get => GameManager.LevelManager.PlayerInventory; }
-		public bool StateMenu
-		{ get; private set; }
+		public bool InMenu
+		{ get => MenuStack.Count > 0; }
 		public bool StateInventoryMenu
 		{ get => ContainerMenuManager != null; }
 		public bool StartMenuCondition
-		{ get => InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Start) && !StateMenu; }
+		{ get => InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Start) && !InMenu; }
 		public GameManager GameManager
 		{ get; private set; }
 
 		public GameUIManager(GameManager gameManager)
 		{
-			DataLog = new DataLog(DATALOG_LENGTH);
 			GameManager = gameManager;
-			InGameMenu = new MenuManager(InputManager, new string[] { "Return", "Stats", "Inventory", "Quit" }, 4, 1);
+			MenuStack = new Stack<Menu>(DEFAULT_MENU_STACK_SIZE);
+			DataLog = new DataLog(DATALOG_LENGTH);
+			InGameMenu = new SelectionMenu(InputManager, new string[] { "Return", "Stats", "Inventory", "Quit" }, 4, 1);
 		}
 
 		public void Update()
 		{
-			if (StateInventoryMenu)
-				UpdateContainerManager();
-			else
-				UpdateInGameMenu();
+            if (InMenu)
+			{
+				while (GetCurrentMenu().Exit) // TODO Verify that this doesn't exit all menus because of a single ESC/Back keystroke
+					ExitCurrentMenu();
+
+				if (InMenu)
+					GetCurrentMenu().Update();
+			}
 		}
 
+		public void StackNewMenu(Menu menu)
+		{
+			MenuStack.Push(menu);
+		}
+
+		public Menu? GetCurrentMenu()
+		{
+			if (MenuStack.Count > 0)
+				return MenuStack.Peek();
+			else
+				return null;
+		}
+
+		private void ExitCurrentMenu()
+		{
+			Debug.Assert(GetCurrentMenu().Exit);
+			MenuStack.Pop();
+		}
+
+		// TODO Remove these 4 to an external file
 		public void StartInGameMenu()
 		{
 			ContainerMenuManager = null;

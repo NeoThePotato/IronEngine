@@ -10,7 +10,7 @@ namespace IO.Render
 		{ get; private set; }
 		public GameUIManagerRenderer UIManagerRenderer
 		{ get; private set; }
-		public ContainerMenuManagerRenderer ContainerMenuManagerRenderer
+		public ContainerMenuRenderer ContainerMenuManagerRenderer
 		{ get; private set; }
 		public override int SizeJ
 		{ get => LevelRenderer.SizeJ; }

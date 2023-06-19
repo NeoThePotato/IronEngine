@@ -34,7 +34,7 @@ namespace Game
 		public GameState State
 		{ get => GetGameState(); }
 		private bool InMenu
-		{ get => UIManager.StateMenu; }
+		{ get => UIManager.InMenu; }
 		private bool InEncounter
 		{ get => EncounterManager != null; }
 		private bool PendingExit
