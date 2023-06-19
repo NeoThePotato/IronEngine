@@ -7,11 +7,11 @@ namespace IO.Render
 {
 	class MapRenderer : Renderer
 	{
+		public const int STRECH_I = 2;
 		private const char ENTRY_CHAR = 'E';
 		private const byte ENTRY_COLOR = 2;
 		private const char EXIT_CHAR = 'X';
 		private const byte EXIT_COLOR = 1;
-		private const int STRECH_I = 2;
 		private FrameBuffer _mapCache;
 
 		private Map Map

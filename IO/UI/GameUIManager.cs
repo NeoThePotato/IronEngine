@@ -16,7 +16,7 @@ namespace IO.UI
 		public ContainerMenuManager? ContainerMenuManager
 		{ get; private set; }
 		public Container PlayerInventory
-		{ get => GameManager.PlayerInventory; }
+		{ get => GameManager.LevelManager.PlayerInventory; }
 		public bool StateMenu
 		{ get; private set; }
 		public bool StateInventoryMenu

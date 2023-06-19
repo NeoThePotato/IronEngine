@@ -1,6 +1,4 @@
 ﻿using Game;
-using IO.UI;
-using System;
 
 namespace IO.Render
 {
@@ -13,11 +11,9 @@ namespace IO.Render
 
 		public GameManager GameManager
 		{ get; private set; }
-		public LevelRenderer LevelManagerRenderer
+		public LevelManagerRenderer LevelManagerRenderer
 		{ get; private set; }
 		public GameUIManagerRenderer UIManagerRenderer
-		{ get; private set; }
-		public ContainerMenuManagerRenderer ContainerMenuManagerRenderer
 		{ get; private set; }
 		public override int SizeJ
 		{ get => _borderLinesJ.Length + LevelManagerRenderer.SizeJ + GameManager.DataLog.MAX_SIZE; }
@@ -27,8 +23,8 @@ namespace IO.Render
 		public GameManagerRenderer(GameManager gameManager)
 		{
 			GameManager = gameManager;
-			LevelManagerRenderer = new LevelRenderer(GameManager.Level);
 			UIManagerRenderer = new GameUIManagerRenderer(GameManager.UIManager, this);
+			LevelManagerRenderer = new LevelManagerRenderer(GameManager.LevelManager, UIManagerRenderer);
 			_borderLinesJ = new int[] {0, LevelManagerRenderer.SizeJ + 1, LevelManagerRenderer.SizeJ + GameManager.UIManager.DataLog.MAX_SIZE + 2 };
 			_borderLinesI = new int[] {0, LevelManagerRenderer.SizeI + 1};
 		}
@@ -36,44 +32,8 @@ namespace IO.Render
 		public override void Render(FrameBuffer buffer)
 		{
 			RenderBorders(buffer); // TODO Probably cache this
-
-			switch (GameManager.State)
-			{
-				case GameManager.GameState.Encounter:
-					RenderEncounter(buffer);
-					break;
-				case GameManager.GameState.World:
-					RenderWorld(buffer);
-					break;
-			}
-
-			UIManagerRenderer.Render(buffer);
-		}
-
-		private void RenderEncounter(FrameBuffer buffer) // TODO I probably need an EncounterRenderer
-		{
-			if (GameManager.EncounterManager._encounterType == Game.World.EncounterManager.EncounterType.Container)
-			{
-				ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(GameManager.EncounterManager._containerMenuManager);
-				ContainerMenuManagerRenderer.Render(buffer);
-			}
-		}
-
-		private void RenderWorld(FrameBuffer buffer)
-		{
-			var levelBuffer = new FrameBuffer(buffer, 1, 1);
-			RenderLevelAndEntities(levelBuffer);
-		}
-
-		private void RenderLevelAndEntities(FrameBuffer buffer)
-		{
 			LevelManagerRenderer.Render(buffer);
-			RenderPlayer(buffer);
-		}
-
-		private void RenderPlayer(FrameBuffer buffer)
-		{
-			LevelManagerRenderer.RenderEntity(buffer, GameManager.PlayerEntity, '@', 15);
+			UIManagerRenderer.Render(buffer);
 		}
 
 		private void RenderBorders(FrameBuffer buffer)
