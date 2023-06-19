@@ -1,8 +1,8 @@
 ﻿using Game.World;
 
-namespace Assets.WorldTemplates
+namespace Assets
 {
-	static class Levels
+	static class LevelTemplates
 	{
 		const string MAPS_PATH = "../../../Assets/Maps/";
 

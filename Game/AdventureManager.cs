@@ -1,6 +1,6 @@
 ﻿using System.Text;
-using Assets.CombatTemplates;
 using Game.Combat;
+using Assets;
 
 namespace Game
 {
@@ -25,9 +25,9 @@ namespace Game
 
 		public AdventureManager()
 		{
-			_playerUnit = new Unit(Units.hero);
-			_finalBossUnit = new Unit(Units.tyrantKing);
-			_enemyPool = new Unit[] { Units.slime, Units.fae, Units.annoyingFly, Units.imp, Units.spawnOfTwilight, Units.antiHero, Units.invincibleArchdemon, Units.tyrantKingClone};
+			_playerUnit = new Unit(UnitTemplates.hero);
+			_finalBossUnit = new Unit(UnitTemplates.tyrantKing);
+			_enemyPool = new Unit[] { UnitTemplates.slime, UnitTemplates.fae, UnitTemplates.annoyingFly, UnitTemplates.imp, UnitTemplates.spawnOfTwilight, UnitTemplates.antiHero, UnitTemplates.invincibleArchdemon, UnitTemplates.tyrantKingClone};
 			_rewardsMerchant = new RewardsMerchant(_playerUnit);
 		}
 

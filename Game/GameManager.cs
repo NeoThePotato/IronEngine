@@ -3,11 +3,13 @@ using IO;
 using IO.UI;
 using Game.World;
 using Game.Combat;
-using Assets.CombatTemplates;
+using Game.Items;
+using Assets.EquipmentTemplates;
+using Assets;
 
 namespace Game
 {
-	class GameManager
+    class GameManager
 	{
 		public const int PLAYER_INVENTORY_SIZE = 10;
 
@@ -47,14 +49,14 @@ namespace Game
 
 		public void Start()
 		{
-			var playerUnit = new Unit(Units.hero);
+			var playerUnit = new Unit(UnitTemplates.hero);
 			LevelManager = LevelFactory.MakeLevel("TestMap");
 			PlayerEntity = LevelManager.AddEntityAtEntryTile(playerUnit);
 			DataLog.WriteLine($"{PlayerEntity} has arrived at {LevelManager.Metadata.name}");
 
 			// TODO This is a test, remove this in the final release
-			LevelManager.AddEntityAtRandomValidTile(Units.slime);
-			LevelManager.AddEntityAtEntryTile(Assets.Traps.firePit);
+			LevelManager.AddEntityAtRandomValidTile(UnitTemplates.slime);
+			LevelManager.AddEntityAtEntryTile(Assets.TrapsTemplates.firePit);
 			var treasureChest = new Container("Chest", 5);
 			treasureChest.TryAddItem(Armors.rustedChestplate);
 			treasureChest.TryAddItem(Weapons.rustedBlade);

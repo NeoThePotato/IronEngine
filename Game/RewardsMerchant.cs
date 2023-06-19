@@ -1,7 +1,7 @@
-﻿using Game.Combat;
-using Game.Combat.Equipment;
-using System.Text;
-using Assets.CombatTemplates;
+﻿using System.Text;
+using Game.Combat;
+using Game.Items.Equipment;
+using Assets.EquipmentTemplates;
 
 namespace Game
 {

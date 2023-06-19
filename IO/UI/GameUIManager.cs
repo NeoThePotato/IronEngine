@@ -1,9 +1,9 @@
 ﻿using Game;
-using Game.World;
+using Game.Items;
 
 namespace IO.UI
 {
-	class GameUIManager
+    class GameUIManager
 	{
 		public const int DATALOG_LENGTH = 5;
 

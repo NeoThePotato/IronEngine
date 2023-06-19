@@ -1,6 +1,6 @@
 ﻿using Game.World;
-using Game.Combat.Equipment;
-using Assets.CombatTemplates;
+using Game.Items.Equipment;
+using Assets.EquipmentTemplates;
 
 namespace Game.Combat
 {

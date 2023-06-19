@@ -1,6 +1,7 @@
 ﻿using IO;
 using IO.UI;
 using Game.Combat;
+using Game.Items;
 
 namespace Game.World
 {

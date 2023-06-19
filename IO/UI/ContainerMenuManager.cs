@@ -1,10 +1,9 @@
-﻿using Game;
-using Game.World;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Game.Items;
 
 namespace IO.UI
 {
-	class ContainerMenuManager
+    class ContainerMenuManager
 	{
 		public PlayerInputManager InputManager
 		{ get => MenuManager.InputManager; }

@@ -2,7 +2,7 @@
 
 namespace Assets
 {
-	internal class Traps
+	internal class TrapsTemplates
 	{
 		public static readonly Trap dartTrap = new Trap("Dart Trap", 5);
 		public static readonly Trap woodenSpike = new Trap("Wooden Spike Trap", 15);

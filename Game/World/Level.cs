@@ -258,7 +258,7 @@
 
         public static LevelMetadata GetMetadata(string levelName)
         {
-            return Assets.WorldTemplates.Levels.LEVELS_DICTIONARY[levelName];
+            return Assets.LevelTemplates.LEVELS_DICTIONARY[levelName];
         }
 
 		public override string ToString()

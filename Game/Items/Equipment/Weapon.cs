@@ -1,20 +1,20 @@
-﻿namespace Game.Combat.Equipment
+﻿namespace Game.Items.Equipment
 {
-    class Armor : Equipment
+    class Weapon : Equipment
     {
         public override string Name { get; }
-        public int Defense { get; private set; }
+        public int Damage { get; private set; }
 
-        public Armor(string name, int shield)
+        public Weapon(string name, int damage)
         {
             Name = name;
-            Defense = shield;
+            Damage = damage;
         }
 
         public string GetStats()
         {
             return $"{this}\n" +
-                    $"	Defense: {Defense}";
+                    $"	Damage: {Damage}";
         }
 
         public override string ToString()
