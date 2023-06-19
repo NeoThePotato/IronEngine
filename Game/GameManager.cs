@@ -19,12 +19,12 @@ namespace Game
 		{ get; private set; }
 		public GameUIManager UIManager
 		{ get; private set; }
-		public Level LevelManager
+		public Level Level
 		{ get; private set; }
 		public EncounterManager? EncounterManager
 		{ get; private set; }
 		public List<MapEntity> Entities
-		{ get => LevelManager.Entities; }
+		{ get => Level.Entities; }
 		public MapEntity PlayerEntity
 		{ get; private set; }
 		public Container PlayerInventory
@@ -50,17 +50,17 @@ namespace Game
 		public void Start()
 		{
 			var playerUnit = new Unit(UnitTemplates.hero);
-			LevelManager = LevelFactory.MakeLevel("TestMap");
-			PlayerEntity = LevelManager.AddEntityAtEntryTile(playerUnit);
-			DataLog.WriteLine($"{PlayerEntity} has arrived at {LevelManager.Metadata.name}");
+			Level = LevelFactory.MakeLevel("TestMap");
+			PlayerEntity = Level.AddEntityAtEntryTile(playerUnit);
+			DataLog.WriteLine($"{PlayerEntity} has arrived at {Level.Metadata.name}");
 
 			// TODO This is a test, remove this in the final release
-			LevelManager.AddEntityAtRandomValidTile(UnitTemplates.slime);
-			LevelManager.AddEntityAtEntryTile(Assets.TrapsTemplates.firePit);
+			Level.AddEntityAtRandomValidTile(UnitTemplates.slime);
+			Level.AddEntityAtEntryTile(Assets.TrapsTemplates.firePit);
 			var treasureChest = new Container("Chest", 5);
 			treasureChest.TryAddItem(Armors.rustedChestplate);
 			treasureChest.TryAddItem(Weapons.rustedBlade);
-			LevelManager.AddEntityAtRandomValidTile(treasureChest);
+			Level.AddEntityAtRandomValidTile(treasureChest);
 		}
 
 		public void Update(ulong currentTick)
@@ -105,7 +105,7 @@ namespace Game
 		private void UpdatePlayerMovement()
 		{
 			var movementDirection = InputManager.GetMovementDirection();
-			LevelManager.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
+			Level.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
 
 			if (encounteredEntity != null)
 				StartEncounter(encounteredEntity);

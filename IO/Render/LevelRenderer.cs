@@ -4,7 +4,7 @@ namespace IO.Render
 {
 	class LevelRenderer : Renderer
 	{
-		private Level LevelManager
+		private Level Level
 		{ get; set; }
 		private MapRenderer MapRenderer
 		{ get; set; }
@@ -15,8 +15,8 @@ namespace IO.Render
 
 		public LevelRenderer(Level levelManager)
 		{
-			LevelManager = levelManager;
-			MapRenderer = new MapRenderer(LevelManager.Map, LevelManager.Metadata);
+			Level = levelManager;
+			MapRenderer = new MapRenderer(Level.Map, Level.Metadata);
 		}
 
 		public override void Render(FrameBuffer buffer)
@@ -25,7 +25,7 @@ namespace IO.Render
 			MapRenderer.Render(buffer);
 
 			// Render entities
-			foreach (var entity in LevelManager.Entities)
+			foreach (var entity in Level.Entities)
 			{
 				RenderEntity(buffer, entity, 'x');
 			}

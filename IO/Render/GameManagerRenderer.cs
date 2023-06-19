@@ -27,7 +27,7 @@ namespace IO.Render
 		public GameManagerRenderer(GameManager gameManager)
 		{
 			GameManager = gameManager;
-			LevelManagerRenderer = new LevelRenderer(GameManager.LevelManager);
+			LevelManagerRenderer = new LevelRenderer(GameManager.Level);
 			UIManagerRenderer = new GameUIManagerRenderer(GameManager.UIManager, this);
 			_borderLinesJ = new int[] {0, LevelManagerRenderer.SizeJ + 1, LevelManagerRenderer.SizeJ + GameManager.UIManager.DataLog.MAX_SIZE + 2 };
 			_borderLinesI = new int[] {0, LevelManagerRenderer.SizeI + 1};
