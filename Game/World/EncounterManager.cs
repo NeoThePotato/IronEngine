@@ -32,18 +32,6 @@ namespace Game.World
 			Start(_encounterType);
 		}
 
-		public EncounterManager(GameUIManager uIManager, PlayerInputManager inputManager, Container playerInventory, Unit unit, Entity encounteredEntity, DataLog dataLog)
-        {
-			_inputManager = inputManager;
-			_uiManager = uIManager;
-			_playerInventory = playerInventory;
-			_unit = unit;
-            _encounteredEntity = encounteredEntity;
-			_encounterType = encounteredEntity.EncounterType;
-			_dataLog = dataLog;
-			Start(_encounterType);
-        }
-
         public void Update()
         {
             Update(_encounterType);

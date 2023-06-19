@@ -7,14 +7,12 @@ namespace IO.UI.Menus
 	{
 		public static SelectionMenu GetInGameMenu(LevelManager levelManager)
 		{
-			Dictionary<string, Action?> actions;
-
 			Action returnToGame = () => levelManager.UIManager.ForceExitCurrentMenu(); /// This is some cyclical shit
 			Action openStatsMenu = () => throw new NotImplementedException();
 			Action openInventoryMenu = () => levelManager.UIManager.StackNewMenu(GetContainerMenu(levelManager.InputManager, levelManager.PlayerInventory));
 			Action quitGame = () => levelManager.Exit();
 
-			actions = new Dictionary<string, Action?>()
+			var actions = new Dictionary<string, Action?>()
 			{
 				{ "Return", returnToGame},
 				{ "Stats", openStatsMenu},
