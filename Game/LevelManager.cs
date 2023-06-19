@@ -79,6 +79,16 @@ namespace Game
 					UpdateWorld();
 					break;
 			}
+			PurgeDeadEntities();
+        }
+
+		private void PurgeDeadEntities()
+		{
+			for (int i = 0; i < Entities.Count; i++)
+			{
+				if (Entities[i].Entity.MarkForDelete)
+					Entities.RemoveAt(i);
+			}
 		}
 
 		private void UpdateWorld()
@@ -90,7 +100,7 @@ namespace Game
 			else // Update world's entities
 			{
 				UpdatePlayerMovement();
-				// UpdateOtherEntitiesMovement();
+				UpdateOtherEntitiesMovement();
 			}
 		}
 
@@ -105,8 +115,26 @@ namespace Game
 
 		private void UpdateOtherEntitiesMovement()
 		{
-			throw new NotImplementedException(); // TODO Implement entity auto-movement
+			foreach (var entity in Entities)
+			{
+				if (entity.Entity.Moveable && entity != PlayerEntity)
+					AutoMoveEntity(entity);
+			}
 		}
+
+		private void AutoMoveEntity(MapEntity entity)
+		{
+			if (entity.Dir == Direction.Directions.None)
+                entity.Dir = Direction.GetRandomDirection(); // Start moving
+
+			if (!Level.MoveEntity(entity, out MapEntity? encounteredEntity))
+				entity.Dir = Direction.GetRandomDirection(); // Move or change direction
+
+            if (encounteredEntity == PlayerEntity)
+                StartEncounter(entity); // Encounter player
+
+            // TODO Follow player if in range
+        }
 
 		private void UpdateEncounter()
 		{

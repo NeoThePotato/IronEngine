@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using static Game.World.Direction;
 
 static class Utility
 {
@@ -76,12 +77,12 @@ static class Utility
 				break;
 		}
 
-		for (int i = 0; i < objArr.Length-1; i++)
+		for (int i = 0; i < objArr.Length - 1; i++)
 		{
 			Console.Write(objArr[i] + separatorStr);
 		}
 
-		Console.WriteLine(objArr[objArr.Length-1]);
+		Console.WriteLine(objArr[objArr.Length - 1]);
 	}
 
 	[SupportedOSPlatform("windows")]

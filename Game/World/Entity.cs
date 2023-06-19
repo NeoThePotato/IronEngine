@@ -6,6 +6,10 @@
         { get; }
         public abstract bool Passable
         { get; }
+        public abstract bool Moveable
+        { get; }
+        public abstract bool MarkForDelete
+        { get; }
         public abstract EncounterManager.EncounterType EncounterType
         { get; }
 

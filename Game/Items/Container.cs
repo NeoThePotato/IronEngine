@@ -20,6 +20,10 @@ namespace Game.Items
         { get => NumberOfItems == Capacity; }
         public override bool Passable
         { get => true; }
+        public override bool Moveable
+        { get => false; }
+        public override bool MarkForDelete
+        { get => Empty; }
         public override EncounterManager.EncounterType EncounterType
         { get => EncounterManager.EncounterType.Container; }
 

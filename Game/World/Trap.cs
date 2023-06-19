@@ -7,13 +7,17 @@ namespace Game.World
 	{
 		public override string Name
 		{ get; }
-		public override bool Passable
-		{ get => true; }
-		public int Damage
+        public int Damage
 		{ get; private set; }
 		public bool Armed
 		{ get; private set; }
-		public override EncounterManager.EncounterType EncounterType
+        public override bool Passable
+        { get => true; }
+        public override bool Moveable
+        { get => false; }
+        public override bool MarkForDelete
+		{ get => false; }
+        public override EncounterManager.EncounterType EncounterType
 		{ get => EncounterManager.EncounterType.Trap; }
 
 		public Trap(string name, int damage)

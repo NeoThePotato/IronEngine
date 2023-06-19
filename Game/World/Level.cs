@@ -67,9 +67,14 @@
 			{
 				return false;
 			}
-		}
+        }
 
-		private bool CanEntityMoveTo(MapEntity entity, Direction.Directions direction, out MapEntity? occupiedBy)
+        public bool MoveEntity(MapEntity entity, out MapEntity? otherEntity)
+        {
+			return MoveEntity(entity, entity.Dir, out otherEntity);
+        }
+
+        private bool CanEntityMoveTo(MapEntity entity, Direction.Directions direction, out MapEntity? occupiedBy)
 		{
 			(int offsetJ, int offsetI) = Direction.TranslateDirection(direction);
 			int newPosJ = entity.PosJ + offsetJ, newPosI = entity.PosI + offsetI;
@@ -205,6 +210,11 @@
 		public static Directions TranslateDirection((int, int) vector)
 		{
 			return (Directions)Array.IndexOf(DIRECTION_VECTORS, vector);
+		}
+
+		public static Directions GetRandomDirection()
+		{
+			return (Directions)Random.Shared.Next(0, Enum.GetNames(typeof(Directions)).Length);
 		}
 
 		public enum Directions

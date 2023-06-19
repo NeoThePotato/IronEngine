@@ -106,7 +106,11 @@ namespace Game.Combat
         }
 		public override bool Passable
         { get => Dead; }
-		public override EncounterManager.EncounterType EncounterType
+        public override bool Moveable
+        { get => true; }
+        public override bool MarkForDelete
+        { get => Dead; }
+        public override EncounterManager.EncounterType EncounterType
         { get => EncounterManager.EncounterType.Combat; }
 
 		public Unit(string name, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Armor shield, Armor bodyArmor)
