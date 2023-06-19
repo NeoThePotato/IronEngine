@@ -1,16 +1,20 @@
-﻿namespace IO.UI.Menus
+﻿using static System.Windows.Forms.Design.AxImporter;
+
+namespace IO.UI.Menus
 {
     class SelectionMenu : Menu
     {
         private int _cursorJ = 0;
         private int _cursorI = 0;
 
-        public string?[,] Options
+        public string?[,] Strings
         { get; private set; }
+		public Dictionary<string, Action?> Actions
+		{ get; private set; }
 		public int DimJ
-        { get => Options.GetLength(0); }
+        { get => Strings.GetLength(0); }
         public int DimI
-        { get => Options.GetLength(1); }
+        { get => Strings.GetLength(1); }
         public int LongestString
         { get; private set; }
         public int ColumnLength
@@ -38,13 +42,14 @@
 		public override bool Exit
         { get; set; }
 
-        public SelectionMenu(PlayerInputManager inputManager, string[] options, int dimJ, int dimI) : base(inputManager)
+        public SelectionMenu(PlayerInputManager inputManager, Dictionary<string, Action?> actions, int dimJ, int dimI) : base(inputManager)
         {
-            if (dimJ * dimI >= options.Length)
+            if (dimJ * dimI >= actions.Count)
             {
-                Options = new string[dimJ, dimI];
-                SetOptions(options);
-                Start();
+				Actions = actions;
+				Strings = GetStringMatrix(actions.Keys.ToArray(), dimJ, dimI);
+				UpdateLongestString();
+				Start();
             }
             else
             {
@@ -52,10 +57,12 @@
             }
         }
 
-		public SelectionMenu(PlayerInputManager inputManager, string?[,] options) : base(inputManager)
+		public SelectionMenu(PlayerInputManager inputManager, Dictionary<string, Action?> actions, string?[,] strings) : base(inputManager)
 		{
-			SetOptions(options);
-            Start();
+			Actions = actions;
+			Strings = strings;
+			UpdateLongestString();
+			Start();
 		}
 
 		public override void Start()
@@ -81,7 +88,7 @@
 
         public string? GetOptionAtCursor()
         {
-            return Options[CursorJ, CursorI];
+            return Strings[CursorJ, CursorI];
 		}
 
 		public void ResetCursor()
@@ -97,46 +104,58 @@
 
         public void SetOptions(string?[,] options)
         {
-            Options = options;
-            UpdateLongestString();
-		}
-
-		public void SetOptions(string[] options)
-		{
-			int o = 0;
-
-			for (int j = 0; j < DimJ; j++)
-			{
-				for (int i = 0; i < DimI; i++)
-				{
-					if (o < options.Length)
-					{
-						Options[j, i] = options[o];
-						LongestString = Math.Max(LongestString, options[o].Length);
-					}
-					else
-					{
-						Options[j, i] = null;
-					}
-					o++;
-				}
-			}
+            Strings = options;
 		}
 
         private void UpdateLongestString()
         {
-            foreach (var str in Options)
-				LongestString = str != null ? Math.Max(LongestString, str.Length) : LongestString;
+			var longestString = GetLongestString(Strings);
+			LongestString = longestString != null? longestString.Length : 0;
 		}
 
 		private void MoveCursor((int, int) vector)
-        {
-            do
-            {
-                CursorJ += vector.Item1;
-                CursorI += vector.Item2;
-            }
-            while (GetOptionAtCursor() == null);
-        }
-    }
+		{
+			do
+			{
+				CursorJ += vector.Item1;
+				CursorI += vector.Item2;
+			}
+			while (GetOptionAtCursor() == null);
+		}
+
+		private static string? GetLongestString(string?[,] strings)
+		{
+			var longestString = "";
+
+			foreach (var s in strings)
+			{
+				if (s != null && s.Length > longestString.Length)
+					longestString = s;
+			}
+
+			return longestString;
+		}
+
+		private static string? GetLongestString(IEnumerable<string?> strings)
+		{
+			return strings.MaxBy(s => s != null? s.Length : 0);
+		}
+
+		private static string?[,] GetStringMatrix(string[] options, int dimJ, int dimI)
+		{
+			var ret = new string?[dimJ, dimI];
+			int str = 0;
+
+			for (int j = 0; j < dimJ; j++)
+			{
+				for (int i = 0; i < dimI; i++)
+				{
+					ret[j, i] = (str < options.Length) ? options[str] : null;
+					str++;
+				}
+			}
+
+            return ret;
+		}
+	}
 }

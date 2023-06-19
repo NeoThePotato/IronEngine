@@ -37,7 +37,7 @@ namespace IO.Render
 
 		private void RenderCol(FrameBuffer frameBuffer, int col)
 		{
-			var rowEnum = Enumerable.Range(0, Menu.DimJ).Select(row => Menu.Options[row, col] != null ? Menu.Options[row, col] : "");
+			var rowEnum = Enumerable.Range(0, Menu.DimJ).Select(row => Menu.Strings[row, col] != null ? Menu.Strings[row, col] : "");
 			RenderText(new FrameBuffer(frameBuffer, 0, LengthPerString * col), rowEnum, LengthPerString);
 		}
 
