@@ -1,4 +1,6 @@
-﻿namespace IO.UI
+﻿using IO.Render;
+
+namespace IO.UI
 {
     abstract class Menu
     {
@@ -21,5 +23,7 @@
         public abstract void Start();
 
         public abstract string? Update();
+
+        public abstract Renderer GetRenderer();
     }
 }

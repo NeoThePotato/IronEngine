@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Game.Items;
+using IO.Render;
 
 namespace IO.UI.Menus
 {
@@ -73,6 +74,11 @@ namespace IO.UI.Menus
 		public Item? GetItemAtSelection()
 		{
 			return Containers[SelectedContainerIndex].Items[SelectedItemIndex];
+		}
+
+		public override Renderer GetRenderer()
+		{
+			return new ContainerMenuRenderer(this);
 		}
 
 		private void SelectedCurrentItem()

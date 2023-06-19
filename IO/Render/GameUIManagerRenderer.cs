@@ -1,6 +1,5 @@
 ﻿using Game;
 using IO.UI;
-using System;
 
 namespace IO.Render
 {
@@ -10,10 +9,8 @@ namespace IO.Render
 		{ get; set; }
 		private GameManagerRenderer GameManagerRenderer
 		{ get; set; }
-		private SelectionMenuRenderer InGameMenuRenderer
+		private Renderer? CurrentMenuRenderer
 		{ get; set; }
-		public ContainerMenuRenderer? ContainerMenuManagerRenderer
-		{ get; private set; }
 		public override int SizeJ
 		{ get => GameManagerRenderer.SizeJ; }
 		public override int SizeI
@@ -25,7 +22,6 @@ namespace IO.Render
 		{
 			UIManager = uiManager;
 			GameManagerRenderer = gameManagerRenderer;
-			InGameMenuRenderer = new MenuManagerRenderer(UIManager.InGameMenu);
 		}
 
 		public override void Render(FrameBuffer buffer)
@@ -33,21 +29,10 @@ namespace IO.Render
 			RenderDataLog(buffer);
 
 			if (UIManager.InMenu)
-				RenderInGameMenu(buffer);
-		}
-
-		private void RenderInGameMenu(FrameBuffer buffer)
-		{
-			if (UIManager.StateInventoryMenu)
-				RenderInventoryMenu(buffer);
-			else
-				InGameMenuRenderer.Render(buffer);
-		}
-
-		private void RenderInventoryMenu(FrameBuffer buffer)
-		{
-			ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(UIManager.ContainerMenuManager);
-			ContainerMenuManagerRenderer.Render(buffer);
+			{
+				CurrentMenuRenderer = UIManager.GetCurrentMenu().GetRenderer();
+				CurrentMenuRenderer.Render(buffer);
+			}
 		}
 
 		private void RenderDataLog(FrameBuffer buffer)

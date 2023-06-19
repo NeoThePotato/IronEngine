@@ -2,26 +2,40 @@
 using IO.UI;
 using Game.Combat;
 using Game.Items;
+using IO.UI.Menus;
 
 namespace Game.World
 {
     class EncounterManager
     {
 		private PlayerInputManager _inputManager;
+		private GameUIManager _uiManager;
 		private Container _playerInventory;
 		private Unit _unit;
         private Entity _encounteredEntity;
         private CombatManager? _combatManager;
 		private DataLog _dataLog;
 		public EncounterType _encounterType;
-		public ContainerMenuManager? _containerMenuManager;
 
 		public bool Exit
         { get; private set; }
 
-        public EncounterManager(PlayerInputManager inputManager, Container playerInventory, Unit unit, Entity encounteredEntity, DataLog dataLog)
+		public EncounterManager(LevelManager levelManager, Entity encounteredEntity)
+		{
+			_inputManager = levelManager.InputManager;
+			_uiManager = levelManager.UIManager;
+			_playerInventory = levelManager.PlayerInventory;
+			_unit = (Unit)levelManager.PlayerEntity.Entity;
+			_encounteredEntity = encounteredEntity;
+			_encounterType = encounteredEntity.EncounterType;
+			_dataLog = levelManager.DataLog;
+			Start(_encounterType);
+		}
+
+		public EncounterManager(GameUIManager uIManager, PlayerInputManager inputManager, Container playerInventory, Unit unit, Entity encounteredEntity, DataLog dataLog)
         {
 			_inputManager = inputManager;
+			_uiManager = uIManager;
 			_playerInventory = playerInventory;
 			_unit = unit;
             _encounteredEntity = encounteredEntity;
@@ -98,13 +112,13 @@ namespace Game.World
 		{
 			var container = (Container)_encounteredEntity;
 			_dataLog.WriteLine($"{_unit} has found {container}");
-			_containerMenuManager = new ContainerMenuManager(_inputManager, _playerInventory, container);
+			_uiManager.StackNewMenu(MenuFactory.GetContainerMenu(_inputManager, _playerInventory, container));
+			Exit = true;
 		}
 
 		private void UpdateContainer()
 		{
-			_containerMenuManager.Update();
-			Exit = _containerMenuManager.Exit;
+			Exit = true;
 		}
 
 		private void StartTrap()
@@ -121,7 +135,7 @@ namespace Game.World
 
 		private void UpdateTrap()
 		{
-			return;
+			Exit = true;
 		}
 
 		private void StartDoor()

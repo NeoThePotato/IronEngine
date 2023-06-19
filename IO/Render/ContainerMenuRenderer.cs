@@ -19,9 +19,9 @@ namespace IO.Render
 		public int LengthPerString
 		{ get => Menu.LongestString + SPACE_BETWEEN_COLS; }
 
-		public ContainerMenuRenderer(ContainerMenu containerMenuManager)
+		public ContainerMenuRenderer(ContainerMenu containerMenu)
 		{
-			ContainerMenu = containerMenuManager;
+			ContainerMenu = containerMenu;
 			MenuManagerRenderer = new SelectionMenuRenderer(Menu);
 
 		}

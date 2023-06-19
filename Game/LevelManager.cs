@@ -1,5 +1,6 @@
 ﻿using IO;
 using IO.UI;
+using IO.UI.Menus;
 using Game.Items;
 using Game.World;
 using Game.Combat;
@@ -118,7 +119,7 @@ namespace Game
 
 		private void StartEncounter(MapEntity other)
 		{
-			EncounterManager = new EncounterManager(InputManager, PlayerInventory, (Unit)PlayerEntity.Entity, other.Entity, DataLog);
+			EncounterManager = new EncounterManager(this, other.Entity);
 			Debug.Assert(State == GameState.Encounter);
 
 			if (EncounterManager.Exit)
@@ -133,7 +134,7 @@ namespace Game
 
 		private void StartUIManager()
 		{
-			UIManager.StartInGameMenu();
+			UIManager.StackNewMenu(MenuFactory.GetInGameMenu(this));
 			Debug.Assert(State == GameState.Menu);
 		}
 

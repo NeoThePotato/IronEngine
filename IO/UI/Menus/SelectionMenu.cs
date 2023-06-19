@@ -1,4 +1,5 @@
-﻿using static System.Windows.Forms.Design.AxImporter;
+﻿using IO.Render;
+using static System.Windows.Forms.Design.AxImporter;
 
 namespace IO.UI.Menus
 {
@@ -107,7 +108,12 @@ namespace IO.UI.Menus
             Strings = options;
 		}
 
-        private void UpdateLongestString()
+		public override Renderer GetRenderer()
+		{
+			return new SelectionMenuRenderer(this);
+		}
+
+		private void UpdateLongestString()
         {
 			var longestString = GetLongestString(Strings);
 			LongestString = longestString != null? longestString.Length : 0;

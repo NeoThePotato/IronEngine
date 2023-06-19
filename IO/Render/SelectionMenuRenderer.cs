@@ -8,7 +8,7 @@ namespace IO.Render
 		private const int SPACE_BETWEEN_COLS = 1;
 
 		private SelectionMenu Menu
-		{  get; set; }
+		{ get; set; }
 		public override int SizeJ
 		{ get => Menu.DimJ; }
 		public override int SizeI
@@ -16,9 +16,9 @@ namespace IO.Render
 		public int LengthPerString
 		{ get => Menu.LongestString + SPACE_BETWEEN_COLS; }
 
-		public SelectionMenuRenderer(SelectionMenu menuManager)
+		public SelectionMenuRenderer(SelectionMenu selectionMenu)
 		{
-			Menu = menuManager;
+			Menu = selectionMenu;
 		}
 
 		public override void Render(FrameBuffer frameBuffer)

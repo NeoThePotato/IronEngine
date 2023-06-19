@@ -39,13 +39,9 @@ namespace IO.Render
 			UIManagerRenderer.Render(buffer);
 		}
 
-		private void RenderEncounter(FrameBuffer buffer) // TODO I probably need an EncounterRenderer
+		private void RenderEncounter(FrameBuffer buffer) // TODO I probably need a dedicated EncounterRenderer
 		{
-			if (LevelManager.EncounterManager._encounterType == Game.World.EncounterManager.EncounterType.Container)
-			{
-				ContainerMenuManagerRenderer = new ContainerMenuManagerRenderer(LevelManager.EncounterManager._containerMenuManager);
-				ContainerMenuManagerRenderer.Render(buffer);
-			}
+
 		}
 
 		private void RenderWorld(FrameBuffer buffer)
