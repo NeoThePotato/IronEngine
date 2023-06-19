@@ -30,7 +30,7 @@ namespace IO.Render
 
 			if (UIManager.InMenu)
 			{
-				CurrentMenuRenderer = UIManager.GetCurrentMenu().GetRenderer();
+				CurrentMenuRenderer = UIManager.GetCurrentMenu()!.GetRenderer();
 				CurrentMenuRenderer.Render(buffer);
 			}
 		}
@@ -41,5 +41,4 @@ namespace IO.Render
 			RenderText(dataLogBuffer, UIManager.DataLog, GameManagerRenderer.LevelManagerRenderer.SizeI);
 		}
 	}
-
 }

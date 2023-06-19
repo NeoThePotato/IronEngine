@@ -16,8 +16,6 @@ namespace IO.UI
 		{ get; set; }
 		public PlayerInputManager InputManager
 		{ get => GameManager.InputManager; }
-		public SelectionMenu InGameMenu
-		{ get; private set; }
 		public ContainerMenu? ContainerMenuManager
 		{ get; private set; }
 		public Container PlayerInventory
@@ -40,11 +38,11 @@ namespace IO.UI
 
 		public void Update()
 		{
-            while (InMenu && GetCurrentMenu().Exit) // TODO Verify that this doesn't exit all menus because of a single ESC/Back keystroke
+            while (InMenu && GetCurrentMenu()!.Exit)
 				ExitCurrentMenu();
 
 			if (InMenu)
-				GetCurrentMenu().Update();
+				GetCurrentMenu()!.Update();
 		}
 
 		public void StackNewMenu(Menu menu)
@@ -54,7 +52,7 @@ namespace IO.UI
 
 		public Menu? GetCurrentMenu()
 		{
-			if (MenuStack.Count > 0)
+			if (InMenu)
 				return MenuStack.Peek();
 			else
 				return null;
@@ -68,7 +66,7 @@ namespace IO.UI
 
 		private void ExitCurrentMenu()
 		{
-			Debug.Assert(GetCurrentMenu().Exit);
+			Debug.Assert(GetCurrentMenu()!.Exit);
 			MenuStack.Pop();
 		}
 	}

@@ -10,8 +10,6 @@ namespace IO.Render
 		{ get; private set; }
 		public GameUIManagerRenderer UIManagerRenderer
 		{ get; private set; }
-		public ContainerMenuRenderer ContainerMenuManagerRenderer
-		{ get; private set; }
 		public override int SizeJ
 		{ get => LevelRenderer.SizeJ; }
 		public override int SizeI
@@ -39,12 +37,12 @@ namespace IO.Render
 			UIManagerRenderer.Render(buffer);
 		}
 
-		private void RenderEncounter(FrameBuffer buffer) // TODO I probably need a dedicated EncounterRenderer
+		private void RenderEncounter(FrameBuffer buffer)
 		{
+            // TODO I probably need a dedicated EncounterRenderer
+        }
 
-		}
-
-		private void RenderWorld(FrameBuffer buffer)
+        private void RenderWorld(FrameBuffer buffer)
 		{
 			RenderLevelAndEntities(new FrameBuffer(buffer, 1, 1));
 		}
