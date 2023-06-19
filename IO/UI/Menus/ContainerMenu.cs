@@ -27,15 +27,15 @@ namespace IO.UI.Menus
 		public ContainerMenu(PlayerInputManager inputManager, params Container[] containers) : base(inputManager)
 		{
 			Containers = containers;
-			Menu = new SelectionMenu(inputManager, GetStrings());
+			Menu = new SelectionMenu(inputManager, null, GetStrings());
 		}
 
 		public override void Start()
 		{
-
+			Menu.Start();
 		}
 
-		public override void Update()
+		public override string? Update()
 		{
 			bool itemSelected = Menu.Update() != null;
 			
@@ -44,7 +44,7 @@ namespace IO.UI.Menus
 			if (Menu.Exit && !ItemSelected && !itemSelected)
 			{
 				Exit = true;
-				return;
+				return null;
 			}
 			else if (Menu.Exit && ItemSelected)
 			{
@@ -61,6 +61,8 @@ namespace IO.UI.Menus
 				RefreshMenuStrings();
 				SelectedItem = null;
 			}
+
+			return null;
 		}
 
 		public Item? GetItemAtCursor()

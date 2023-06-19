@@ -36,7 +36,6 @@ namespace IO.UI
 			GameManager = gameManager;
 			MenuStack = new Stack<Menu>(DEFAULT_MENU_STACK_SIZE);
 			DataLog = new DataLog(DATALOG_LENGTH);
-			InGameMenu = new SelectionMenu(InputManager, new string[] { "Return", "Stats", "Inventory", "Quit" }, 4, 1);
 		}
 
 		public void Update()
@@ -47,7 +46,9 @@ namespace IO.UI
 					ExitCurrentMenu();
 
 				if (InMenu)
-					GetCurrentMenu().Update();
+				{
+					var ret = GetCurrentMenu().Update();
+				}
 			}
 		}
 
@@ -64,61 +65,16 @@ namespace IO.UI
 				return null;
 		}
 
+		public void ForceExitCurrentMenu()
+		{
+			if (InMenu)
+				MenuStack.Pop();
+		}
+
 		private void ExitCurrentMenu()
 		{
 			Debug.Assert(GetCurrentMenu().Exit);
 			MenuStack.Pop();
-		}
-
-		// TODO Remove these 4 to an external file
-		public void StartInGameMenu()
-		{
-			ContainerMenuManager = null;
-			StateMenu = true;
-			InGameMenu.Start();
-		}
-
-		private void UpdateInGameMenu()
-		{
-			var input = InGameMenu.Update();
-
-			if (InGameMenu.Exit)
-			{
-				StateMenu = false;
-
-				return;
-			}
-			else
-			{
-				switch (input)
-				{
-					case "Return":
-						StateMenu = false;
-						break;
-					case "Stats":
-						throw new NotImplementedException();
-						break;
-					case "Inventory":
-						StartContainerManager();
-						break;
-					case "Quit":
-						GameManager.Exit();
-						break;
-				}
-			}
-		}
-
-		private void UpdateContainerManager()
-		{
-			ContainerMenuManager.Update();
-
-			if (ContainerMenuManager.Exit)
-				ContainerMenuManager = null;
-		}
-
-		private void StartContainerManager()
-		{
-			ContainerMenuManager = new ContainerMenuManager(InputManager, PlayerInventory);
 		}
 	}
 }
