@@ -63,6 +63,8 @@ namespace Game.World
 			}
 			else
 			{
+				MoveEntityToEdgeOfTile(entity, direction);
+
 				return false;
 			}
         }
@@ -71,6 +73,14 @@ namespace Game.World
         {
 			return MoveEntity(entity, entity.Dir, out otherEntity);
         }
+
+		private void MoveEntityToEdgeOfTile(MapEntity entity, Direction direction)
+		{
+			var projectedPoint = entity.Pos + direction;
+			var actualJ = Utility.ClampRange(projectedPoint.PointJ, TileToPoint(entity.Pos.TileJ), TileToPoint(entity.Pos.TileJ + 1) - 1);
+			var actualI = Utility.ClampRange(projectedPoint.PointI, TileToPoint(entity.Pos.TileI), TileToPoint(entity.Pos.TileI + 1) - 1);
+			entity.Pos = new Point2D(actualJ, actualI);
+		}
 
         private bool CanEntityMoveTo(MapEntity entity, Point2D newPos, out MapEntity? occupiedBy)
 		{
