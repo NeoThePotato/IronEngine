@@ -150,6 +150,7 @@ namespace Game.World
 
 		public bool CanEntityMoveTo(MapEntity entity, MapEntity other)
 		{
+			Debug.Assert(entity != other);
 			MapEntity? encountered;
 			bool inLineOfSight = CanEntityMoveTo(entity, other.Pos, out encountered);
 

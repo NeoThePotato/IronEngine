@@ -1,11 +1,12 @@
-﻿using System.Diagnostics;
-using static Game.World.Direction;
+﻿using static Game.World.Direction;
 using static Game.World.Point2D;
 
 namespace Game.World
 {
 	class MapEntity
 	{
+		private Point2D _target;
+
 		public const int MAX_MOVEMENT_SPEED = POINTS_PER_TILE;
 		public Entity Entity
 		{ get; set; }
@@ -17,13 +18,13 @@ namespace Game.World
 		{ get => MAX_MOVEMENT_SPEED / 4; } // TODO Replace with entity "SPD" stat or something
 		public int DetectionRange
 		{ get => TileToPoint(3); } // TODO Replace with entity "INT" stat or something
-		public Point2D Target // TODO Make sure I am using auto-properties correctly
+		public Point2D Target
 		{
-			get => Target;
+			get => _target;
 			set
 			{
-				Target = value;
-				Dir = new Direction(Pos, Target);
+				_target = value;
+				Dir = new Direction(Pos, _target);
 			}
 		}
 		public bool Passable
