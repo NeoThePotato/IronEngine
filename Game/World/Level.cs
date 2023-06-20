@@ -112,7 +112,7 @@ namespace Game.World
 
 		private bool TileOutOfBounds(Point2D pos)
 		{
-			return pos.PointJ >= Map.SizeJ || pos.PointJ < 0 || pos.PointI >= Map.SizeI || pos.PointI < 0;
+			return pos.TileJ >= Map.SizeJ || pos.TileJ < 0 || pos.TileI >= Map.SizeI || pos.TileI < 0;
 		}
 
 		private bool TileImpassable(Point2D pos)
