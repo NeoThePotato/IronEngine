@@ -38,9 +38,7 @@ namespace IO.Render
 			int subTileI = MapRenderer.STRECH_I * Point2D.PointRemainder(entity.Pos.PointI) / Point2D.POINTS_PER_TILE;
 			posI += subTileI;
 			buffer.Char[posJ, posI] = c;
-			buffer.Char[posJ, posI + 1] = c;
 			buffer.Foreground[posJ, posI] = color;
-			buffer.Foreground[posJ, posI + 1] = color;
 		}
 	}
 }
