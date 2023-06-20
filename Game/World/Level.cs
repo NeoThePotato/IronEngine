@@ -114,12 +114,12 @@ namespace Game.World
 
 		private bool TileTraversable(Point2D pos)
 		{
-			return !(TileOutOfBounds(pos) || TileImpassable(pos));
+			return !(PointOutOfBounds(pos) || TileImpassable(pos));
 		}
 
-		private bool TileOutOfBounds(Point2D pos)
+		private bool PointOutOfBounds(Point2D pos)
 		{
-			return pos.TileJ >= Map.SizeJ || pos.TileJ < 0 || pos.TileI >= Map.SizeI || pos.TileI < 0;
+			return pos.PointJ >= TileToPoint(Map.SizeJ) || pos.PointJ < 0 || pos.PointI >= TileToPoint(Map.SizeI) || pos.PointI < 0;
 		}
 
 		private bool TileImpassable(Point2D pos)
