@@ -34,6 +34,11 @@ namespace Game.World
 			Dir = dir.Dir;
 		}
 
+		public Direction(Point2D source, Point2D target)
+		{
+			Dir = target - source;
+		}
+
 		public Direction((int, int) vector)
 		{
 			Dir = new Point2D(vector);

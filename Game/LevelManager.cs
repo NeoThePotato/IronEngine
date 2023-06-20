@@ -117,7 +117,7 @@ namespace Game
 		{
 			foreach (var entity in Entities)
 			{
-				if (entity.Entity.Moveable && entity != PlayerEntity)
+				if (entity.Moveable && entity != PlayerEntity)
 					AutoMoveEntity(entity);
 			}
 		}

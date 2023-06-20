@@ -24,6 +24,7 @@ namespace Game.World
 			_metadata = metadata;
 		}
 
+		#region ENTITY_SPAWNING
 		public MapEntity AddEntity(Entity entity, Point2D pos)
 		{
 			var mapEntity = new MapEntity(entity, pos);
@@ -52,10 +53,12 @@ namespace Game.World
 
 			return AddEntity(entity, randP);
 		}
+		#endregion
 
+		#region ENTITY_MOVEMENT
 		public bool MoveEntity(MapEntity entity, Direction direction, out MapEntity? otherEntity)
 		{
-			if (CanEntityMoveTo(entity, entity.ProjectedNewLocation(direction), out otherEntity))
+			if (CanEntityMoveTo(entity, direction, out otherEntity))
 			{
 				entity.Move(direction);
 
@@ -81,10 +84,13 @@ namespace Game.World
 			var actualI = Utility.ClampRange(projectedPoint.PointI, TileToPoint(entity.Pos.TileI), TileToPoint(entity.Pos.TileI + 1) - 1);
 			entity.Pos = new Point2D(actualJ, actualI);
 		}
+		#endregion
 
-        private bool CanEntityMoveTo(MapEntity entity, Point2D newPos, out MapEntity? occupiedBy)
+		#region SPATIAL_CHECKS
+		private bool CanEntityMoveTo(MapEntity entity, Direction targetDir, out MapEntity? occupiedBy)
 		{
 			occupiedBy = null;
+			var newPos = entity.ProjectedNewLocation(targetDir);
 
 			if (TileTraversable(newPos))
 			{
@@ -110,6 +116,36 @@ namespace Game.World
 			{
 				return false;
 			}
+		}
+
+		/// <summary>
+		/// Checks if there is a direct line-of-sight/movement between this entity and targetPos.
+		/// </summary>
+		/// <param name="entity">MapEntity to check movement for.</param>
+		/// <param name="targetPos">Target point to check if entity can move to.</param>
+		/// <param name="occupiedBy">Returns entity standing in the way.</param>
+		/// <returns></returns>
+		private bool CanEntityMoveTo(MapEntity entity, Point2D targetPos, out MapEntity? occupiedBy)
+		{
+			Debug.Assert(entity.Moveable);
+			Point2D currentLocation = entity.Pos;
+			Direction currentTrajectory = new Direction(entity.Pos, targetPos);
+			CanEntityMoveTo(entity, currentTrajectory, out occupiedBy);
+
+			while (!SameTile(currentLocation, targetPos))
+			{
+				if (CanEntityMoveTo(entity, currentTrajectory, out occupiedBy))
+				{
+					currentLocation = entity.ProjectedNewLocation(currentLocation, currentTrajectory);
+					currentTrajectory = new Direction(currentLocation, targetPos);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		private bool TileTraversable(Point2D pos)
@@ -144,6 +180,7 @@ namespace Game.World
 
 			return null;
 		}
+		#endregion
 	}
 
 	static class LevelFactory

@@ -13,10 +13,23 @@ namespace Game.World
 		{ get; set; }
 		public Direction Dir
 		{ get; set; }
-		public int Speed
+		public int MovementSpeed
 		{ get => MAX_MOVEMENT_SPEED / 4; } // TODO Replace with entity "SPD" stat or something
+		public int DetectionRange
+		{ get => TileToPoint(3); } // TODO Replace with entity "INT" stat or something
+		public Point2D Target // TODO Make sure I am using auto-properties correctly
+		{
+			get => Target;
+			set
+			{
+				Target = value;
+				Dir = new Direction(Pos, Target);
+			}
+		}
 		public bool Passable
 		{ get => Entity.Passable; }
+		public bool Moveable
+		{ get => Entity.Moveable && MovementSpeed > 1; }
 
 		public MapEntity(Entity entity, Point2D pos)
 		{
@@ -39,20 +52,29 @@ namespace Game.World
 
 		public void Move(Direction dir)
 		{
-			dir.Normalize();
-			Debug.Assert(dir.Mag <= MAX_MAG);
 			Dir = dir;
 			Pos = ProjectedNewLocation(dir);
 		}
 
 		public Point2D ProjectedNewLocation(Direction dir)
 		{
-			return Pos + EffectiveMovement(dir);
+			return ProjectedNewLocation(Pos, dir);
+		}
+
+		public Point2D ProjectedNewLocation(Point2D pos, Direction dir)
+		{
+			dir.Normalize();
+			return pos + EffectiveMovement(dir);
+		}
+
+		public bool OtherInDetectionRange(MapEntity other)
+		{
+			return WithinDistance(Pos, other.Pos, DetectionRange);
 		}
 
 		private Direction EffectiveMovement(Direction dir)
 		{
-			return (dir * Speed) / MAX_MOVEMENT_SPEED;
+			return (dir * MovementSpeed) / MAX_MOVEMENT_SPEED;
 		}
 
 		public override string ToString()
@@ -60,5 +82,4 @@ namespace Game.World
 			return Entity.ToString();
 		}
 	}
-
 }
