@@ -43,12 +43,12 @@ namespace IO
 
 		public (int, int) GetMovementVector(int mag)
 		{
-			return NormalizeMovementVector(InputToVector(), mag);
+			return NormalizeMovementVector(InputToMovementVector(), mag);
 		}
 
 		public (int, int) GetMenuVector()
 		{
-			return NormalizeMenuVector(InputToVector());
+			return NormalizeMenuVector(InputToMenuVector());
 		}
 
 		public bool IsInputPressed(PlayerInputs playerInput)
@@ -95,14 +95,24 @@ namespace IO
 				keyboardState[kvp.Key] = false;
 		}
 
-		private (int, int) InputToVector()
+		private (int, int) InputToMovementVector()
 		{
 			(int, int) totalMovementVector = (0, 0);
 
 			foreach (var kvp in INPUT_TO_VECTOR)
-				totalMovementVector = AddVectors(totalMovementVector, IsInputDown(kvp.Key) ? kvp.Value : (0, 0));
+				totalMovementVector = AddVectors(totalMovementVector, IsInputPressed(kvp.Key) ? kvp.Value : (0, 0));
 
 			return totalMovementVector;
+		}
+
+		private (int, int) InputToMenuVector()
+		{
+			(int, int) totalMenuVector = (0, 0);
+
+			foreach (var kvp in INPUT_TO_VECTOR)
+				totalMenuVector = AddVectors(totalMenuVector, IsInputDown(kvp.Key) ? kvp.Value : (0, 0));
+
+			return totalMenuVector;
 		}
 
 		private static (int, int) AddVectors((int, int) vector1, (int, int) vector2)
