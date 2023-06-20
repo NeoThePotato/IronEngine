@@ -99,7 +99,7 @@ namespace Game.World
 
 		public override string ToString()
 		{
-			return $"({TileJ}.{PointRemainder(PointJ)}/{POINTS_PER_TILE}, {TileI}.{PointRemainder(PointI)}/{POINTS_PER_TILE})";
+			return $"({TileJ}+{PointRemainder(PointJ)}/{POINTS_PER_TILE}, {TileI}+{PointRemainder(PointI)}/{POINTS_PER_TILE})";
 		}
 	}
 }

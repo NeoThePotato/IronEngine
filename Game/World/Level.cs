@@ -78,25 +78,22 @@ namespace Game.World
 
 			if (TileTraversable(newPos))
 			{
-				if (TileOccupied(newPos, out occupiedBy))
+				if (!TileOccupied(newPos, out occupiedBy))
 				{
-					if (occupiedBy == entity)
-					{
-						occupiedBy = null;
-						return true;
-					}
-					else if (occupiedBy.Passable)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
+					return true;
+				}
+				else if (occupiedBy == entity)
+				{
+					occupiedBy = null;
+					return true;
+				}
+				else if (occupiedBy.Passable)
+				{
+					return true;
 				}
 				else
 				{
-					return true;
+					return false;
 				}
 			}
 			else
@@ -181,7 +178,7 @@ namespace Game.World
 
 		private Direction EffectiveMovement(Direction dir)
 		{
-			return dir * (Speed / MAX_MOVEMENT_SPEED);
+			return (dir * Speed) / MAX_MOVEMENT_SPEED;
 		}
 
 		public override string ToString()

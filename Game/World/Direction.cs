@@ -2,16 +2,18 @@
 {
 	struct Direction
 	{
+		public const double SQRT2OVER2 = 0.7071067812;
 		public const int MAX_MAG = Point2D.POINTS_PER_TILE;
+		public const int MAX_DIAGONAL_MAG = (int)(MAX_MAG * SQRT2OVER2);
 		private static readonly Direction[] DIRECTION_VECTORS = {
 			new Direction(0, MAX_MAG),
-			new Direction(-MAX_MAG, MAX_MAG),
+			new Direction(-MAX_DIAGONAL_MAG, MAX_DIAGONAL_MAG),
 			new Direction(-MAX_MAG, 0),
-			new Direction(-MAX_MAG, -MAX_MAG),
+			new Direction(-MAX_DIAGONAL_MAG, -MAX_DIAGONAL_MAG),
 			new Direction(0, -MAX_MAG),
-			new Direction(MAX_MAG, -MAX_MAG),
+			new Direction(MAX_DIAGONAL_MAG, -MAX_DIAGONAL_MAG),
 			new Direction(MAX_MAG, 0),
-			new Direction(MAX_MAG, MAX_MAG),
+			new Direction(MAX_DIAGONAL_MAG, MAX_DIAGONAL_MAG),
 			new Direction(0, 0)
 		};
 
@@ -48,6 +50,9 @@
 
 		public static Direction operator *(Direction dir, int mag)
 			=> new Direction(dir.Dir * mag);
+
+		public static Direction operator /(Direction dir, int mag)
+			=> new Direction(dir.Dir / mag);
 
 		public static Direction TranslateDirection(Directions dir)
 		{
