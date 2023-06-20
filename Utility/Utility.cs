@@ -57,7 +57,7 @@ static class Utility
 		vector = (vector.Item1 * maxMagnitude, vector.Item2 * maxMagnitude);
 		var mag = Magnitude(vector);
 
-		return (mag > 0) ? (vector.Item1 / mag, vector.Item2 / mag) : (0, 0);
+		return (mag > 0) ? ((vector.Item1 * maxMagnitude) / mag, (vector.Item2 * maxMagnitude) / mag) : (0, 0);
 	}
 
 	public static void BlockUntilKeyDown()
