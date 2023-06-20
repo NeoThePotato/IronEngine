@@ -55,7 +55,7 @@ namespace Game.World
 
 		public bool MoveEntity(MapEntity entity, Direction direction, out MapEntity? otherEntity)
 		{
-			if (CanEntityMoveTo(entity, entity.Pos + direction, out otherEntity))
+			if (CanEntityMoveTo(entity, entity.ProjectedNewLocation(direction), out otherEntity))
 			{
 				entity.Move(direction);
 
@@ -76,7 +76,7 @@ namespace Game.World
 
 		private void MoveEntityToEdgeOfTile(MapEntity entity, Direction direction)
 		{
-			var projectedPoint = entity.Pos + direction;
+			var projectedPoint = entity.ProjectedNewLocation(direction);
 			var actualJ = Utility.ClampRange(projectedPoint.PointJ, TileToPoint(entity.Pos.TileJ), TileToPoint(entity.Pos.TileJ + 1) - 1);
 			var actualI = Utility.ClampRange(projectedPoint.PointI, TileToPoint(entity.Pos.TileI), TileToPoint(entity.Pos.TileI + 1) - 1);
 			entity.Pos = new Point2D(actualJ, actualI);
@@ -183,7 +183,12 @@ namespace Game.World
 		{
 			Debug.Assert(dir.Mag <= POINTS_PER_TILE);
 			Dir = dir;
-			Pos += EffectiveMovement(dir);
+			Pos = ProjectedNewLocation(dir);
+		}
+
+		public Point2D ProjectedNewLocation(Direction dir)
+		{
+			return Pos + EffectiveMovement(dir);
 		}
 
 		private Direction EffectiveMovement(Direction dir)
