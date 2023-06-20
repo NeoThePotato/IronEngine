@@ -48,7 +48,7 @@ namespace Game.World
 			=> new Point2D(p1.PointJ + p2.PointJ, p1.PointI + p2.PointI);
 									   
 		public static Point2D operator -(Point2D p1, Point2D p2)
-			=> p1 - p2;
+			=> new Point2D(p1.PointJ - p2.PointJ, p1.PointI - p2.PointI);
 									   
 		public static Point2D operator *(Point2D p, int num)
 			=> new Point2D(p.PointJ * num, p.PointI * num);
