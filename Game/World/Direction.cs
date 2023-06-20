@@ -1,9 +1,11 @@
-﻿namespace Game.World
+﻿using static Game.World.Point2D;
+
+namespace Game.World
 {
 	struct Direction
 	{
 		public const double SQRT2OVER2 = 0.7071067812;
-		public const int MAX_MAG = Point2D.POINTS_PER_TILE;
+		public const int MAX_MAG = POINTS_PER_TILE;
 		public const int MAX_DIAGONAL_MAG = (int)(MAX_MAG * SQRT2OVER2);
 		private static readonly Direction[] DIRECTION_VECTORS = {
 			new Direction(0, MAX_MAG),
@@ -53,6 +55,16 @@
 
 		public static Direction operator /(Direction dir, int mag)
 			=> new Direction(dir.Dir / mag);
+
+		public void Normalize()
+		{
+			this = Normalize(this);
+		}
+
+		public static Direction Normalize(Direction dir)
+		{
+			return new Direction(Utility.NormalizeVector((dir.Dir.PointJ, dir.Dir.PointI), MAX_MAG));
+		}
 
 		public static Direction TranslateDirection(Directions dir)
 		{

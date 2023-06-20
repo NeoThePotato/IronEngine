@@ -181,7 +181,8 @@ namespace Game.World
 
         public void Move(Direction dir)
 		{
-			Debug.Assert(dir.Mag <= POINTS_PER_TILE);
+			dir.Normalize();
+			Debug.Assert(dir.Mag <= MAX_MAG);
 			Dir = dir;
 			Pos = ProjectedNewLocation(dir);
 		}
