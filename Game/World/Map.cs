@@ -7,15 +7,23 @@ namespace Game.World
     class Map
     {
         private char[,] _tileMap;
-        public int SizeJ
+        public int TileSizeJ
         {
             get => _tileMap.GetLength(0);
         }
-        public int SizeI
+        public int TileSizeI
         {
             get => _tileMap.GetLength(1);
-        }
-        public char[,] TileMap
+		}
+		public int PointSizeJ
+		{
+			get => TileToPoint(TileSizeJ);
+		}
+		public int PointSizeI
+		{
+			get => TileToPoint(TileSizeI);
+		}
+		public char[,] TileMap
         { get => _tileMap; private set => _tileMap = value; }
 
         public Map(char[,] tileMap)
@@ -36,14 +44,19 @@ namespace Game.World
 		public TileInfo GetTileInfo(int tileJ, int tileI)
         {
             return TileInfo.GetTileInfo(TileMap[tileJ, tileI]);
-        }
+		}
 
-        public Point2D GetRandomTile()
+		public Point2D GetRandomPoint()
+		{
+			return new Point2D(Random.Shared.Next(0, PointSizeJ), Random.Shared.Next(0, PointSizeI));
+		}
+
+		public Point2D GetRandomTile()
         {
-            return Tile(Random.Shared.Next(0, SizeJ), Random.Shared.Next(0, SizeI));
-        }
+            return Tile(Random.Shared.Next(0, TileSizeJ), Random.Shared.Next(0, TileSizeI));
+		}
 
-        public struct TileInfo
+		public struct TileInfo
         {
             public string name;
             public bool passable;

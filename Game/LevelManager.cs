@@ -54,12 +54,12 @@ namespace Game
 		public void Start()
 		{
 			// TODO This is a test, remove this in the final release
-			Level.AddEntityAtRandomValidTile(UnitTemplates.slime);
+			Level.AddEntityAtRandomValidPoint(UnitTemplates.slime);
 			Level.AddEntityAtEntryTile(Assets.TrapsTemplates.firePit);
 			var treasureChest = new Container("Chest", 5);
 			treasureChest.TryAddItem(Armors.rustedChestplate);
 			treasureChest.TryAddItem(Weapons.rustedBlade);
-			Level.AddEntityAtRandomValidTile(treasureChest);
+			Level.AddEntityAtRandomValidPoint(treasureChest);
 		}
 
 		public void Update(ulong currentTick)

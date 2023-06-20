@@ -19,9 +19,9 @@ namespace IO.Render
 		private LevelMetadata LevelMetadata
 		{ get; set; }
 		public override int SizeJ
-		{ get => Map.SizeJ; }
+		{ get => Map.TileSizeJ; }
 		public override int SizeI
-		{ get => Map.SizeI*STRECH_I; }
+		{ get => Map.TileSizeI*STRECH_I; }
 		public (int, int) Size
 		{ get => (SizeJ, SizeI); }
 		public (int, int) CacheSize
@@ -49,9 +49,9 @@ namespace IO.Render
 
 		private void RenderTileDataToCache()
 		{
-			for (int j = 0; j < Map.SizeJ; j++)
+			for (int j = 0; j < Map.TileSizeJ; j++)
 			{
-				for (int i = 0; i < Map.SizeI; i++)
+				for (int i = 0; i < Map.TileSizeI; i++)
 				{
 					var info = VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]);
 					RenderToCache(j, i, info);

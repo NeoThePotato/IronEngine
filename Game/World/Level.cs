@@ -42,12 +42,12 @@ namespace Game.World
             return AddEntity(entity, Metadata.entryTile);
         }
 
-		public MapEntity AddEntityAtRandomValidTile(Entity entity)
+		public MapEntity AddEntityAtRandomValidPoint(Entity entity)
 		{
 			Point2D randP;
 
 			do
-				randP = Map.GetRandomTile();
+				randP = Map.GetRandomPoint();
 			while (!TileTraversable(randP));
 
 			return AddEntity(entity, randP);
@@ -119,7 +119,7 @@ namespace Game.World
 
 		private bool PointOutOfBounds(Point2D pos)
 		{
-			return pos.PointJ >= TileToPoint(Map.SizeJ) || pos.PointJ < 0 || pos.PointI >= TileToPoint(Map.SizeI) || pos.PointI < 0;
+			return pos.PointJ >= TileToPoint(Map.TileSizeJ) || pos.PointJ < 0 || pos.PointI >= TileToPoint(Map.TileSizeI) || pos.PointI < 0;
 		}
 
 		private bool TileImpassable(Point2D pos)
