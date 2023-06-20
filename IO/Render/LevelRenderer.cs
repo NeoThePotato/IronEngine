@@ -34,7 +34,9 @@ namespace IO.Render
 		public void RenderEntity(FrameBuffer buffer, MapEntity entity, char c = 'x', byte color = 15)
 		{
 			int posJ = entity.Pos.TileJ;
-			int posI = entity.Pos.TileI * MapRenderer.STRECH_I;
+			int posI = (entity.Pos.TileI * MapRenderer.STRECH_I);
+			int subTileI = MapRenderer.STRECH_I * Point2D.PointRemainder(entity.Pos.PointI) / Point2D.POINTS_PER_TILE;
+			posI += subTileI;
 			buffer.Char[posJ, posI] = c;
 			buffer.Char[posJ, posI + 1] = c;
 			buffer.Foreground[posJ, posI] = color;

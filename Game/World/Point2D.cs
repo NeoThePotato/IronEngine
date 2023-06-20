@@ -78,14 +78,14 @@ namespace Game.World
 			return (int)Math.Sqrt(DistanceAbs(p1, p2));
 		}
 
+		public static int PointRemainder(int point)
+			=> point % POINTS_PER_TILE;
+
 		private static int TileToPoint(int tile)
 			=> tile * POINTS_PER_TILE;
 
 		private static int PointToTile(int point)
 			=> point / POINTS_PER_TILE;
-
-		private static int PointRemainder(int point)
-			=> point % POINTS_PER_TILE;
 
 		public override bool Equals([NotNullWhen(true)] object? obj)
 		{
