@@ -124,17 +124,22 @@ namespace Game
 
 		private void AutoMoveEntity(MapEntity entity)
 		{
-			if (entity.Dir.Mag == 0)
-                entity.Dir = Direction.GetRandomDirection(); // Start moving
+			if (EntityDetectsPlayer(entity)) // Track player if in range
+				entity.Target = PlayerEntity.Pos;
+			else if (entity.Dir.Mag == 0)
+                entity.Dir = Direction.GetRandomDirection(); // Start moving in random direction
 
 			if (!Level.MoveEntity(entity, out MapEntity? encounteredEntity))
 				entity.Dir = Direction.GetRandomDirection(); // Move or change direction
 
             if (encounteredEntity == PlayerEntity)
                 StartEncounter(entity); // Encounter player
-
-            // TODO Follow player if in range
         }
+
+		private bool EntityDetectsPlayer(MapEntity entity)
+		{
+			return entity.OtherInDetectionRange(PlayerEntity) &&  Level.CanEntityMoveTo(entity, PlayerEntity);
+		}
 
 		private void UpdateEncounter()
 		{

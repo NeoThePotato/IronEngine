@@ -87,7 +87,7 @@ namespace Game.World
 		#endregion
 
 		#region SPATIAL_CHECKS
-		private bool CanEntityMoveTo(MapEntity entity, Direction targetDir, out MapEntity? occupiedBy)
+		public bool CanEntityMoveTo(MapEntity entity, Direction targetDir, out MapEntity? occupiedBy)
 		{
 			occupiedBy = null;
 			var newPos = entity.ProjectedNewLocation(targetDir);
@@ -123,9 +123,9 @@ namespace Game.World
 		/// </summary>
 		/// <param name="entity">MapEntity to check movement for.</param>
 		/// <param name="targetPos">Target point to check if entity can move to.</param>
-		/// <param name="occupiedBy">Returns entity standing in the way.</param>
-		/// <returns></returns>
-		private bool CanEntityMoveTo(MapEntity entity, Point2D targetPos, out MapEntity? occupiedBy)
+		/// <param name="occupiedBy">Returns entity standing in the way, null if there isn't any.</param>
+		/// <returns>true</returns>
+		public bool CanEntityMoveTo(MapEntity entity, Point2D targetPos, out MapEntity? occupiedBy)
 		{
 			Debug.Assert(entity.Moveable);
 			Point2D currentLocation = entity.Pos;
@@ -146,6 +146,14 @@ namespace Game.World
 			}
 
 			return true;
+		}
+
+		public bool CanEntityMoveTo(MapEntity entity, MapEntity other)
+		{
+			MapEntity? encountered;
+			bool inLineOfSight = CanEntityMoveTo(entity, other.Pos, out encountered);
+
+			return inLineOfSight && (encountered == other);
 		}
 
 		private bool TileTraversable(Point2D pos)
