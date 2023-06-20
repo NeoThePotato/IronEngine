@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Game.World
 {
@@ -69,13 +70,20 @@ namespace Game.World
 
 		public static int DistanceAbs(Point2D p1, Point2D p2)
 		{
-			var p = p1 - p2;
-			return (int)(Math.Pow(Math.Abs(p.TileI), 2) + Math.Pow(Math.Abs(p.TileJ), 2));
+			return (int)Math.Sqrt(DistanceAbs(p1, p2));
 		}
 
 		public static int DistanceSq(Point2D p1, Point2D p2)
 		{
-			return (int)Math.Sqrt(DistanceAbs(p1, p2));
+			var p = p1 - p2;
+			return (int)(Math.Pow(Math.Abs(p.TileI), 2) + Math.Pow(Math.Abs(p.TileJ), 2));
+		}
+
+		public static bool WithinDistance(Point2D p1, Point2D p2, int distance)
+		{
+			Debug.Assert(distance >= 0);
+
+			return DistanceSq(p1, p2) < Math.Pow(distance, 2);
 		}
 
 		public static int TileToPoint(int tile)
