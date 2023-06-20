@@ -33,8 +33,8 @@ namespace IO.Render
 
 		public void RenderEntity(FrameBuffer buffer, MapEntity entity, char c = 'x', byte color = 15)
 		{
-			int posJ = entity.PosJ;
-			int posI = entity.PosI * MapRenderer.STRECH_I;
+			int posJ = entity.Pos.TileJ;
+			int posI = entity.Pos.TileI * MapRenderer.STRECH_I;
 			buffer.Char[posJ, posI] = c;
 			buffer.Char[posJ, posI + 1] = c;
 			buffer.Foreground[posJ, posI] = color;

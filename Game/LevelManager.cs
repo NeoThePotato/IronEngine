@@ -106,7 +106,7 @@ namespace Game
 
 		private void UpdatePlayerMovement()
 		{
-			var movementDirection = InputManager.GetMovementDirection();
+			var movementDirection = new Direction(InputManager.GetMovementVector(Point2D.POINTS_PER_TILE));
 			Level.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
 
 			if (encounteredEntity != null)
@@ -124,7 +124,7 @@ namespace Game
 
 		private void AutoMoveEntity(MapEntity entity)
 		{
-			if (entity.Dir == Direction.Directions.None)
+			if (entity.Dir.Mag == 0)
                 entity.Dir = Direction.GetRandomDirection(); // Start moving
 
 			if (!Level.MoveEntity(entity, out MapEntity? encounteredEntity))

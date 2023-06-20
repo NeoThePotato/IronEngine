@@ -8,10 +8,10 @@ namespace Assets
 
 		public static readonly Dictionary<string, LevelMetadata> LEVELS_DICTIONARY = new Dictionary< string, LevelMetadata>()
 		{
-			{ "TestMap",        new LevelMetadata("Test Map",	$"{MAPS_PATH}TestMap.txt",		(15, 2), (2, 36))},
-			{ "Palace",         new LevelMetadata("Palace",		$"{MAPS_PATH}Palace.txt",		(102, 49), (4, 90))},
-			{ "PalaceSmall",    new LevelMetadata("Palace",		$"{MAPS_PATH}PalaceSmall.txt",	(59, 49), (4, 90))},
-			{ "Ship",           new LevelMetadata("Ship",		$"{MAPS_PATH}Ship.txt",			(9, 23), (70, 15)) },
+			{ "TestMap",        new LevelMetadata("Test Map",	$"{MAPS_PATH}TestMap.txt",		Point2D.Tile(15, 2),	Point2D.Tile(2, 36))},
+			{ "Palace",         new LevelMetadata("Palace",		$"{MAPS_PATH}Palace.txt",       Point2D.Tile(102, 49),	Point2D.Tile(4, 90))},
+			{ "PalaceSmall",    new LevelMetadata("Palace",		$"{MAPS_PATH}PalaceSmall.txt",  Point2D.Tile(59, 49),	Point2D.Tile(4, 90))},
+			{ "Ship",           new LevelMetadata("Ship",		$"{MAPS_PATH}Ship.txt",         Point2D.Tile(9, 23),	Point2D.Tile(70, 15))},
 		};
 	}
 }

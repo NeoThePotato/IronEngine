@@ -1,4 +1,8 @@
-﻿namespace Game.World
+﻿using static Game.World.Point2D;
+using static Game.World.Direction;
+using System.Diagnostics;
+
+namespace Game.World
 {
 	class Level
 	{
@@ -20,9 +24,9 @@
 			_metadata = metadata;
 		}
 
-		public MapEntity AddEntity(Entity entity, int posJ, int posI)
+		public MapEntity AddEntity(Entity entity, Point2D pos)
 		{
-			var mapEntity = new MapEntity(entity, posJ, posI);
+			var mapEntity = new MapEntity(entity, pos);
 			AddEntity(mapEntity);
 
 			return mapEntity;
@@ -35,29 +39,23 @@
 
         public MapEntity AddEntityAtEntryTile(Entity entity)
         {
-            (int entryJ, int EntryI) = Metadata.entryTile;
-
-            return AddEntity(entity, entryJ, EntryI);
+            return AddEntity(entity, Metadata.entryTile);
         }
 
 		public MapEntity AddEntityAtRandomValidTile(Entity entity)
 		{
-			int randJ;
-			int randI;
+			Point2D randP;
 
 			do
-			{
-				randJ = Random.Shared.Next(0, Map.SizeJ);
-				randI = Random.Shared.Next(0, Map.SizeI);
-			}
-			while (!TileTraversable(randJ, randI));
+				randP = Map.GetRandomTile();
+			while (!TileTraversable(randP));
 
-			return AddEntity(entity, randJ, randI);
+			return AddEntity(entity, randP);
 		}
 
-        public bool MoveEntity(MapEntity entity, Direction.Directions direction, out MapEntity? otherEntity)
+		public bool MoveEntity(MapEntity entity, Direction direction, out MapEntity? otherEntity)
 		{
-			if (CanEntityMoveTo(entity, direction, out otherEntity))
+			if (CanEntityMoveTo(entity, entity.Pos + direction, out otherEntity))
 			{
 				entity.Move(direction);
 
@@ -74,15 +72,13 @@
 			return MoveEntity(entity, entity.Dir, out otherEntity);
         }
 
-        private bool CanEntityMoveTo(MapEntity entity, Direction.Directions direction, out MapEntity? occupiedBy)
+        private bool CanEntityMoveTo(MapEntity entity, Point2D newPos, out MapEntity? occupiedBy)
 		{
-			(int offsetJ, int offsetI) = Direction.TranslateDirection(direction);
-			int newPosJ = entity.PosJ + offsetJ, newPosI = entity.PosI + offsetI;
 			occupiedBy = null;
 
-			if (TileTraversable(newPosJ, newPosI))
+			if (TileTraversable(newPos))
 			{
-				if (TileOccupied(newPosJ, newPosI, out occupiedBy))
+				if (TileOccupied(newPos, out occupiedBy))
 				{
 					if (occupiedBy == entity)
 					{
@@ -109,33 +105,33 @@
 			}
 		}
 
-		private bool TileTraversable(int posJ, int posI)
+		private bool TileTraversable(Point2D pos)
 		{
-			return !(TileOutOfBounds(posJ, posI) || TileImpassable(posJ, posI));
+			return !(TileOutOfBounds(pos) || TileImpassable(pos));
 		}
 
-		private bool TileOutOfBounds(int posJ, int posI)
+		private bool TileOutOfBounds(Point2D pos)
 		{
-			return posJ >= Map.SizeJ || posJ < 0 || posI >= Map.SizeI || posI < 0;
+			return pos.PointJ >= Map.SizeJ || pos.PointJ < 0 || pos.PointI >= Map.SizeI || pos.PointI < 0;
 		}
 
-		private bool TileImpassable(int posJ, int posI)
+		private bool TileImpassable(Point2D pos)
 		{
-			return !Map.GetTileInfo(posJ, posI).passable;
+			return !Map.GetTileInfo(pos).passable;
 		}
 
-		private bool TileOccupied(int posJ, int posI, out MapEntity? occupiedBy)
+		private bool TileOccupied(Point2D pos, out MapEntity? occupiedBy)
 		{
-			occupiedBy = GetEntityAt(posJ, posI);
+			occupiedBy = GetEntityAt(pos);
 
 			return occupiedBy != null;
 		}
 
-		private MapEntity? GetEntityAt(int posJ, int posI)
+		private MapEntity? GetEntityAt(Point2D pos)
 		{
 			foreach (var entity in Entities)
 			{
-				if (entity.PosJ == posJ && entity.PosI == posI)
+				if (SameTile(entity.Pos, pos))
 					return entity;
 			}
 
@@ -145,89 +141,52 @@
 
 	class MapEntity
 	{
+		public const int MAX_MOVEMENT_SPEED = POINTS_PER_TILE;
 		public Entity Entity
 		{ get; set; }
-		public int PosJ
+		public Point2D Pos
 		{ get; set; }
-		public int PosI
+		public Direction Dir
 		{ get; set; }
-		public Direction.Directions Dir
-		{ get; set; }
+		public int Speed
+		{ get => MAX_MOVEMENT_SPEED / 4; } // TODO Replace with entity "SPD" stat or something
 		public bool Passable
 		{ get => Entity.Passable; }
 
-		public MapEntity(Entity entity, int posJ, int posI, Direction.Directions direction = Direction.Directions.None)
+		public MapEntity(Entity entity, Point2D pos)
 		{
 			Entity = entity;
-			PosJ = posJ;
-			PosI = posI;
-			Dir = direction;
+			Pos = pos;
+			Dir = TranslateDirection(Directions.None);
 		}
 
-        public void Move()
+		public MapEntity(Entity entity, Point2D pos, Direction dir)
+		{
+			Entity = entity;
+			Pos = pos;
+			Dir = dir;
+		}
+
+		public void Move()
         {
             Move(Dir);
         }
 
-        public void Move(Direction.Directions direction)
+        public void Move(Direction dir)
 		{
-			(int movJ, int movI) = Direction.TranslateDirection(direction);
-			Dir = direction;
-			Move(movJ, movI);
+			Debug.Assert(dir.Mag <= POINTS_PER_TILE);
+			Dir = dir;
+			Pos += EffectiveMovement(dir);
 		}
 
-		public void Move(int movJ, int movI)
+		private Direction EffectiveMovement(Direction dir)
 		{
-			PosJ += movJ;
-			PosI += movI;
+			return dir * (Speed / MAX_MOVEMENT_SPEED);
 		}
 
 		public override string ToString()
 		{
 			return Entity.ToString();
-		}
-	}
-
-	static class Direction
-	{
-		private static readonly (int, int)[] DIRECTION_VECTORS = {
-			(0, 1),
-			(-1, 1),
-			(-1, 0),
-			(-1, -1),
-			(0, -1),
-			(1, -1),
-			(1, 0),
-			(1, 1),
-			(0, 0)
-		};
-
-		public static (int, int) TranslateDirection(Directions direction)
-		{
-			return DIRECTION_VECTORS[(int)direction];
-		}
-
-		public static Directions TranslateDirection((int, int) vector)
-		{
-			return (Directions)Array.IndexOf(DIRECTION_VECTORS, vector);
-		}
-
-		public static Directions GetRandomDirection()
-		{
-			return (Directions)Random.Shared.Next(0, Enum.GetNames(typeof(Directions)).Length);
-		}
-
-		public enum Directions
-		{
-			E = 0,
-			NE = 1,
-			N = 2,
-			NW = 3,
-			W = 4,
-			SW = 5,
-			S = 6,
-			SE = 7,
-			None = 8
 		}
 	}
 
@@ -255,10 +214,10 @@
 	{
 		public string name;
 		public string filePath;
-		public (int, int) entryTile;
-		public (int, int) exitTile;
+		public Point2D entryTile;
+		public Point2D exitTile;
 
-		public LevelMetadata(string name, string filePath, (int, int) entryTile, (int, int) exitTile)
+		public LevelMetadata(string name, string filePath, Point2D entryTile, Point2D exitTile)
 		{
 			this.name = name;
 			this.filePath = filePath;

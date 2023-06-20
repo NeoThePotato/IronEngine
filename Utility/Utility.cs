@@ -47,6 +47,19 @@ static class Utility
 		return ClampMin(ClampMax(val, max), min);
 	}
 
+	public static int Magnitude((int, int) vector)
+	{
+		return (int)Math.Sqrt(Math.Pow(vector.Item1, 2) + Math.Pow(vector.Item2, 2));
+	}
+
+	public static (int, int) NormalizeVector((int, int) vector, int maxMagnitude)
+	{
+		vector = (vector.Item1 * maxMagnitude, vector.Item2 * maxMagnitude);
+		var mag = Magnitude(vector);
+
+		return (mag > 0) ? (vector.Item1 / mag, vector.Item2 / mag) : (0, 0);
+	}
+
 	public static void BlockUntilKeyDown()
 	{
 		Console.ReadKey();
