@@ -81,6 +81,11 @@ namespace Game.World
 			return TranslateDirection((Directions)Random.Shared.Next(0, Enum.GetNames(typeof(Directions)).Length));
 		}
 
+		public override string ToString()
+		{
+			return Dir.ToString();
+		}
+
 		public enum Directions
 		{
 			E = 0,
