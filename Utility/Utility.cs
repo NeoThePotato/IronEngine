@@ -52,12 +52,33 @@ static class Utility
 		return (int)Math.Sqrt(Math.Pow(vector.Item1, 2) + Math.Pow(vector.Item2, 2));
 	}
 
+	public static (int, int) ClampVectorMagnitude((int, int) vector, int maxMagnitude)
+	{
+		Debug.Assert(maxMagnitude > 0);
+		var vectorMagnitude = Magnitude(vector);
+
+		if (vectorMagnitude > maxMagnitude)
+			vector = NormalizeVector(vector, maxMagnitude);
+
+		return vector;
+	}
+
 	public static (int, int) NormalizeVector((int, int) vector, int maxMagnitude)
 	{
+		Debug.Assert(maxMagnitude > 0);
 		vector = (vector.Item1 * maxMagnitude, vector.Item2 * maxMagnitude);
-		var mag = Magnitude(vector);
+		var vectorMagnitude = Magnitude(vector);
 
-		return (mag > 0) ? ((vector.Item1 * maxMagnitude) / mag, (vector.Item2 * maxMagnitude) / mag) : (0, 0);
+		if (vectorMagnitude > 0)
+		{
+			vector = ((vector.Item1 * maxMagnitude) / vectorMagnitude, (vector.Item2 * maxMagnitude) / vectorMagnitude);
+
+			return vector;
+		}
+		else
+		{
+			return (0, 0);
+		}
 	}
 
 	public static void BlockUntilKeyDown()

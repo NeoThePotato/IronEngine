@@ -68,7 +68,7 @@ namespace Game.World
 
 		public static Direction Normalize(Direction dir)
 		{
-			return new Direction(Utility.NormalizeVector((dir.Dir.PointJ, dir.Dir.PointI), MAX_MAG));
+			return new Direction(Utility.ClampVectorMagnitude((dir.Dir.PointJ, dir.Dir.PointI), MAX_MAG));
 		}
 
 		public static Direction TranslateDirection(Directions dir)
