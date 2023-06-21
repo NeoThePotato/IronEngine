@@ -23,15 +23,20 @@ namespace IO.Render
 
 		public override void Render(FrameBuffer frameBuffer)
 		{
-			if (Menu.HasTitle)
-			{
-				RenderTitle(frameBuffer);
-				frameBuffer = new FrameBuffer(frameBuffer, 1, 0);
-			}
+			RenderTitle(frameBuffer);
+			frameBuffer = BaseMenuOffset(frameBuffer);
 			RenderBaseMenu(frameBuffer);
 
 			if (Menu.CursorValidPosition)
 				HighlightSelection(frameBuffer);
+		}
+
+		public FrameBuffer BaseMenuOffset(FrameBuffer frameBuffer)
+		{
+			if (Menu.HasTitle)
+				frameBuffer = new FrameBuffer(frameBuffer, 1, 0);
+
+			return frameBuffer;
 		}
 
 		private void RenderTitle(FrameBuffer frameBuffer)

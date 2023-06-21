@@ -29,6 +29,7 @@ namespace IO.Render
 		public override void Render(FrameBuffer frameBuffer)
 		{
 			MenuManagerRenderer.Render(frameBuffer);
+			frameBuffer = MenuManagerRenderer.BaseMenuOffset(frameBuffer);
 
 			if (ContainerMenu.ItemSelected)
 				HighlightSelection(frameBuffer);
