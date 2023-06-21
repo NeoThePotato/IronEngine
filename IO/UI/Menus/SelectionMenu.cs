@@ -9,6 +9,8 @@ namespace IO.UI.Menus
         private int _cursorJ = 0;
         private int _cursorI = 0;
 
+		public string Title
+		{ get; private set; }
         public string?[,] Strings
         { get; private set; }
 		public Dictionary<string, Action?>? Actions
@@ -41,11 +43,14 @@ namespace IO.UI.Menus
 		{ get => DimJ; }
 		public override int LengthI
 		{ get => DimI * ColumnLength; }
+		public bool HasTitle
+		{ get => Title != string.Empty; }
 		public override bool Exit
         { get; set; }
 
-        public SelectionMenu(PlayerInputManager inputManager, Dictionary<string, Action?> actions, int dimJ, int dimI) : base(inputManager)
+        public SelectionMenu(PlayerInputManager inputManager, Dictionary<string, Action?> actions, int dimJ, int dimI, string? title = null) : base(inputManager)
         {
+			Title = title ?? string.Empty;
             if (dimJ * dimI >= actions.Count)
             {
 				Actions = actions;
@@ -59,8 +64,9 @@ namespace IO.UI.Menus
             }
         }
 
-		public SelectionMenu(PlayerInputManager inputManager, Dictionary<string, Action?> actions, string?[,] strings) : base(inputManager)
+		public SelectionMenu(PlayerInputManager inputManager, Dictionary<string, Action?> actions, string?[,] strings, string? title = null) : base(inputManager)
 		{
+			Title = title ?? string.Empty;
 			Actions = actions;
 			Strings = strings;
 			UpdateLongestString();

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using Game.Items;
 using IO.Render;
 
@@ -27,8 +28,12 @@ namespace IO.UI.Menus
 
 		public ContainerMenu(PlayerInputManager inputManager, params Container[] containers) : base(inputManager)
 		{
+			var sb = new StringBuilder(50);
+
+			foreach (var container in containers)
+				sb.Append($"{container.Name} | ");
 			Containers = containers;
-			Menu = new SelectionMenu(inputManager, null, GetStrings());
+			Menu = new SelectionMenu(inputManager, null, GetStrings(), sb.ToString());
 		}
 
 		public override void Start()
