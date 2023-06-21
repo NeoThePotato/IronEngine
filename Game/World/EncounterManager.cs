@@ -8,6 +8,7 @@ namespace Game.World
 {
     class EncounterManager
     {
+		private LevelManager _levelManager;
 		private PlayerInputManager _inputManager;
 		private GameUIManager _uiManager;
 		private Container _playerInventory;
@@ -22,6 +23,7 @@ namespace Game.World
 
 		public EncounterManager(LevelManager levelManager, Entity encounteredEntity)
 		{
+			_levelManager = levelManager;
 			_inputManager = levelManager.InputManager;
 			_uiManager = levelManager.UIManager;
 			_playerInventory = levelManager.PlayerInventory;
@@ -53,6 +55,9 @@ namespace Game.World
 				case EncounterType.Door:
 					StartDoor();
 					break;
+				case EncounterType.Portal:
+					StartPortal();
+					break;
 			}
 		}
 
@@ -71,6 +76,9 @@ namespace Game.World
 					break;
 				case EncounterType.Door:
 					UpdateDoor();
+					break;
+				case EncounterType.Portal:
+					UpdatePortal();
 					break;
 			}
 		}
@@ -136,13 +144,31 @@ namespace Game.World
 			throw new NotImplementedException();
 		}
 
+		private void StartPortal()
+		{
+			var portal = (Portal)_encounteredEntity;
+
+			if (portal.PortalType == PortalType.Exit)
+			{
+				_dataLog.WriteLine($"{_unit} has found {portal}");
+				_uiManager.StackNewMenu(MenuFactory.GetConfirmPortalMenu(_levelManager));
+			}
+			Exit = true;
+		}
+
+		private void UpdatePortal()
+		{
+			Exit = true;
+		}
+
 
 		public enum EncounterType
         {
             Combat,
             Container,
             Trap,
-            Door
+            Door,
+			Portal
         }
     }
 }

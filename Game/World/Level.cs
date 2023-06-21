@@ -41,7 +41,12 @@ namespace Game.World
         public MapEntity AddEntityAtEntryTile(Entity entity)
         {
             return AddEntity(entity, Metadata.entryTile);
-        }
+		}
+
+		public MapEntity AddEntityAtExitTile(Entity entity)
+		{
+			return AddEntity(entity, Metadata.exitTile);
+		}
 
 		public MapEntity AddEntityAtRandomValidPoint(Entity entity)
 		{
