@@ -125,7 +125,7 @@ namespace Game.World
 		/// <param name="targetPos">Target point to check if entity can move to.</param>
 		/// <param name="occupiedBy">Returns entity standing in the way, null if there isn't any.</param>
 		/// <returns>true</returns>
-		public bool CanEntityMoveTo(MapEntity entity, Point2D targetPos)
+		public bool CanEntityMoveTo(MapEntity entity, Point2D targetPos, out MapEntity? occupiedBy)
 		{
 			Debug.Assert(entity.Moveable);
 			MapEntity? _ = null;
@@ -137,7 +137,7 @@ namespace Game.World
 
 			while (!SameTile(currentLocation, targetPos))
 			{
-				if (CanEntityMoveTo(entity, currentTrajectory, out _) && stepsCounter < maxSteps)
+				if (CanEntityMoveTo(entity, currentTrajectory, out occupiedBy) && stepsCounter < maxSteps)
 				{
 					currentLocation = entity.ProjectedNewLocation(currentLocation, currentTrajectory);
 					currentTrajectory = new Direction(currentLocation, targetPos);
@@ -150,6 +150,7 @@ namespace Game.World
 					return false;
 				}
 			}
+			occupiedBy = GetEntityAt(targetPos);
 
 			return true;
 		}
@@ -157,9 +158,9 @@ namespace Game.World
 		public bool CanEntityMoveTo(MapEntity entity, MapEntity other)
 		{
 			Debug.Assert(entity != other);
-			bool inLineOfSight = CanEntityMoveTo(entity, other.Pos);
+			bool inLineOfSight = CanEntityMoveTo(entity, other.Pos, out var occupiedBy);
 
-			return inLineOfSight;
+			return inLineOfSight || occupiedBy == other;
 		}
 
 		private bool TileTraversable(Point2D pos)
