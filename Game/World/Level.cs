@@ -89,8 +89,12 @@ namespace Game.World
 		#region SPATIAL_CHECKS
 		public bool CanEntityMoveTo(MapEntity entity, Direction targetDir, out MapEntity? occupiedBy)
 		{
+			return CanEntityMoveTo(entity, entity.Pos, targetDir, out occupiedBy);
+		}
+		public bool CanEntityMoveTo(MapEntity entity, Point2D startingPoint, Direction targetDir, out MapEntity? occupiedBy)
+		{
 			occupiedBy = null;
-			var newPos = entity.ProjectedNewLocation(targetDir);
+			var newPos = entity.ProjectedNewLocation(startingPoint, targetDir);
 
 			if (TileTraversable(newPos))
 			{
@@ -118,6 +122,14 @@ namespace Game.World
 			}
 		}
 
+		public bool CanEntityMoveTo(MapEntity entity, MapEntity other)
+		{
+			Debug.Assert(entity != other);
+			bool inLineOfSight = CanEntityMoveTo(entity, other.Pos, out var occupiedBy);
+
+			return inLineOfSight || occupiedBy == other;
+		}
+
 		/// <summary>
 		/// Checks if there is a direct line-of-sight/movement between this entity and targetPos.
 		/// </summary>
@@ -128,16 +140,14 @@ namespace Game.World
 		public bool CanEntityMoveTo(MapEntity entity, Point2D targetPos, out MapEntity? occupiedBy)
 		{
 			Debug.Assert(entity.Moveable);
-			MapEntity? _ = null;
 			int stepsCounter = 0;
 			int maxSteps = (entity.DetectionRange/entity.MovementSpeed) + 1;
 			Point2D currentLocation = entity.Pos;
 			Direction currentTrajectory = new Direction(entity.Pos, targetPos);
-			CanEntityMoveTo(entity, currentTrajectory, out _);
 
 			while (!SameTile(currentLocation, targetPos))
 			{
-				if (CanEntityMoveTo(entity, currentTrajectory, out occupiedBy) && stepsCounter < maxSteps)
+				if (CanEntityMoveTo(entity, currentLocation, currentTrajectory, out occupiedBy) && stepsCounter < maxSteps)
 				{
 					currentLocation = entity.ProjectedNewLocation(currentLocation, currentTrajectory);
 					currentTrajectory = new Direction(currentLocation, targetPos);
@@ -153,14 +163,6 @@ namespace Game.World
 			occupiedBy = GetEntityAt(targetPos);
 
 			return true;
-		}
-
-		public bool CanEntityMoveTo(MapEntity entity, MapEntity other)
-		{
-			Debug.Assert(entity != other);
-			bool inLineOfSight = CanEntityMoveTo(entity, other.Pos, out var occupiedBy);
-
-			return inLineOfSight || occupiedBy == other;
 		}
 
 		private bool TileTraversable(Point2D pos)
