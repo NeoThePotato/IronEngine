@@ -128,19 +128,24 @@ namespace Game.World
 		public bool CanEntityMoveTo(MapEntity entity, Point2D targetPos, out MapEntity? occupiedBy)
 		{
 			Debug.Assert(entity.Moveable);
+			int stepsCounter = 0;
+			int maxSteps = (entity.DetectionRange/entity.MovementSpeed) + 1;
 			Point2D currentLocation = entity.Pos;
 			Direction currentTrajectory = new Direction(entity.Pos, targetPos);
 			CanEntityMoveTo(entity, currentTrajectory, out occupiedBy);
 
 			while (!SameTile(currentLocation, targetPos))
 			{
-				if (CanEntityMoveTo(entity, currentTrajectory, out occupiedBy))
+				if (CanEntityMoveTo(entity, currentTrajectory, out occupiedBy) && stepsCounter < maxSteps)
 				{
 					currentLocation = entity.ProjectedNewLocation(currentLocation, currentTrajectory);
 					currentTrajectory = new Direction(currentLocation, targetPos);
+					stepsCounter++;
 				}
 				else
 				{
+					Debug.WriteIf(stepsCounter >= maxSteps, $"{entity} took {stepsCounter} steps and failed to reach its destination");
+
 					return false;
 				}
 			}
