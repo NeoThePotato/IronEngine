@@ -125,8 +125,21 @@ namespace Game
 		private void AutoMoveEntity(MapEntity entity)
 		{
 			if (EntityDetectsPlayer(entity)) // Track player if in range
-				entity.Target = PlayerEntity.Pos;
-			else if (entity.Dir.Mag == 0)
+			{
+				if (!entity.IsTargeting) // Found player
+					DataLog.WriteLine($"{entity} has spotted {PlayerEntity}");
+
+				entity.Target = PlayerEntity;
+			}
+			else
+			{
+				if (entity.IsTargeting) // Lost player
+					DataLog.WriteLine($"{entity} has lost sight of {entity.Target}");
+
+				entity.Target = null;
+			}
+
+			if (entity.Dir.Mag == 0)
                 entity.Dir = Direction.GetRandomDirection(); // Start moving in random direction
 
 			if (!Level.MoveEntity(entity, out MapEntity? encounteredEntity))

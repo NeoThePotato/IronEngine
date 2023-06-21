@@ -5,7 +5,9 @@ namespace Game.World
 {
 	class MapEntity
 	{
-		private Point2D _target;
+		private Direction _direction;
+		private MapEntity? _target;
+		private Point2D _targetPos;
 		public const int MAX_MOVEMENT_SPEED = POINTS_PER_TILE;
 		public const int MOVEMENT_SPEED = MAX_MOVEMENT_SPEED / 4; // TODO Replace with entity "SPD" stat or something
 		public static readonly int DETECTION_RANGE = TileToPoint(3); // TODO Replace with entity "INT" stat or something
@@ -15,20 +17,27 @@ namespace Game.World
 		public Point2D Pos
 		{ get; set; }
 		public Direction Dir
-		{ get; set; }
+		{
+			get => IsTargeting? new Direction(Pos, TargetPos) : _direction;
+			set => _direction = value;
+		}
 		public int MovementSpeed
 		{ get => Utility.ClampMax(MOVEMENT_SPEED, MAX_MOVEMENT_SPEED); }
 		public int DetectionRange
 		{ get => DETECTION_RANGE; }
-		public Point2D Target
+		public Point2D TargetPos
+		{ get => IsTargeting ? _targetPos : Pos; set => _targetPos = value; }
+		public MapEntity? Target
 		{
 			get => _target;
 			set
 			{
 				_target = value;
-				Dir = new Direction(Pos, _target);
+				TargetPos = IsTargeting? _target!.Pos : Pos;
 			}
 		}
+		public bool IsTargeting
+		{ get => Target != null; }
 		public bool Passable
 		{ get => Entity.Passable; }
 		public bool Moveable
