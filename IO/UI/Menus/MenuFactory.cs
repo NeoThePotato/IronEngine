@@ -10,7 +10,7 @@ namespace IO.UI.Menus
 			Action onTrue = () => throw new NotImplementedException(); // TODO Call some "MoveToNextLevel" function
 			Action onFalse = () => levelManager.UIManager.ForceExitCurrentMenu();
 
-			return GetConfirmMenu(levelManager, "Are you sure you want to proceed?", onTrue, onFalse);
+			return GetConfirmMenu(levelManager.InputManager, "Are you sure you want to proceed?", onTrue, onFalse);
 		}
 
 		public static SelectionMenu GetInGameMenu(LevelManager levelManager)
@@ -36,7 +36,7 @@ namespace IO.UI.Menus
 			return new ContainerMenu(inputManager, containers);
 		}
 
-		private static SelectionMenu GetConfirmMenu(LevelManager levelManager, string query, Action onTrue, Action onFalse)
+		private static SelectionMenu GetConfirmMenu(PlayerInputManager inputManager, string query, Action onTrue, Action onFalse)
 		{
 			var actions = new Dictionary<string, Action?>()
 			{
@@ -44,7 +44,7 @@ namespace IO.UI.Menus
 				{ "No", onFalse},
 			};
 
-			return new SelectionMenu(levelManager.InputManager, actions, 1, 2, query);
+			return new SelectionMenu(inputManager, actions, 1, 2, query);
 		}
 	}
 }
