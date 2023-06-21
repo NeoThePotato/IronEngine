@@ -6,8 +6,10 @@ namespace Game.World
 	class MapEntity
 	{
 		private Point2D _target;
-
 		public const int MAX_MOVEMENT_SPEED = POINTS_PER_TILE;
+		public const int MOVEMENT_SPEED = MAX_MOVEMENT_SPEED / 4; // TODO Replace with entity "SPD" stat or something
+		public static readonly int DETECTION_RANGE = TileToPoint(3); // TODO Replace with entity "INT" stat or something
+
 		public Entity Entity
 		{ get; set; }
 		public Point2D Pos
@@ -15,9 +17,9 @@ namespace Game.World
 		public Direction Dir
 		{ get; set; }
 		public int MovementSpeed
-		{ get => MAX_MOVEMENT_SPEED / 4; } // TODO Replace with entity "SPD" stat or something
+		{ get => Utility.ClampMax(MOVEMENT_SPEED, MAX_MOVEMENT_SPEED); }
 		public int DetectionRange
-		{ get => TileToPoint(3); } // TODO Replace with entity "INT" stat or something
+		{ get => DETECTION_RANGE; }
 		public Point2D Target
 		{
 			get => _target;
