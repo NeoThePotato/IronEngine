@@ -14,5 +14,10 @@ namespace Assets
 			{ "Ship",			new MapMetadata("Ship",			$"{MAPS_PATH}Ship.txt",			Point2D.Tile(9, 23),	Point2D.Tile(70, 15))},
 			{ "CastleRuins1",	new MapMetadata("Castle Ruins",	$"{MAPS_PATH}CastleRuins1.txt",	Point2D.Tile(74, 59),	Point2D.Tile(21, 30))},
 		};
+
+		public static MapMetadata GetRandomMapMeta()
+		{
+			return MAPS_DICTIONARY.ElementAt(Random.Shared.Next(0, MAPS_DICTIONARY.Count)).Value;
+		}
 	}
 }

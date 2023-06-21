@@ -204,24 +204,4 @@ namespace Game.World
 		}
 		#endregion
 	}
-
-	static class LevelFactory
-	{
-		public static Level MakeLevel(string levelName)
-        {
-			var levelMetadata = MapMetadata.GetMetadata(levelName);
-
-            return MakeLevel(levelMetadata);
-        }
-
-        public static Level MakeLevel(MapMetadata levelMetadata)
-        {
-            var charData = IO.File.Map.LoadMapCharData(levelMetadata.filePath);
-
-            if (charData != null)
-                return new Level(new Map(charData), levelMetadata);
-            else
-                throw new NullReferenceException();
-        }
-    }
 }

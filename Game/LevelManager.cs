@@ -45,24 +45,16 @@ namespace Game
 		{
 			GameManager = gameManager;
 			var playerUnit = new Unit(UnitTemplates.hero);
-			Level = LevelFactory.MakeLevel("TestMap");
-			PlayerEntity = Level.AddEntityAtEntryTile(playerUnit);
-			Level.AddEntityAtEntryTile(new Portal(PortalType.Entry));
-			Level.AddEntityAtExitTile(new Portal(PortalType.Exit));
-			PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
-			DataLog.WriteLine($"{PlayerEntity} has arrived at {Level.Metadata.name}");
+            PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
+            MapEntity playerEntity;
+			Level = LevelGenerator.MakeLevel(playerUnit, out playerEntity);
+			PlayerEntity = playerEntity;
 		}
 
 		public void Start()
-		{
-			// TODO This is a test, remove this in the final release
-			Level.AddEntityAtRandomValidPoint(UnitTemplates.slime);
-			Level.AddEntityAtEntryTile(Assets.TrapsTemplates.firePit);
-			var treasureChest = new Container("Chest", 5);
-			treasureChest.TryAddItem(Armors.rustedChestplate);
-			treasureChest.TryAddItem(Weapons.rustedBlade);
-			Level.AddEntityAtRandomValidPoint(treasureChest);
-		}
+        {
+            DataLog.WriteLine($"{PlayerEntity} has arrived at {Level.Metadata.name}");
+        }
 
 		public void Update(ulong currentTick)
 		{
