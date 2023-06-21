@@ -61,14 +61,19 @@ namespace Game.World
 		public static Direction operator /(Direction dir, int mag)
 			=> new Direction(dir.Dir / mag);
 
-		public void Normalize()
+		public void ClampMagnitude()
 		{
-			this = Normalize(this);
+			this = ClampMagnitude(this);
 		}
 
-		public static Direction Normalize(Direction dir)
+		public static Direction ClampMagnitude(Direction dir)
 		{
-			return new Direction(Utility.ClampVectorMagnitude((dir.Dir.PointJ, dir.Dir.PointI), MAX_MAG));
+			return ClampMagnitude(dir, MAX_MAG);
+		}
+
+		public static Direction ClampMagnitude(Direction dir, int mag)
+		{
+			return new Direction(Utility.ClampVectorMagnitude((dir.Dir.PointJ, dir.Dir.PointI), mag));
 		}
 
 		public static Direction TranslateDirection(Directions dir)

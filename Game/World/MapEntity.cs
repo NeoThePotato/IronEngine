@@ -64,7 +64,6 @@ namespace Game.World
 
 		public Point2D ProjectedNewLocation(Point2D pos, Direction dir)
 		{
-			dir.Normalize();
 			return pos + EffectiveMovement(dir);
 		}
 
@@ -75,7 +74,7 @@ namespace Game.World
 
 		private Direction EffectiveMovement(Direction dir)
 		{
-			return (dir * MovementSpeed) / MAX_MOVEMENT_SPEED;
+			return ClampMagnitude(dir, MovementSpeed);
 		}
 
 		public override string ToString()

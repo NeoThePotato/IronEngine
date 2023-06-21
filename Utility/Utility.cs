@@ -55,9 +55,8 @@ static class Utility
 	public static (int, int) ClampVectorMagnitude((int, int) vector, int maxMagnitude)
 	{
 		Debug.Assert(maxMagnitude > 0);
-		var vectorMagnitude = Magnitude(vector);
 
-		if (vectorMagnitude > maxMagnitude)
+		if (Magnitude(vector) > maxMagnitude)
 			vector = NormalizeVector(vector, maxMagnitude);
 
 		return vector;
