@@ -8,16 +8,16 @@ namespace Game.World
 	{
 		private Map _map;
 		private List<MapEntity> _entities;
-		private LevelMetadata _metadata;
+		private MapMetadata _metadata;
 
 		public Map Map
 		{ get => _map; private set => _map = value; }
 		public List<MapEntity> Entities
 		{ get => _entities; private set => _entities = value; }
-        public LevelMetadata Metadata
+        public MapMetadata Metadata
 		{ get => _metadata; private set => _metadata = value; }
 
-        public Level(Map map, LevelMetadata metadata)
+        public Level(Map map, MapMetadata metadata)
 		{
 			_map = map;
 			_entities = new List<MapEntity>();
@@ -204,12 +204,12 @@ namespace Game.World
 	{
 		public static Level MakeLevel(string levelName)
         {
-			var levelMetadata = LevelMetadata.GetMetadata(levelName);
+			var levelMetadata = MapMetadata.GetMetadata(levelName);
 
             return MakeLevel(levelMetadata);
         }
 
-        public static Level MakeLevel(LevelMetadata levelMetadata)
+        public static Level MakeLevel(MapMetadata levelMetadata)
         {
             var charData = IO.File.Map.LoadMapCharData(levelMetadata.filePath);
 
@@ -218,31 +218,5 @@ namespace Game.World
             else
                 throw new NullReferenceException();
         }
-    }
-
-	struct LevelMetadata
-	{
-		public string name;
-		public string filePath;
-		public Point2D entryTile;
-		public Point2D exitTile;
-
-		public LevelMetadata(string name, string filePath, Point2D entryTile, Point2D exitTile)
-		{
-			this.name = name;
-			this.filePath = filePath;
-			this.entryTile = entryTile;
-			this.exitTile = exitTile;
-        }
-
-        public static LevelMetadata GetMetadata(string levelName)
-        {
-            return Assets.LevelTemplates.LEVELS_DICTIONARY[levelName];
-        }
-
-		public override string ToString()
-		{
-			return name;
-		}
     }
 }

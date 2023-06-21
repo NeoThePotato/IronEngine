@@ -16,7 +16,7 @@ namespace IO.Render
 
 		private Map Map
 		{ get; set; }
-		private LevelMetadata LevelMetadata
+		private MapMetadata LevelMetadata
 		{ get; set; }
 		public override int SizeJ
 		{ get => Map.TileSizeJ; }
@@ -27,7 +27,7 @@ namespace IO.Render
 		public (int, int) CacheSize
 		{ get => (_mapCache.SizeJ, _mapCache.SizeI); }
 
-		public MapRenderer(Map map, LevelMetadata levelMetadata)
+		public MapRenderer(Map map, MapMetadata levelMetadata)
 		{
 			Map = map;
 			LevelMetadata = levelMetadata;

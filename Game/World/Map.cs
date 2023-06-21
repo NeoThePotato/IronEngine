@@ -80,5 +80,31 @@ namespace Game.World
 				}
             }
         }
-    }
+	}
+
+	struct MapMetadata
+	{
+		public string name;
+		public string filePath;
+		public Point2D entryTile;
+		public Point2D exitTile;
+
+		public MapMetadata(string name, string filePath, Point2D entryTile, Point2D exitTile)
+		{
+			this.name = name;
+			this.filePath = filePath;
+			this.entryTile = entryTile;
+			this.exitTile = exitTile;
+		}
+
+		public static MapMetadata GetMetadata(string levelName)
+		{
+			return Assets.MapTemplates.MAPS_DICTIONARY[levelName];
+		}
+
+		public override string ToString()
+		{
+			return name;
+		}
+	}
 }
