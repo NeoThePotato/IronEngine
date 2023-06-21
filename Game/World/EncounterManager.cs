@@ -8,7 +8,7 @@ namespace Game.World
 {
     class EncounterManager
     {
-		private LevelManager _levelManager;
+		private LevelManager _levelManager; // TODO The following fields should be computational properties of "_levelManager"
 		private PlayerInputManager _inputManager;
 		private GameUIManager _uiManager;
 		private Container _playerInventory;

@@ -46,9 +46,9 @@ namespace Game
 			GameManager = gameManager;
 			var playerUnit = new Unit(UnitTemplates.hero);
 			Level = LevelFactory.MakeLevel("TestMap");
+			PlayerEntity = Level.AddEntityAtEntryTile(playerUnit);
 			Level.AddEntityAtEntryTile(new Portal(PortalType.Entry));
 			Level.AddEntityAtExitTile(new Portal(PortalType.Exit));
-			PlayerEntity = Level.AddEntityAtEntryTile(playerUnit);
 			PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
 			DataLog.WriteLine($"{PlayerEntity} has arrived at {Level.Metadata.name}");
 		}
