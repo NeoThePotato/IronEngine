@@ -24,7 +24,7 @@
         public int MaxNumOfDoors
         { get => _baseMaxNumOfDoors + Level / 10; }
 
-        public DifficultyProfile(string name, GrowthProfile enemyGrowthProfile, int baseEnemyDensity, int baseTrapDensity, int baseDoorChance, int baseMaxNumOfDoors)
+        public DifficultyProfile(string name, GrowthProfile enemyGrowthProfile, int baseEnemyDensity, int baseTrapDensity, float baseDoorChance, int baseMaxNumOfDoors)
         {
             Name = name ?? string.Empty;
             Level = 1;
