@@ -5,7 +5,7 @@ using Game.Items;
 using Game.World;
 using Game.Combat;
 using Assets;
-using Assets.EquipmentTemplates;
+using Assets.Generators;
 using System.Diagnostics;
 
 namespace Game
@@ -47,7 +47,7 @@ namespace Game
 			var playerUnit = new Unit(UnitTemplates.hero);
             PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
             MapEntity playerEntity;
-			Level = LevelGenerator.MakeLevel(playerUnit, out playerEntity);
+			Level = LevelGenerator.MakeLevel(playerUnit, out playerEntity, DifficultyProfileTemplates.normalDifficulty);
 			PlayerEntity = playerEntity;
 		}
 

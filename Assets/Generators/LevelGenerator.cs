@@ -1,6 +1,7 @@
 ﻿using Game.World;
 using Game.Items;
 using Game.Combat;
+using Game.Progression;
 using Assets.EquipmentTemplates;
 using static Assets.MapTemplates;
 using static Assets.Generators.LevelGenerator.Direction;
@@ -26,17 +27,17 @@ namespace Assets.Generators
 				throw new NullReferenceException();
 		}
 
-		public static Level MakeLevel(Unit playerUnit, out MapEntity playerEntity)
+		public static Level MakeLevel(Unit playerUnit, out MapEntity playerEntity, DifficultyProfile difficulty)
 		{
 			Level level;
 			level = MakeEmptyLevel(GetRandomMapMeta());
             playerEntity = level.AddEntityAtEntryTile(playerUnit);
 			var tileDirectionMap = GetTileDirectionMap(level.Map);
 			GeneratePortals(level);
-			GenerateDoors(level, tileDirectionMap);
-			GenerateChests(level, tileDirectionMap);
-			GenerateTraps(level);
-			GenerateEnemies(level);
+			GenerateDoors(level, difficulty, tileDirectionMap);
+			GenerateChests(level, difficulty, tileDirectionMap);
+			GenerateTraps(level, difficulty);
+			GenerateEnemies(level, difficulty);
 
             return level;
 		}
@@ -47,37 +48,62 @@ namespace Assets.Generators
 			level.AddEntityAtExitTile(new Portal(PortalType.Exit));
 		}
 
-		private static void GenerateDoors(Level level, Direction[,] tileDirectionMap)
+		private static void GenerateDoors(Level level, DifficultyProfile difficulty, Direction[,] tileDirectionMap)
 		{
 			var validDoorLocations = GetValidDoorLocations(tileDirectionMap);
-			throw new NotImplementedException(); // TODO Call ChestGenerator here, code below is rough guide
+			int doorsToGenerate = difficulty.MaxNumOfDoors;
+
+			while(validDoorLocations.Any() && doorsToGenerate > 0)
+			{
+				var point = PopRandomPoint(validDoorLocations);
+
+				if (RandomRoll(difficulty.DoorChance))
+				{
+					GenerateDoor(level, difficulty, point);
+					doorsToGenerate--;
+				}
+			}
 		}
 
-		private static void GenerateChests(Level level, Direction[,] tileDirectionMap)
+		private static void GenerateDoor(Level level, DifficultyProfile difficulty, Point2D point)
+		{
+			//throw new NotImplementedException();
+			//level.AddEntity(new MapEntity(new Door(), point)); // TODO Implement Door class
+		}
+
+		private static void GenerateChests(Level level, DifficultyProfile difficulty, Direction[,] tileDirectionMap)
 		{
 			var validChestLocations = GetValidChestLocations(tileDirectionMap);
-			throw new NotImplementedException(); // TODO Call ChestGenerator here, code below is rough guide
+
+			while (validChestLocations.Any())
+			{
+				var point = PopRandomPoint(validChestLocations);
+				GenerateChest(level, difficulty, point);
+			}
+		}
+
+		private static void GenerateChest(Level level, DifficultyProfile difficulty, Point2D point)
+		{
+			// TODO Call ChestGenerator here, code below is rough guide
 			var treasureChest = new Container("Chest", 5);
 			treasureChest.TryAddItem(Armors.rustedChestplate);
 			treasureChest.TryAddItem(Weapons.rustedBlade);
-			level.AddEntityAtRandomValidPoint(treasureChest);
+			level.AddEntity(new MapEntity(treasureChest, point));
 		}
 
-		private static void GenerateTraps(Level level)
+		private static void GenerateTraps(Level level, DifficultyProfile difficulty)
 		{
-			throw new NotImplementedException(); // TODO Call TrapGenerator here, code below is rough guide
-			level.AddEntityAtRandomValidPoint(TrapsTemplates.firePit);
+			level.AddEntityAtRandomValidPoint(TrapsTemplates.firePit); // TODO Call TrapGenerator here, code below is rough guide
 		}
 
-		private static void GenerateEnemies(Level level)
+		private static void GenerateEnemies(Level level, DifficultyProfile difficulty)
 		{
-			throw new NotImplementedException(); // TODO Call UnitGenerator here, code below is rough guide
-			level.AddEntityAtRandomValidPoint(UnitTemplates.slime);
-        }
+			level.AddEntityAtRandomValidPoint(UnitTemplates.slime); // TODO Call UnitGenerator here, code below is rough guide
+		}
 
         private static List<Point2D> GetValidDoorLocations(Direction[,] map)
         {
-            List<Point2D> validDoorLocations = new List<Point2D>(map.Length/3);
+            List<Point2D> validDoorLocations = new List<Point2D>(map.Length / 3);
 
             for (int j = 1; j < map.GetLength(0); j++)
             {
@@ -144,6 +170,20 @@ namespace Assets.Generators
 			bool s = j > map.TileSizeJ ? !map.GetTileInfo(j+1, i).passable : true;
 
             return (e ? E : None) | (n ? N : None) | (w ? W : None) | (s ? S : None);
+		}
+
+		private static Point2D PopRandomPoint(List<Point2D> points)
+		{
+			int index = Random.Shared.Next(0, points.Count());
+			Point2D point = points.ElementAt(index);
+			points.RemoveAt(index);
+
+			return point;
+		}
+
+		private static bool RandomRoll(float p)
+		{
+			return Random.Shared.NextDouble() < p;
 		}
 
 		[Flags]
