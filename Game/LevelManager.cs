@@ -5,7 +5,6 @@ using Game.Items;
 using Game.World;
 using Game.Combat;
 using Assets;
-using Assets.EquipmentTemplates;
 using System.Diagnostics;
 
 namespace Game
@@ -98,6 +97,7 @@ namespace Game
 			}
 		}
 
+		#region ENTITY_BEHAVIOUR
 		private void UpdatePlayerMovement()
 		{
 			var movementDirection = new Direction(InputManager.GetMovementVector(Point2D.POINTS_PER_TILE));
@@ -147,7 +147,9 @@ namespace Game
 		{
 			return entity.OtherInDetectionRange(PlayerEntity) &&  Level.CanEntityMoveTo(entity, PlayerEntity);
 		}
+		#endregion
 
+		#region ENCOUNTERS_LOGIC
 		private void UpdateEncounter()
 		{
 			Debug.Assert(State == GameState.Encounter);
@@ -183,6 +185,7 @@ namespace Game
 			Debug.Assert(State == GameState.Exit);
 			GameManager.Exit();
 		}
+		#endregion
 
 		private GameState GetGameState()
 		{
