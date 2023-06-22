@@ -36,8 +36,8 @@ namespace Assets.Generators
 			GeneratePortals(level);
 			GenerateDoors(level, difficulty, tileDirectionMap);
 			GenerateChests(level, difficulty, tileDirectionMap);
-			GenerateTraps(level, difficulty);
-			GenerateEnemies(level, difficulty);
+			GenerateTraps(level, difficulty, level.Map.TileSize);
+			GenerateEnemies(level, difficulty, level.Map.TileSize);
 
             return level;
 		}
@@ -91,14 +91,17 @@ namespace Assets.Generators
 			level.AddEntity(new MapEntity(treasureChest, point));
 		}
 
-		private static void GenerateTraps(Level level, DifficultyProfile difficulty)
+		private static void GenerateTraps(Level level, DifficultyProfile difficulty, int mapSize)
 		{
 			level.AddEntityAtRandomValidPoint(TrapsTemplates.firePit); // TODO Call TrapGenerator here, code below is rough guide
 		}
 
-		private static void GenerateEnemies(Level level, DifficultyProfile difficulty)
+		private static void GenerateEnemies(Level level, DifficultyProfile difficulty, int mapSize)
 		{
-			level.AddEntityAtRandomValidPoint(UnitTemplates.slime); // TODO Call UnitGenerator here, code below is rough guide
+			int numberOfEnemies = mapSize / difficulty.EnemyDensity;
+
+			for (int i = 0; i < numberOfEnemies; i++)
+				level.AddEntityAtRandomValidPoint(UnitGenerator.MakeUnit(difficulty));
 		}
 
         private static List<Point2D> GetValidDoorLocations(Direction[,] map)

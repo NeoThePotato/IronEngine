@@ -22,7 +22,7 @@ namespace Game.World
         public override EncounterManager.EncounterType EncounterType
 		{ get => EncounterManager.EncounterType.Trap; }
 
-		public Trap(string name, int damage, int level)
+		public Trap(string name, int level, int damage)
 		{
 			Name = name;
 			Level = level;

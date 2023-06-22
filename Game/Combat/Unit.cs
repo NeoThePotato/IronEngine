@@ -227,9 +227,9 @@ namespace Game.Combat
                     HealingPowerDecay *= (1f - growthProfile.healingPowerDecay);
                     break;
             }
-        }
+		}
 
-        public string GetStats()
+		public string GetStats()
         {
             return $"{this}" +
                 $"\nHP: {CurrentHP}/{MaxHP}" +

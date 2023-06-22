@@ -15,6 +15,10 @@ namespace Game.World
         {
             get => _tileMap.GetLength(1);
 		}
+		public int TileSize
+		{
+			get => _tileMap.Length;
+		}
 		public int PointSizeJ
 		{
 			get => TileToPoint(TileSizeJ);
