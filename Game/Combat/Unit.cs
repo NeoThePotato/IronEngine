@@ -1,6 +1,7 @@
 ﻿using Game.World;
 using Game.Items.Equipment;
 using Assets.EquipmentTemplates;
+using Game.Progression;
 
 namespace Game.Combat
 {
@@ -205,25 +206,25 @@ namespace Game.Combat
             Blocking = false;
         }
 
-        public void UpgradeStat(UnitStat stat)
+        public void UpgradeStat(UnitStat stat, GrowthProfile growthProfile)
         {
 			_level++;
             switch (stat)
             {
                 case UnitStat.HP:
-                    MaxHP += 3;
+                    MaxHP += growthProfile.maxHP;
                     break;
                 case UnitStat.Strength:
-                    Strength += 1;
+                    Strength += growthProfile.strength;
                     break;
                 case UnitStat.Evasion:
-                    Evasion += (1f - Evasion) * 0.1f;
+                    Evasion += (1f - Evasion) * growthProfile.evasion;
                     break;
                 case UnitStat.HealingPower:
-                    MaxHealingPower += (1f - MaxHealingPower) * 0.2f;
+                    MaxHealingPower += (1f - MaxHealingPower) * growthProfile.maxHealingPower;
                     break;
                 case UnitStat.HealingPowerDecay:
-                    HealingPowerDecay *= 0.8f;
+                    HealingPowerDecay *= (1f - growthProfile.healingPowerDecay);
                     break;
             }
         }

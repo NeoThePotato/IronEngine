@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Game.Combat;
 using Game.Items.Equipment;
+using static Assets.GrowthProfileTemplates;
 using Assets.EquipmentTemplates;
 
 namespace Game
@@ -69,19 +70,19 @@ namespace Game
 			switch (input)
 			{
 				case 1:
-					_unit.UpgradeStat(UnitStat.HP);
+					_unit.UpgradeStat(UnitStat.HP, playerGrowthProfile);
 					break;
 				case 2:
-					_unit.UpgradeStat(UnitStat.Strength);
+					_unit.UpgradeStat(UnitStat.Strength, playerGrowthProfile);
 					break;
 				case 3:
-					_unit.UpgradeStat(UnitStat.Evasion);
+					_unit.UpgradeStat(UnitStat.Evasion, playerGrowthProfile);
 					break;
 				case 4:
-					_unit.UpgradeStat(UnitStat.HealingPower);
+					_unit.UpgradeStat(UnitStat.HealingPower, playerGrowthProfile);
 					break;
 				case 5:
-					_unit.UpgradeStat(UnitStat.HealingPowerDecay);
+					_unit.UpgradeStat(UnitStat.HealingPowerDecay, playerGrowthProfile);
 					break;
 				case 6:
 					return UpgradeWeapon();
