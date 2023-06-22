@@ -13,9 +13,11 @@ class ProgramManager
 	private DateTime _logicFinishTime;
 	private DateTime _renderFinishTime;
 	#endregion
+	#region CORE_COMPONENTS
 	private GameManager _gameManager;
 	private ConsoleRenderer _consoleRenderer;
 	private ulong _currentTick;
+	#endregion
 
 	#region TIMING_PROPERTIES
 	private TimeSpan LogicUpdateTime
@@ -27,8 +29,10 @@ class ProgramManager
 	private TimeSpan TimeUntilNextFrame
 	{ get => FRAMETIME > TotalUpdateTime ? FRAMETIME - TotalUpdateTime : new TimeSpan(0); }
 	#endregion
+	#region META_FLAGS
 	private bool Exit
 	{ get => _gameManager.PendingExit; }
+	#endregion
 
 	public ProgramManager()
 	{
