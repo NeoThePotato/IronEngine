@@ -6,9 +6,9 @@ namespace Game.Items
     {
         public override string Name
         { get; }
-        public int Capacity
-        { get; private set; }
-        public int LockLevel
+		public override int Level
+		{ get; }
+		public int Capacity
         { get; private set; }
         public int NumberOfItems
         { get; private set; }
@@ -27,28 +27,28 @@ namespace Game.Items
         public override EncounterManager.EncounterType EncounterType
         { get => EncounterManager.EncounterType.Container; }
 
-        public Container(string name, int capacity = 1, int lockLevel = 0)
+        public Container(string name, int capacity = 1, int level = 1)
         {
             Name = name;
-            Capacity = capacity;
-            LockLevel = lockLevel;
+			Level = level;
+			Capacity = capacity;
             Items = new Item[Capacity];
         }
 
-        public Container(string name, Item item, int lockLevel = 0)
+        public Container(string name, Item item, int level = 1)
         {
             Name = name;
-            Capacity = 1;
-            LockLevel = lockLevel;
+			Level = level;
+			Capacity = 1;
             Items = new Item[Capacity];
             TryAddItem(item);
         }
 
-        public Container(string name, Item[] items, int lockLevel = 0)
+        public Container(string name, Item[] items, int level = 1)
         {
             Name = name;
-            Capacity = items.Length;
-            LockLevel = lockLevel;
+			Level = level;
+			Capacity = items.Length;
             Items = new Item[Capacity];
             TryAddItems(items);
         }

@@ -7,7 +7,9 @@ namespace Game.World
 	{
 		public override string Name
 		{ get; }
-        public int Damage
+		public override int Level
+		{ get; }
+		public int Damage
 		{ get; private set; }
 		public bool Armed
 		{ get; private set; }
@@ -20,11 +22,13 @@ namespace Game.World
         public override EncounterManager.EncounterType EncounterType
 		{ get => EncounterManager.EncounterType.Trap; }
 
-		public Trap(string name, int damage)
+		public Trap(string name, int damage, int level)
 		{
 			Name = name;
+			Level = level;
 			Damage = damage;
 			Armed = true;
+			Level = level;
 		}
 
 		public void TriggerTrap(Unit unit, DataLog dataLog)

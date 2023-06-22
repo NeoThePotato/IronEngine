@@ -4,18 +4,20 @@
     {
         public abstract string Name
         { get; }
-        public abstract bool Passable
+		public abstract int Level
+		{ get; }
+		public abstract bool Passable
         { get; }
         public abstract bool Moveable
         { get; }
-        public abstract bool MarkForDelete
+		public abstract bool MarkForDelete
         { get; }
         public abstract EncounterManager.EncounterType EncounterType
         { get; }
 
 		public override string ToString()
 		{
-            return Name;
+            return $"{Name} Lv{Level}";
 		}
 	}
 }

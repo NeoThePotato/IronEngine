@@ -8,6 +8,7 @@ namespace Game.Combat
     {
         // Permanent Stats
         private string _name = "";
+        private int _level = 1;
         private int _maxHP = 1;
         private int _strength = 0;
         private float _evasion = 0f;
@@ -104,6 +105,8 @@ namespace Game.Combat
             get => _equippedBodyArmor == null ? Armors.nothing : _equippedBodyArmor;
             set => _equippedBodyArmor = value;
         }
+		public override int Level
+        { get => _level; }
 		public override bool Passable
         { get => Dead; }
         public override bool Moveable
@@ -113,7 +116,7 @@ namespace Game.Combat
         public override EncounterManager.EncounterType EncounterType
         { get => EncounterManager.EncounterType.Combat; }
 
-		public Unit(string name, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Armor shield, Armor bodyArmor)
+		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Armor shield, Armor bodyArmor)
         {
             _name = name;
             MaxHP = HP;
@@ -204,10 +207,11 @@ namespace Game.Combat
 
         public void UpgradeStat(UnitStat stat)
         {
+			_level++;
             switch (stat)
             {
                 case UnitStat.HP:
-                    MaxHP += 5;
+                    MaxHP += 3;
                     break;
                 case UnitStat.Strength:
                     Strength += 1;
