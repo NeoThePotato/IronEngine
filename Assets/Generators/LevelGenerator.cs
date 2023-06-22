@@ -164,12 +164,13 @@ namespace Assets.Generators
 
 		private static Direction GetTileDirection(Map map, int j, int i)
 		{
-			bool e = i < map.TileSizeI-1? !map.GetTileInfo(j, i+1).passable : true;
-			bool n = j > 0 ? !map.GetTileInfo(j-1, i).passable : true;
-			bool w = i > 0 ? !map.GetTileInfo(j, i-1).passable : true;
-			bool s = j > map.TileSizeJ-1? !map.GetTileInfo(j+1, i).passable : true;
+			bool c =						!map.GetTileInfo(j, i).passable;
+			bool e = i < map.TileSizeI-1?	!map.GetTileInfo(j, i+1).passable : true;
+			bool n = j > 0 ?				!map.GetTileInfo(j-1, i).passable : true;
+			bool w = i > 0 ?				!map.GetTileInfo(j, i-1).passable : true;
+			bool s = j > map.TileSizeJ-1?	!map.GetTileInfo(j+1, i).passable : true;
 
-            return (e ? E : None) | (n ? N : None) | (w ? W : None) | (s ? S : None);
+            return (c ? C : None) | (e ? E : None) | (n ? N : None) | (w ? W : None) | (s ? S : None);
 		}
 
 		private static Point2D PopRandomPoint(List<Point2D> points)
@@ -189,11 +190,12 @@ namespace Assets.Generators
 		[Flags]
         public enum Direction: byte
         {
-            None =  0b0000,
-            E =     0b0001,
-            N =     0b0010,
-            W =     0b0100,
-            S =     0b1000,
+			None =	0b00000,
+            C =		0b00001,
+            E =     0b00010,
+            N =     0b00100,
+            W =     0b01000,
+            S =     0b10000,
         }
     }
 }
