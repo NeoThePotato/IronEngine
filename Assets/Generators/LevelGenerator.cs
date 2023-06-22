@@ -164,10 +164,10 @@ namespace Assets.Generators
 
 		private static Direction GetTileDirection(Map map, int j, int i)
 		{
-			bool e = i < map.TileSizeI? !map.GetTileInfo(j, i+1).passable : true;
+			bool e = i < map.TileSizeI-1? !map.GetTileInfo(j, i+1).passable : true;
 			bool n = j > 0 ? !map.GetTileInfo(j-1, i).passable : true;
 			bool w = i > 0 ? !map.GetTileInfo(j, i-1).passable : true;
-			bool s = j > map.TileSizeJ ? !map.GetTileInfo(j+1, i).passable : true;
+			bool s = j > map.TileSizeJ-1? !map.GetTileInfo(j+1, i).passable : true;
 
             return (e ? E : None) | (n ? N : None) | (w ? W : None) | (s ? S : None);
 		}
