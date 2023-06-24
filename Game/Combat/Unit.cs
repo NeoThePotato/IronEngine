@@ -1,6 +1,7 @@
 ﻿using Game.World;
 using Game.Items.Equipment;
 using Assets.EquipmentTemplates;
+using Game.Progression;
 
 namespace Game.Combat
 {
@@ -8,6 +9,7 @@ namespace Game.Combat
     {
         // Permanent Stats
         private string _name = "";
+        private int _level = 1;
         private int _maxHP = 1;
         private int _strength = 0;
         private float _evasion = 0f;
@@ -104,6 +106,8 @@ namespace Game.Combat
             get => _equippedBodyArmor ?? Armors.nothing;
             set => _equippedBodyArmor = value;
         }
+		public override int Level
+        { get => _level; }
 		public override bool Passable
         { get => Dead; }
         public override bool Moveable
@@ -113,7 +117,7 @@ namespace Game.Combat
         public override EncounterManager.EncounterType EncounterType
         { get => EncounterManager.EncounterType.Combat; }
 
-		public Unit(string name, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Armor shield, Armor bodyArmor)
+		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Armor shield, Armor bodyArmor)
         {
             _name = name;
             MaxHP = HP;
@@ -202,29 +206,30 @@ namespace Game.Combat
             Blocking = false;
         }
 
-        public void UpgradeStat(UnitStat stat)
+        public void UpgradeStat(UnitStat stat, GrowthProfile growthProfile)
         {
+			_level++;
             switch (stat)
             {
                 case UnitStat.HP:
-                    MaxHP += 5;
+                    MaxHP += growthProfile.maxHP;
                     break;
                 case UnitStat.Strength:
-                    Strength += 1;
+                    Strength += growthProfile.strength;
                     break;
                 case UnitStat.Evasion:
-                    Evasion += (1f - Evasion) * 0.1f;
+                    Evasion += (1f - Evasion) * growthProfile.evasion;
                     break;
                 case UnitStat.HealingPower:
-                    MaxHealingPower += (1f - MaxHealingPower) * 0.2f;
+                    MaxHealingPower += (1f - MaxHealingPower) * growthProfile.maxHealingPower;
                     break;
                 case UnitStat.HealingPowerDecay:
-                    HealingPowerDecay *= 0.8f;
+                    HealingPowerDecay *= (1f - growthProfile.healingPowerDecay);
                     break;
             }
-        }
+		}
 
-        public string GetStats()
+		public string GetStats()
         {
             return $"{this}" +
                 $"\nHP: {CurrentHP}/{MaxHP}" +
