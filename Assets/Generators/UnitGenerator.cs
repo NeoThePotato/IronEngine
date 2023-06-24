@@ -56,7 +56,7 @@ namespace Assets.Generators
 
 			foreach (var kvp in units)
 			{
-				if (kvp.Value.minLevel >= level)
+				if (kvp.Value.minLevel <= level)
 					retList.Add(kvp.Key, kvp.Value);
 			}
 
