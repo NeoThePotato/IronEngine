@@ -91,10 +91,12 @@ namespace Assets.Generators
 
 		private static void GenerateChest(Level level, DifficultyProfile difficulty, Point2D point)
 		{
-			// TODO Call ChestGenerator here, code below is rough guide
-			var treasureChest = new Container("Chest", 5);
-			treasureChest.TryAddItem(Armors.rustedChestplate);
-			treasureChest.TryAddItem(Weapons.rustedBlade);
+			int numberOfItems = Random.Shared.Next(0, 5);
+			var treasureChest = new Container("Chest", numberOfItems);
+
+			for (int i = 0; i < numberOfItems; i++)
+				treasureChest.TryAddItem(ItemGenerator.MakeItem(difficulty.Level));
+
 			level.AddEntity(new MapEntity(treasureChest, point));
 		}
 
