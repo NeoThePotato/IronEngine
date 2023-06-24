@@ -5,6 +5,6 @@ namespace Assets
 {
 	static class DifficultyProfileTemplates
 	{
-		public static DifficultyProfile normalDifficulty = new DifficultyProfile("Normal", enemyGrowthProfile, 50, 30, 0.5f, 2);
+		public static DifficultyProfile normalDifficulty = new DifficultyProfile("Normal", enemyGrowthProfile, 250, 30, 0.5f, 2);
 	}
 }

@@ -28,7 +28,7 @@ namespace Game
 
 		public void Start()
 		{
-			LevelManager = new LevelManager(this);
+			LevelManager = new LevelManager(this, Assets.DifficultyProfileTemplates.normalDifficulty);
 			LevelManager.Start();
 		}
 

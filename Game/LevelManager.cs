@@ -7,6 +7,7 @@ using Game.Combat;
 using Assets;
 using Assets.Generators;
 using System.Diagnostics;
+using Game.Progression;
 
 namespace Game
 {
@@ -41,13 +42,13 @@ namespace Game
 		private bool PendingExit
 		{ get; set; }
 
-		public LevelManager(GameManager gameManager)
+		public LevelManager(GameManager gameManager, DifficultyProfile difficultyProfile)
 		{
 			GameManager = gameManager;
 			var playerUnit = new Unit(UnitTemplates.hero);
             PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
             MapEntity playerEntity;
-			Level = LevelGenerator.MakeLevel(playerUnit, out playerEntity, DifficultyProfileTemplates.normalDifficulty);
+			Level = LevelGenerator.MakeLevel(playerUnit, out playerEntity, difficultyProfile);
 			PlayerEntity = playerEntity;
 		}
 
