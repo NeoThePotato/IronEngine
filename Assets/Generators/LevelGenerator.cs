@@ -29,9 +29,8 @@ namespace Assets.Generators
 
 		public static Level MakeLevel(Unit playerUnit, out MapEntity playerEntity, DifficultyProfile difficulty)
 		{
-			Level level;
-			level = MakeEmptyLevel(GetRandomMapMeta());
-            playerEntity = level.AddEntityAtEntryTile(playerUnit);
+			Level level = MakeEmptyLevel(GetRandomMapMeta());
+			playerEntity = level.AddEntityAtEntryTile(playerUnit);
 			var tileDirectionMap = GetTileDirectionMap(level.Map);
 			GeneratePortals(level);
 			GenerateDoors(level, difficulty, tileDirectionMap);
@@ -74,11 +73,19 @@ namespace Assets.Generators
 		private static void GenerateChests(Level level, DifficultyProfile difficulty, Direction[,] tileDirectionMap)
 		{
 			var validChestLocations = GetValidChestLocations(tileDirectionMap);
-
+			int chestsGenerated = 0;
 			while (validChestLocations.Any())
 			{
 				var point = PopRandomPoint(validChestLocations);
-				GenerateChest(level, difficulty, point);
+
+				if (!RandomRoll(difficulty.ChestChance))
+				{
+					GenerateChest(level, difficulty, point);
+					chestsGenerated++;
+				}
+
+				if (chestsGenerated >= difficulty.MaxNumOfChests)
+					break;
 			}
 		}
 
