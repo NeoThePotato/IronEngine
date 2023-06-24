@@ -43,7 +43,7 @@
         public override string ToString()
         {
             return
-                $"Difficulty: {Name} Lv{Level}\nEnemy density: 1/{EnemyDensity} tiles\nTrap density: 1/{TrapDensity} tiles\nDoor frequency: {EnemyDensity * 100:0.00}%";
+                $"Difficulty: {Name} Lv{Level}\nEnemy density: 1/{EnemyDensity} tiles\nTrap density: 1/{TrapDensity} tiles\nDoor frequency: {DoorChance * 100:0.00}%";
         }
     }
 }
