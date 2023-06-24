@@ -10,7 +10,11 @@ namespace Assets.Generators
 		private static readonly List<SpawnProfile> SPAWNABLE_UNITS = new List<SpawnProfile>()
 		{
 			{ new SpawnProfile(UnitTemplates.slime, 1, 5)},
-			// TODO Add more templates
+			{ new SpawnProfile(UnitTemplates.bandit, 2, 5)},
+			{ new SpawnProfile(UnitTemplates.imp, 2, 6)},
+			{ new SpawnProfile(UnitTemplates.fae, 2, 6)},
+			{ new SpawnProfile(UnitTemplates.spawnOfTwilight, 4, 2)},
+			{ new SpawnProfile(UnitTemplates.antiHero, 10, 2)},
 		};
 
 		public static Unit MakeUnit(DifficultyProfile difficultyProfile)
