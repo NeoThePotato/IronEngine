@@ -15,10 +15,15 @@ namespace Assets.Generators
 			{UnitTemplates.antiHero,		new SpawnProfile(10, 2)},
 		};
 
-		public static Unit MakeUnit(DifficultyProfile difficultyProfile)
+		public static Unit? MakeUnit(DifficultyProfile difficultyProfile)
 		{
-			var unit = new Unit(EntityGenerator<Unit>.MakeEntity(SPAWNABLE_UNITS, difficultyProfile.Level));
-			GrowUnit(ref unit, difficultyProfile.Level, difficultyProfile.EnemyGrowthProfile);
+			var unit = EntityGenerator<Unit>.MakeEntity(SPAWNABLE_UNITS, difficultyProfile.Level);
+
+			if (unit != null)
+			{
+				unit = new Unit(unit);
+				GrowUnit(ref unit, difficultyProfile.Level, difficultyProfile.EnemyGrowthProfile);
+			}
 
 			return unit;
 		}

@@ -31,6 +31,15 @@ namespace Game.World
 			Level = level;
 		}
 
+		public Trap(Trap other)
+		{
+			Name = other.Name;
+			Level = other.Level;
+			Damage = other.Damage;
+			Armed = other.Armed;
+			Level = other.Level;
+		}
+
 		public void TriggerTrap(Unit unit, DataLog dataLog)
 		{
 			if (Armed)

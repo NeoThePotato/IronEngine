@@ -22,11 +22,9 @@ namespace Assets.Generators
 			{EquipmentTemplates.Armors.mithrilChainmail,	new SpawnProfile(10, 1)},
 		};
 
-		public static Item MakeItem(int level)
+		public static Item? MakeItem(int level)
 		{
-			var item = EntityGenerator<Item>.MakeEntity(SPAWNABLE_ITEMS, level);
-
-			return item;
+			return EntityGenerator<Item>.MakeEntity(SPAWNABLE_ITEMS, level);
 		}
 	}
 }

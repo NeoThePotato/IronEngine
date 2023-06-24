@@ -4,7 +4,7 @@ namespace Assets.Generators
 {
 	static class EntityGenerator<Entity>
 	{
-		public static Entity MakeEntity(Dictionary<Entity, SpawnProfile> spawnableEntities, int level)
+		public static Entity? MakeEntity(Dictionary<Entity, SpawnProfile> spawnableEntities, int level)
 		{
 			if (spawnableEntities is null)
 				throw new ArgumentNullException(nameof(spawnableEntities));

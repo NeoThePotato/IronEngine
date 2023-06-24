@@ -102,7 +102,15 @@ namespace Assets.Generators
 
 		private static void GenerateTraps(Level level, DifficultyProfile difficulty, int mapSize)
 		{
-			level.AddEntityAtRandomValidPoint(TrapsTemplates.firePit); // TODO Call TrapGenerator here, code below is rough guide
+			int numberOfTraps = mapSize / difficulty.TrapDensity;
+
+			for (int i = 0; i < numberOfTraps; i++)
+			{
+				var trap = TrapGenerator.MakeTrap(difficulty);
+
+				if (trap != null)
+					level.AddEntityAtRandomValidPoint(trap);
+			}
 		}
 
 		private static void GenerateEnemies(Level level, DifficultyProfile difficulty, int mapSize)
@@ -110,7 +118,12 @@ namespace Assets.Generators
 			int numberOfEnemies = mapSize / difficulty.EnemyDensity;
 
 			for (int i = 0; i < numberOfEnemies; i++)
-				level.AddEntityAtRandomValidPoint(UnitGenerator.MakeUnit(difficulty));
+			{
+				var unit = UnitGenerator.MakeUnit(difficulty);
+
+				if (unit != null)
+					level.AddEntityAtRandomValidPoint(unit);
+			}
 		}
 
         private static List<Point2D> GetValidDoorLocations(Direction[,] map)
