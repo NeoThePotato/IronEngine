@@ -91,17 +91,17 @@ namespace Game.Combat
         }
         public Weapon Weapon
         {
-            get => _equippedWeapon == null ? Weapons.nothing : _equippedWeapon;
+            get => _equippedWeapon ?? Weapons.nothing;
             set => _equippedWeapon = value;
         }
         public Armor Shield
         {
-            get => _equippedShield == null ? Armors.nothing : _equippedShield;
+            get => _equippedShield ?? Armors.nothing;
             set => _equippedShield = value;
         }
         public Armor BodyArmor
         {
-            get => _equippedBodyArmor == null ? Armors.nothing : _equippedBodyArmor;
+            get => _equippedBodyArmor ?? Armors.nothing;
             set => _equippedBodyArmor = value;
         }
 		public override bool Passable
