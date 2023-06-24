@@ -28,7 +28,6 @@ namespace Game.World
 			Level = level;
 			Damage = damage;
 			Armed = true;
-			Level = level;
 		}
 
 		public Trap(Trap other)
@@ -37,7 +36,6 @@ namespace Game.World
 			Level = other.Level;
 			Damage = other.Damage;
 			Armed = other.Armed;
-			Level = other.Level;
 		}
 
 		public void TriggerTrap(Unit unit, DataLog dataLog)
