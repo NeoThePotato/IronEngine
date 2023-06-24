@@ -1,5 +1,4 @@
-﻿using Game;
-using Game.Combat;
+﻿using Game.Combat;
 using Game.Progression;
 using System.Diagnostics;
 
@@ -7,14 +6,14 @@ namespace Assets.Generators
 {
 	static class UnitGenerator
 	{
-		private static readonly List<SpawnProfile> SPAWNABLE_UNITS = new List<SpawnProfile>()
+		private static readonly Dictionary<Unit, SpawnProfile> SPAWNABLE_UNITS = new Dictionary<Unit, SpawnProfile>()
 		{
-			{ new SpawnProfile(UnitTemplates.slime, 1, 5)},
-			{ new SpawnProfile(UnitTemplates.bandit, 2, 5)},
-			{ new SpawnProfile(UnitTemplates.imp, 2, 6)},
-			{ new SpawnProfile(UnitTemplates.fae, 2, 6)},
-			{ new SpawnProfile(UnitTemplates.spawnOfTwilight, 4, 2)},
-			{ new SpawnProfile(UnitTemplates.antiHero, 10, 2)},
+			{UnitTemplates.slime,			new SpawnProfile(1, 5)},
+			{UnitTemplates.bandit,			new SpawnProfile(2, 5)},
+			{UnitTemplates.imp,				new SpawnProfile(2, 6)},
+			{UnitTemplates.fae,				new SpawnProfile(2, 6)},
+			{UnitTemplates.spawnOfTwilight,	new SpawnProfile(4, 2)},
+			{UnitTemplates.antiHero,		new SpawnProfile(10, 2)},
 		};
 
 		public static Unit MakeUnit(DifficultyProfile difficultyProfile)
@@ -27,7 +26,7 @@ namespace Assets.Generators
 
 		private static Unit PickRandomSpawnableUnit(int level)
 		{
-			return PickRandomUnitFromList(FilterByLevel(SPAWNABLE_UNITS, level)).unit;
+			return PickRandomUnitFromDict(FilterByLevel(SPAWNABLE_UNITS, level));
 		}
 
 		private static void GrowUnit(ref Unit unit, int levels, GrowthProfile profile)
@@ -35,57 +34,43 @@ namespace Assets.Generators
 			profile.GrowUnit(ref unit, levels);
 		}
 
-		private static SpawnProfile PickRandomUnitFromList(List<SpawnProfile> units)
+		private static Unit PickRandomUnitFromDict(Dictionary<Unit, SpawnProfile> units)
 		{
 			var rand = Random.Shared.Next(0, GetCumulativeSpawnChance(units));
 
-			foreach (var unit in units)
+			foreach (var kvp in units)
 			{
-				if (rand < unit.relativeSpawnChance)
-					return unit;
+				if (rand < kvp.Value.relativeSpawnChance)
+					return kvp.Key;
 				else
-					rand = rand - unit.relativeSpawnChance;
+					rand = rand - kvp.Value.relativeSpawnChance;
 			}
 			Debug.Assert(true, "This function should return a value inside of the foreach loop.");
 
-			return units[0];
+			return null;
 		}
 
-		private static List<SpawnProfile> FilterByLevel(List<SpawnProfile> units, int level)
+		private static Dictionary<Unit, SpawnProfile> FilterByLevel(Dictionary<Unit, SpawnProfile> units, int level)
 		{
-			var retList = new List<SpawnProfile>(units.Count);
+			var retList = new Dictionary<Unit, SpawnProfile>(units.Count);
 
-            foreach (var unit in units)
-            {
-                if (unit.minLevel >= level)
-					retList.Add(unit);
-            }
+			foreach (var kvp in units)
+			{
+				if (kvp.Value.minLevel >= level)
+					retList.Add(kvp.Key, kvp.Value);
+			}
 
 			return retList;
-        }
+		}
 
-		private static int GetCumulativeSpawnChance(List<SpawnProfile> units)
+		private static int GetCumulativeSpawnChance(Dictionary<Unit, SpawnProfile> units)
 		{
 			int sum = 0;
 
-			foreach (SpawnProfile profile in units)
-				sum += profile.relativeSpawnChance;
+			foreach (var kvp in units)
+				sum += kvp.Value.relativeSpawnChance;
 
 			return sum;
-		}
-
-		struct SpawnProfile
-		{
-			public Unit unit;
-			public int minLevel;
-			public int relativeSpawnChance;
-
-			public SpawnProfile(Unit unit, int minLevel, int relativeSpawnChance)
-			{
-				this.unit = unit;
-				this.minLevel = minLevel;
-				this.relativeSpawnChance = relativeSpawnChance;
-			}
 		}
 	}
 }
