@@ -1,7 +1,4 @@
-﻿using Game;
-using System.Windows.Shapes;
-
-namespace IO.Render
+﻿namespace IO.Render
 {
 	abstract class Renderer
 	{
@@ -14,6 +11,8 @@ namespace IO.Render
 		{ get; }
 
 		public abstract void Render(FrameBuffer buffer);
+
+		public virtual void Validate() { }
 
 		public static void RenderText(FrameBuffer buffer, string str, int length, byte textColor = COLOR_WHITE, byte bgColor = COLOR_BLACK)
 		{

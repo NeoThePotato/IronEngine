@@ -4,21 +4,20 @@ namespace IO.Render
 {
 	class LevelManagerRenderer : Renderer
 	{
+		private GameManager GameManager
+		{ get; set; }
 		public LevelManager LevelManager
-		{ get; private set; }
+		{ get => GameManager.LevelManager; }
 		public LevelRenderer LevelRenderer
-		{ get; private set; }
-		public GameUIManagerRenderer UIManagerRenderer
 		{ get; private set; }
 		public override int SizeJ
 		{ get => LevelRenderer.SizeJ; }
 		public override int SizeI
 		{ get => LevelRenderer.SizeI; }
 
-		public LevelManagerRenderer(LevelManager levelManager, GameUIManagerRenderer uiManagerRenderer)
+		public LevelManagerRenderer(GameManager gameManager)
 		{
-			UIManagerRenderer = uiManagerRenderer;
-			LevelManager = levelManager;
+			GameManager = gameManager;
 			LevelRenderer = new LevelRenderer(LevelManager.Level);
 		}
 
@@ -33,8 +32,11 @@ namespace IO.Render
 					RenderWorld(buffer);
 					break;
 			}
+		}
 
-			UIManagerRenderer.Render(buffer);
+		public override void Validate()
+		{
+			ValidateCurrentLevel();
 		}
 
 		private void RenderEncounter(FrameBuffer buffer)
@@ -56,6 +58,12 @@ namespace IO.Render
 		private void RenderPlayer(FrameBuffer buffer)
 		{
 			LevelRenderer.RenderEntity(buffer, LevelManager.PlayerEntity, '@', 15);
+		}
+
+		private void ValidateCurrentLevel()
+		{
+			if (LevelRenderer.Level != LevelManager.Level)
+				LevelRenderer = new LevelRenderer(LevelManager.Level);
 		}
 	}
 }

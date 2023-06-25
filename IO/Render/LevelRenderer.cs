@@ -4,8 +4,8 @@ namespace IO.Render
 {
 	class LevelRenderer : Renderer
 	{
-		private Level Level
-		{ get; set; }
+		public Level Level
+		{ get; private set; }
 		private MapRenderer MapRenderer
 		{ get; set; }
 		public override int SizeJ

@@ -67,8 +67,14 @@ namespace IO.Render
 			ChildRenderer.Render(buffer);
 		}
 
+		public override void Validate()
+		{
+			ChildRenderer.Validate();
+		}
+
 		private void UpdateFrameBuffer()
 		{
+			Validate();
 			ValidateFrameBufferSize();
 			Render(_frameBuffer);
 		}

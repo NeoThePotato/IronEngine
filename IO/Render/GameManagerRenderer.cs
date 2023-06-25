@@ -36,6 +36,12 @@ namespace IO.Render
 			UIManagerRenderer.Render(buffer);
 		}
 
+		public override void Validate()
+		{
+			LevelManagerRenderer.Validate();
+			ValidateBorderSizes();
+		}
+
 		private void RenderBorders(FrameBuffer buffer)
 		{
 			// Render vertical borders
