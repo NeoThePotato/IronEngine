@@ -108,6 +108,11 @@ namespace IO.Render
 			}
 		}
 
+		public override string ToString()
+		{
+			return $"J: {_offsetJ}:{_sizeJ}, I: {_offsetI}:{_sizeI}";
+		}
+
 		public struct OffsetBuffer<T>
 		{
 			private T[,] _buffer;
