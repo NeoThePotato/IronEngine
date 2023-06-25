@@ -23,6 +23,8 @@ namespace Game
 		{ get => GameManager.UIManager; }
 		public DataLog DataLog
 		{ get => UIManager.DataLog; }
+		public DifficultyProfile DifficultyProfile
+		{ get; private set; }
 		public Level Level
 		{ get; private set; }
 		public List<MapEntity> Entities
@@ -45,16 +47,18 @@ namespace Game
 		public LevelManager(GameManager gameManager, DifficultyProfile difficultyProfile)
 		{
 			GameManager = gameManager;
-			var playerUnit = new Unit(UnitTemplates.hero);
+			DifficultyProfile = difficultyProfile;
+			PlayerEntity = new MapEntity(new Unit(UnitTemplates.hero));
             PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
-            MapEntity playerEntity;
-			Level = LevelGenerator.MakeLevel(playerUnit, out playerEntity, difficultyProfile);
-			PlayerEntity = playerEntity;
 		}
 
 		public void Start()
-        {
-            DataLog.WriteLine($"{PlayerEntity} has arrived at {Level.Metadata.name}");
+		{
+			EncounterManager = null;
+			UIManager.ExitAllMenus();
+			Level = LevelGenerator.MakeLevel((Unit)PlayerEntity.Entity, out MapEntity playerEntity, DifficultyProfile);
+			PlayerEntity = playerEntity;
+			DataLog.WriteLine($"{PlayerEntity} has arrived at {Level.Metadata.name}");
         }
 
 		public void Update(ulong currentTick)
@@ -75,7 +79,18 @@ namespace Game
 					break;
 			}
 			PurgeDeadEntities();
-        }
+		}
+
+		public void MoveToNextLevel()
+		{
+			DifficultyProfile.RaiseLevel();
+			Start();
+		}
+
+		public void Exit()
+		{
+			PendingExit = true;
+		}
 
 		private void UpdateWorld()
 		{
@@ -199,11 +214,6 @@ namespace Game
 				return GameState.Menu;
 			else
 				return GameState.World;
-		}
-
-		public void Exit()
-		{
-			PendingExit = true;
 		}
 
 		public enum GameState

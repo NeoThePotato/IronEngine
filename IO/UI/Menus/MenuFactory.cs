@@ -7,7 +7,7 @@ namespace IO.UI.Menus
 	{
 		public static SelectionMenu GetConfirmPortalMenu(LevelManager levelManager)
 		{
-			Action onTrue = () => throw new NotImplementedException(); // TODO Call some "MoveToNextLevel" function
+			Action onTrue = () => levelManager.MoveToNextLevel(); // TODO Call some "MoveToNextLevel" function
 			Action onFalse = () => levelManager.UIManager.ForceExitCurrentMenu();
 
 			return GetConfirmMenu(levelManager.InputManager, "Are you sure you want to proceed?", onTrue, onFalse);

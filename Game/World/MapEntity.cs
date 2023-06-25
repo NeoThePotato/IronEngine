@@ -57,6 +57,13 @@ namespace Game.World
 			Dir = dir;
 		}
 
+		public MapEntity(Entity entity)
+		{
+			Entity = entity;
+			Pos = new Point2D();
+			Dir = TranslateDirection(Directions.None);
+		}
+
 		public void Move()
 		{
 			Move(Dir);

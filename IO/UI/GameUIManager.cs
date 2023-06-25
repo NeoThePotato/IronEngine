@@ -58,16 +58,21 @@ namespace IO.UI
 				return null;
 		}
 
+		public void ExitCurrentMenu()
+		{
+			Debug.Assert(GetCurrentMenu()!.Exit);
+			MenuStack.Pop();
+		}
+
 		public void ForceExitCurrentMenu()
 		{
 			if (InMenu)
 				MenuStack.Pop();
 		}
 
-		private void ExitCurrentMenu()
+		public void ExitAllMenus()
 		{
-			Debug.Assert(GetCurrentMenu()!.Exit);
-			MenuStack.Pop();
+			MenuStack.Clear();
 		}
 	}
 }
