@@ -77,15 +77,6 @@ namespace Game
 			PurgeDeadEntities();
         }
 
-		private void PurgeDeadEntities()
-		{
-			for (int i = 0; i < Entities.Count; i++)
-			{
-				if (Entities[i].Entity.MarkForDelete)
-					Entities.RemoveAt(i);
-			}
-		}
-
 		private void UpdateWorld()
 		{
 			Debug.Assert(State == GameState.World);
@@ -96,6 +87,15 @@ namespace Game
 			{
 				UpdatePlayerMovement();
 				UpdateOtherEntitiesMovement();
+			}
+		}
+
+		private void PurgeDeadEntities()
+		{
+			for (int i = Entities.Count - 1; i > 0; i--)
+			{
+				if (Entities[i].Entity.MarkForDelete)
+					Entities.RemoveAt(i);
 			}
 		}
 
