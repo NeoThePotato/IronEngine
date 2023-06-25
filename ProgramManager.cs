@@ -63,7 +63,15 @@ class ProgramManager
 
 	private void UpdateRender()
 	{
-		_consoleRenderer.RenderFrame(_currentTick);
+		try
+		{
+			_consoleRenderer.RenderFrame(_currentTick);
+		}
+		catch (IndexOutOfRangeException)
+		{
+			Debug.WriteLine("ConsoleRenderer has crashed due to faulty buffer size. Restarting renderer...");
+			_consoleRenderer = new ConsoleRenderer(new GameManagerRenderer(_gameManager));
+		}
 		_renderFinishTime = DateTime.Now;
 	}
 
