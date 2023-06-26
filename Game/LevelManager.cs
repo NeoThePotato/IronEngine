@@ -35,8 +35,8 @@ namespace Game
 		{ get; private set; }
 		public EncounterManager? EncounterManager
 		{ get; private set; }
-		public GameState State
-		{ get => GetGameState(); }
+		public LevelState State
+		{ get => GetLevelState(); }
 		private bool InMenu
 		{ get => UIManager.InMenu; }
 		private bool InEncounter
@@ -65,16 +65,16 @@ namespace Game
 		{
 			switch (State)
 			{
-				case GameState.Exit:
+				case LevelState.Exit:
 					UpdateExit();
 					return;
-				case GameState.Encounter:
+				case LevelState.Encounter:
 					UpdateEncounter();
 					break;
-				case GameState.Menu:
+				case LevelState.Menu:
 					UpdateUIManager();
 					break;
-				case GameState.World:
+				case LevelState.World:
 					UpdateWorld();
 					break;
 			}
@@ -94,7 +94,7 @@ namespace Game
 
 		private void UpdateWorld()
 		{
-			Debug.Assert(State == GameState.World);
+			Debug.Assert(State == LevelState.World);
 
 			if (UIManager.StartMenuCondition) // Enter in-game menu
 				StartUIManager();
@@ -169,7 +169,7 @@ namespace Game
 		#region ENCOUNTERS_LOGIC
 		private void UpdateEncounter()
 		{
-			Debug.Assert(State == GameState.Encounter);
+			Debug.Assert(State == LevelState.Encounter);
 			EncounterManager.Update();
 
 			if (EncounterManager.Exit)
@@ -179,7 +179,7 @@ namespace Game
 		private void StartEncounter(MapEntity other)
 		{
 			EncounterManager = new EncounterManager(this, other.Entity);
-			Debug.Assert(State == GameState.Encounter);
+			Debug.Assert(State == LevelState.Encounter);
 
 			if (EncounterManager.Exit)
 				EncounterManager = null;
@@ -187,36 +187,36 @@ namespace Game
 
 		private void UpdateUIManager()
 		{
-			Debug.Assert(State == GameState.Menu);
+			Debug.Assert(State == LevelState.Menu);
 			UIManager.Update();
 		}
 
 		private void StartUIManager()
 		{
 			UIManager.StackNewMenu(MenuFactory.GetInGameMenu(this));
-			Debug.Assert(State == GameState.Menu);
+			Debug.Assert(State == LevelState.Menu);
 		}
 
 		private void UpdateExit()
 		{
-			Debug.Assert(State == GameState.Exit);
+			Debug.Assert(State == LevelState.Exit);
 			GameManager.Exit();
 		}
 		#endregion
 
-		private GameState GetGameState()
+		private LevelState GetLevelState()
 		{
 			if (PendingExit)
-				return GameState.Exit;
+				return LevelState.Exit;
 			else if (InEncounter)
-				return GameState.Encounter;
+				return LevelState.Encounter;
 			else if (InMenu)
-				return GameState.Menu;
+				return LevelState.Menu;
 			else
-				return GameState.World;
+				return LevelState.World;
 		}
 
-		public enum GameState
+		public enum LevelState
 		{
 			Exit,
 			Encounter,

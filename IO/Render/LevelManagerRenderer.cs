@@ -25,10 +25,10 @@ namespace IO.Render
 		{
 			switch (LevelManager.State)
 			{
-				case LevelManager.GameState.Encounter:
+				case LevelManager.LevelState.Encounter:
 					RenderEncounter(buffer);
 					break;
-				case LevelManager.GameState.World:
+				case LevelManager.LevelState.World:
 					RenderWorld(buffer);
 					break;
 			}
