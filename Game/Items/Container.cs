@@ -33,7 +33,8 @@ namespace Game.Items
 			Level = level;
 			Capacity = capacity;
             Items = new Item[Capacity];
-        }
+            NumberOfItems = 0;
+		}
 
         public Container(string name, Item item, int level = 1)
         {
@@ -60,7 +61,7 @@ namespace Game.Items
 
         public bool TryAddItem(Item item, int index)
         {
-            if (item == null || Full || IndexOutOfBounds(index))
+            if (item == null || Items[index] != null || IndexOutOfBounds(index))
             {
                 return false;
             }
@@ -89,7 +90,7 @@ namespace Game.Items
 
         public Item? RemoveItem(int index)
         {
-            if (IndexOutOfBounds(index))
+            if (IndexOutOfBounds(index) || Items[index] == null)
             {
                 return null;
             }
@@ -97,7 +98,7 @@ namespace Game.Items
             {
                 var item = Items[index];
                 Items[index] = null;
-                --NumberOfItems;
+                NumberOfItems--;
 
                 return item;
             }
@@ -106,7 +107,7 @@ namespace Game.Items
         private void AddItem(Item item, int index)
         {
             Items[index] = item;
-            ++NumberOfItems;
+            NumberOfItems++;
         }
 
         private int FindEmptySlot()
@@ -125,6 +126,24 @@ namespace Game.Items
         private bool IndexOutOfBounds(int index)
         {
             return 0 > index || Items.Length <= index;
+        }
+
+        private void UpdateNumberOfItems()
+        {
+            NumberOfItems = CountItemsInContainer();
+		}
+
+        private int CountItemsInContainer()
+        {
+            int itemsCount = 0;
+
+            for (int i = 0; i < Capacity; i++)
+            {
+                if (Items[i] != null)
+                    itemsCount++;
+            }
+
+            return itemsCount;
         }
     }
 }
