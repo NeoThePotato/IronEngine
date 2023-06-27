@@ -15,24 +15,25 @@ namespace Assets.EquipmentTemplates
 		public static readonly Weapon tyrantGauntlets = new Weapon("Tyrant Gauntlets", 10);
 	}
 
-	static class Armors
+	static class Shields
 	{
-		public static readonly Armor nothing = new Armor("", 0);
+		public static readonly Shield nothing = new Shield("", 0);
+		public static readonly Shield rustedBuckler = new Shield("Rusted Buckler", 1);
+		public static readonly Shield steelBuckler = new Shield("Steel Buckler", 2);
+		public static readonly Shield towerShield = new Shield("Tower Shield", 3);
+		public static readonly Shield heroShield = new Shield("Hero Shield", 4);
+	}
 
-		// Shields
-		public static readonly Armor rustedBuckler = new Armor("Rusted Buckler", 1);
-		public static readonly Armor steelBuckler = new Armor("Steel Buckler", 2);
-		public static readonly Armor towerShield = new Armor("Tower Shield", 3);
-		public static readonly Armor heroShield = new Armor("Hero Shield", 4);
-
-		// Body Armor
-		public static readonly Armor rustedChestplate = new Armor("Rusted Chestplate", 1);
-		public static readonly Armor tatteredRags = new Armor("Tattered Rags", 1);
-		public static readonly Armor blackRobes = new Armor("Black Robes", 2);
-		public static readonly Armor leatherArmor = new Armor("Leather Armor", 2);
-		public static readonly Armor moltenArmor = new Armor("Molten Armor", 4);
-		public static readonly Armor mithrilChainmail = new Armor("Mithril Chainmail", 5);
-		public static readonly Armor kingSlayerArmor = new Armor("King-Slayer Armor", 6);
-		public static readonly Armor godSlayerArmor = new Armor("God-Slayer Armor", 15);
+	static class BodyArmors
+	{
+		public static readonly BodyArmor nothing = new BodyArmor("", 0);
+		public static readonly BodyArmor rustedChestplate = new BodyArmor("Rusted Chestplate", 1);
+		public static readonly BodyArmor tatteredRags = new BodyArmor("Tattered Rags", 1);
+		public static readonly BodyArmor blackRobes = new BodyArmor("Black Robes", 2);
+		public static readonly BodyArmor leatherArmor = new BodyArmor("Leather Armor", 2);
+		public static readonly BodyArmor moltenArmor = new BodyArmor("Molten Armor", 4);
+		public static readonly BodyArmor mithrilChainmail = new BodyArmor("Mithril Chainmail", 5);
+		public static readonly BodyArmor kingSlayerArmor = new BodyArmor("King-Slayer Armor", 6);
+		public static readonly BodyArmor godSlayerArmor = new BodyArmor("God-Slayer Armor", 15);
 	}
 }

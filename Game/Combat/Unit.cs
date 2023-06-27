@@ -101,12 +101,12 @@ namespace Game.Combat
         }
         public Shield Shield
         {
-            get => _equippedShield ?? Armors.nothing;
+            get => _equippedShield ?? Shields.nothing;
             set => _equippedShield = value;
         }
         public BodyArmor BodyArmor
         {
-            get => _equippedBodyArmor ?? Armors.nothing;
+            get => _equippedBodyArmor ?? BodyArmors.nothing;
             set => _equippedBodyArmor = value;
         }
 		public override int Level

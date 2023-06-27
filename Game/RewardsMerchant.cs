@@ -11,8 +11,8 @@ namespace Game
 
 		private Unit _unit;
 		private readonly Weapon[] _weaponUpgrades;
-		private readonly Armor[] _shieldUpgrades;
-		private readonly Armor[] _bodyArmorUpgrades;
+		private readonly Shield[] _shieldUpgrades;
+		private readonly BodyArmor[] _bodyArmorUpgrades;
 
 		private bool MaxWeapon { get => _unit.Weapon == _weaponUpgrades.Last(); }
 		private bool MaxShield { get => _unit.Shield == _shieldUpgrades.Last(); }
@@ -22,8 +22,8 @@ namespace Game
 		{
 			_unit = unit;
 			_weaponUpgrades = new Weapon[] { Weapons.rustedBlade, Weapons.steelSword, Weapons.umbraSword, Weapons.fieryGreatsword, Weapons.swordExcalibur };
-			_shieldUpgrades = new Armor[] { Armors.rustedBuckler, Armors.steelBuckler, Armors.towerShield, Armors.heroShield };
-			_bodyArmorUpgrades = new Armor[] { Armors.rustedChestplate, Armors.leatherArmor, Armors.moltenArmor, Armors.mithrilChainmail, Armors.kingSlayerArmor };
+			_shieldUpgrades = new Shield[] { Shields.rustedBuckler, Shields.steelBuckler, Shields.towerShield, Shields.heroShield };
+			_bodyArmorUpgrades = new BodyArmor[] { BodyArmors.rustedChestplate, BodyArmors.leatherArmor, BodyArmors.moltenArmor, BodyArmors.mithrilChainmail, BodyArmors.kingSlayerArmor };
 		}
 
 		public void UpgradeScreen()
@@ -130,7 +130,7 @@ namespace Game
 			bool canUpgrade = !MaxShield;
 			if (canUpgrade)
 			{
-				Armor currentShield = _unit.Shield;
+				Shield currentShield = _unit.Shield;
 				_unit.Shield = _shieldUpgrades[Array.IndexOf(_shieldUpgrades, currentShield) + 1];
 			}
 
@@ -142,7 +142,7 @@ namespace Game
 			bool canUpgrade = !MaxBodyArmor;
 			if (canUpgrade)
 			{
-				Armor currentBodyArmor = _unit.BodyArmor;
+				BodyArmor currentBodyArmor = _unit.BodyArmor;
 				_unit.BodyArmor = _bodyArmorUpgrades[Array.IndexOf(_bodyArmorUpgrades, currentBodyArmor) + 1];
 			}
 
