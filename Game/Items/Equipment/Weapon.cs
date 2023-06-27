@@ -1,4 +1,6 @@
-﻿namespace Game.Items.Equipment
+﻿using Game.Combat;
+
+namespace Game.Items.Equipment
 {
     class Weapon : Equipment
     {
@@ -9,9 +11,9 @@
         {
             Name = name;
             Damage = damage;
-        }
+		}
 
-        public string GetStats()
+		public string GetStats()
         {
             return $"{this}\n" +
                     $"	Damage: {Damage}";

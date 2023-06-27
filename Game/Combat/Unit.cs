@@ -22,8 +22,8 @@ namespace Game.Combat
         private bool _blocking;
         // Equipment
         private Weapon? _equippedWeapon;
-        private Armor? _equippedShield;
-        private Armor? _equippedBodyArmor;
+        private Shield? _equippedShield;
+        private BodyArmor? _equippedBodyArmor;
         // Other
         private VisualEntityInfo _visualInfo = Assets.EntitiesVisualInfo.UNIT_ENEMY;
 
@@ -99,12 +99,12 @@ namespace Game.Combat
             get => _equippedWeapon ?? Weapons.nothing;
             set => _equippedWeapon = value;
         }
-        public Armor Shield
+        public Shield Shield
         {
             get => _equippedShield ?? Armors.nothing;
             set => _equippedShield = value;
         }
-        public Armor BodyArmor
+        public BodyArmor BodyArmor
         {
             get => _equippedBodyArmor ?? Armors.nothing;
             set => _equippedBodyArmor = value;
@@ -122,7 +122,7 @@ namespace Game.Combat
 		public override VisualEntityInfo VisualInfo
         { get => _visualInfo; }
 
-		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon? weapon, Armor? shield, Armor? bodyArmor, VisualEntityInfo visualInfo)
+		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor, VisualEntityInfo visualInfo)
         {
             _name = name;
             _level = level;
@@ -138,7 +138,7 @@ namespace Game.Combat
             ResetTempStats();
         }
 
-		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Armor shield, Armor bodyArmor) : this(name, level, HP, strength, evasion, initialHealingPower, healingPowerDecay, weapon, shield, bodyArmor, Assets.EntitiesVisualInfo.UNIT_ENEMY)
+		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Shield shield, BodyArmor bodyArmor) : this(name, level, HP, strength, evasion, initialHealingPower, healingPowerDecay, weapon, shield, bodyArmor, Assets.EntitiesVisualInfo.UNIT_ENEMY)
 		{
 
 		}
@@ -230,6 +230,29 @@ namespace Game.Combat
                     HealingPowerDecay *= (1f - growthProfile.healingPowerDecay);
                     break;
             }
+		}
+
+        public Equipment? Equip(Equipment equipment)
+        {
+            Equipment? unEquippedItem = equipment;
+
+            switch (equipment)
+            {
+                case Weapon weapon:
+                    unEquippedItem = _equippedWeapon;
+                    _equippedWeapon = weapon;
+                    break;
+				case Shield shield:
+					unEquippedItem = _equippedShield;
+                    _equippedShield = shield;
+					break;
+				case BodyArmor bodyArmor:
+					unEquippedItem = _equippedBodyArmor;
+                    _equippedBodyArmor = bodyArmor;
+					break;
+			}
+
+            return unEquippedItem;
 		}
 
 		public string GetStats()

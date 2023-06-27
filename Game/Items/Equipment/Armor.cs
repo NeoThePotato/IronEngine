@@ -1,14 +1,14 @@
 ﻿namespace Game.Items.Equipment
 {
-    class Armor : Equipment
+    abstract class Armor : Equipment
     {
         public override string Name { get; }
         public int Defense { get; private set; }
 
-        public Armor(string name, int shield)
+        public Armor(string name, int defense)
         {
             Name = name;
-            Defense = shield;
+            Defense = defense;
         }
 
         public string GetStats()
