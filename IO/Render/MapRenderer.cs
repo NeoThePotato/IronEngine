@@ -8,15 +8,9 @@ namespace IO.Render
 	class MapRenderer : Renderer
 	{
 		public const int STRECH_I = 2;
-		private const char ENTRY_CHAR = 'E';
-		private const byte ENTRY_COLOR = 2;
-		private const char EXIT_CHAR = 'X';
-		private const byte EXIT_COLOR = 1;
 		private FrameBuffer _mapCache;
 
 		private Map Map
-		{ get; set; }
-		private MapMetadata LevelMetadata
 		{ get; set; }
 		public override int SizeJ
 		{ get => Map.TileSizeJ; }
@@ -27,10 +21,9 @@ namespace IO.Render
 		public (int, int) CacheSize
 		{ get => (_mapCache.SizeJ, _mapCache.SizeI); }
 
-		public MapRenderer(Map map, MapMetadata levelMetadata)
+		public MapRenderer(Map map)
 		{
 			Map = map;
-			LevelMetadata = levelMetadata;
 			UpdateCacheSize();
 			RenderToCache();
 		}
@@ -44,7 +37,6 @@ namespace IO.Render
 		{
 			ValidateCacheSize();
 			RenderTileDataToCache();
-			RenderEntryExitToCache();
 		}
 
 		private void RenderTileDataToCache()
@@ -59,42 +51,10 @@ namespace IO.Render
 			}
 		}
 
-		private void RenderEntryExitToCache()
-		{
-			(int entJ, int entI) = (LevelMetadata.entryTile.TileJ, LevelMetadata.entryTile.TileI);
-			(int extJ, int extI) = (LevelMetadata.exitTile.TileJ, LevelMetadata.exitTile.TileI);
-			RenderToCache(entJ, entI, ENTRY_CHAR, ENTRY_COLOR);
-			RenderToCache(extJ, extI, EXIT_CHAR, EXIT_COLOR);
-		}
-
 		private void RenderToCache(int j, int i, VisualTileInfo info)
 		{
 			_mapCache[j, i * STRECH_I] = VisualTileInfo.GetFrameBufferTuple(info);
 			_mapCache[j, i * STRECH_I + 1] = VisualTileInfo.GetFrameBufferTuple(info);
-		}
-
-		private void RenderToCache(int j, int i, char c, byte fg)
-		{
-			RenderToCacheC(j, i, c);
-			RenderToCacheFG(j, i, fg);
-		}
-
-		private void RenderToCacheC(int j, int i, char c)
-		{
-			_mapCache.Char[j, i * STRECH_I] = c;
-			_mapCache.Char[j, i * STRECH_I + 1] = c;
-		}
-
-		private void RenderToCacheFG(int j, int i, byte fg)
-		{
-			_mapCache.Foreground[j, i * STRECH_I] = fg;
-			_mapCache.Foreground[j, i * STRECH_I + 1] = fg;
-		}
-
-		private void RenderToCacheBG(int j, int i, byte bg)
-		{
-			_mapCache.Background[j, i * STRECH_I] = bg;
-			_mapCache.Background[j, i * STRECH_I + 1] = bg;
 		}
 
 		private void ValidateCacheSize()

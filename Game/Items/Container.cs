@@ -1,4 +1,6 @@
 ﻿using Game.World;
+using static IO.Render.EntityRenderer;
+using static Assets.EntitiesVisualInfo;
 
 namespace Game.Items
 {
@@ -26,8 +28,10 @@ namespace Game.Items
         { get => Empty; }
         public override EncounterManager.EncounterType EncounterType
         { get => EncounterManager.EncounterType.Container; }
+		public override VisualEntityInfo VisualInfo
+		{ get => CHEST; }
 
-        public Container(string name, int capacity = 1, int level = 1)
+		public Container(string name, int capacity = 1, int level = 1)
         {
             Name = name;
 			Level = level;

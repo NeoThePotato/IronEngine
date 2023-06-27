@@ -2,6 +2,7 @@
 using Game.Items.Equipment;
 using Assets.EquipmentTemplates;
 using Game.Progression;
+using static IO.Render.EntityRenderer;
 
 namespace Game.Combat
 {
@@ -23,6 +24,8 @@ namespace Game.Combat
         private Weapon? _equippedWeapon;
         private Armor? _equippedShield;
         private Armor? _equippedBodyArmor;
+        // Other
+        private VisualEntityInfo _visualInfo = Assets.EntitiesVisualInfo.UNIT_ENEMY;
 
         public override string Name
         {
@@ -116,10 +119,13 @@ namespace Game.Combat
         { get => Dead; }
         public override EncounterManager.EncounterType EncounterType
         { get => EncounterManager.EncounterType.Combat; }
+		public override VisualEntityInfo VisualInfo
+        { get => _visualInfo; }
 
-		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Armor shield, Armor bodyArmor)
+		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon? weapon, Armor? shield, Armor? bodyArmor, VisualEntityInfo visualInfo)
         {
             _name = name;
+            _level = level;
             MaxHP = HP;
             Strength = strength;
             Evasion = evasion;
@@ -128,21 +134,18 @@ namespace Game.Combat
             Weapon = weapon;
             Shield = shield;
             BodyArmor = bodyArmor;
+            _visualInfo = visualInfo;
             ResetTempStats();
         }
 
-        public Unit(Unit other)
+		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Armor shield, Armor bodyArmor) : this(name, level, HP, strength, evasion, initialHealingPower, healingPowerDecay, weapon, shield, bodyArmor, Assets.EntitiesVisualInfo.UNIT_ENEMY)
+		{
+
+		}
+
+		public Unit(Unit other) : this(other._name, other._level, other._maxHP, other._strength, other._evasion, other._maxHealingPower, other._healingPowerDecay, other._equippedWeapon, other._equippedShield, other._equippedBodyArmor, other.VisualInfo)
         {
-            _name = other.Name;
-            MaxHP = other.MaxHP;
-            Strength = other.Strength;
-            Evasion = other.Evasion;
-            MaxHealingPower = other.MaxHealingPower;
-            HealingPowerDecay = other.HealingPowerDecay;
-            Weapon = other.Weapon;
-            Shield = other.Shield;
-            BodyArmor = other.BodyArmor;
-            ResetTempStats();
+
         }
 
         public void AttackOther(Unit other, ref CombatFeedback feedback)

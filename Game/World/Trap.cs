@@ -1,5 +1,8 @@
 ﻿using Game.Combat;
+using IO.Render;
 using IO.UI;
+using static IO.Render.EntityRenderer;
+using static Assets.EntitiesVisualInfo;
 
 namespace Game.World
 {
@@ -21,6 +24,8 @@ namespace Game.World
 		{ get => false; }
         public override EncounterManager.EncounterType EncounterType
 		{ get => EncounterManager.EncounterType.Trap; }
+		public override VisualEntityInfo VisualInfo
+		{ get => Armed ? TRAP_ARMED : TRAP_UNARMED; }
 
 		public Trap(string name, int level, int damage)
 		{

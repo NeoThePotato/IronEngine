@@ -1,4 +1,7 @@
-﻿namespace Game.World
+﻿using static IO.Render.EntityRenderer;
+using static Assets.EntitiesVisualInfo;
+
+namespace Game.World
 {
 	class Portal : Entity
 	{
@@ -16,6 +19,8 @@
 		{ get => false; }
 		public override EncounterManager.EncounterType EncounterType
 		{ get => EncounterManager.EncounterType.Portal; }
+		public override VisualEntityInfo VisualInfo
+		{ get => PortalType == PortalType.Entry ? PORTAL_ENTRY : PORTAL_EXIT; }
 
 		public Portal(PortalType portalType, int level = 1)
 		{

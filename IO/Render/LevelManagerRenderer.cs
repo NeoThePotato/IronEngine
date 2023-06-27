@@ -46,18 +46,7 @@ namespace IO.Render
 
         private void RenderWorld(FrameBuffer buffer)
 		{
-			RenderLevelAndEntities(new FrameBuffer(buffer, 1, 1));
-		}
-
-		private void RenderLevelAndEntities(FrameBuffer buffer)
-		{
-			LevelRenderer.Render(buffer);
-			RenderPlayer(buffer);
-		}
-
-		private void RenderPlayer(FrameBuffer buffer)
-		{
-			LevelRenderer.RenderEntity(buffer, LevelManager.PlayerEntity, '@', 15);
+			LevelRenderer.Render(new FrameBuffer(buffer, 1, 1));
 		}
 
 		private void ValidateCurrentLevel()
