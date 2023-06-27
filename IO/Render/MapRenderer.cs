@@ -33,6 +33,14 @@ namespace IO.Render
 			FrameBuffer.Copy(buffer, _mapCache);
 		}
 
+		public static (int, int) PointToCharPos(Point2D point)
+		{
+			int charPosJ = point.TileJ;
+			int charPosI = (point.TileI * STRECH_I) + STRECH_I * Point2D.PointRemainder(point.PointI) / Point2D.POINTS_PER_TILE;
+
+			return (charPosJ, charPosI);
+		}
+
 		private void RenderToCache()
 		{
 			ValidateCacheSize();

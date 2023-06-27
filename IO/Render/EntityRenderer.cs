@@ -41,18 +41,14 @@ namespace IO.Render
 		private void RenderEntityMoving(FrameBuffer buffer, MapEntity entity)
 		{
 			VisualEntityInfo visualInfo = entity.Entity.VisualInfo;
-			int posJ = entity.Pos.TileJ;
-			int posI = (entity.Pos.TileI * MapRenderer.STRECH_I);
-			int subTileI = MapRenderer.STRECH_I * Point2D.PointRemainder(entity.Pos.PointI) / Point2D.POINTS_PER_TILE;
-			posI += subTileI;
+			(int posJ, int posI) = MapRenderer.PointToCharPos(entity.Pos);
 			RenderEntityAtTile(buffer, posJ, posI, visualInfo);
 		}
 
 		private void RenderEntityStatic(FrameBuffer buffer, MapEntity entity)
 		{
 			VisualEntityInfo visualInfo = entity.Entity.VisualInfo;
-			int posJ = entity.Pos.TileJ;
-			int posI = (entity.Pos.TileI * MapRenderer.STRECH_I);
+			(int posJ, int posI) = MapRenderer.PointToCharPos(entity.Pos);
 			RenderEntityAtTile(buffer, posJ, posI, visualInfo);
 			RenderEntityAtTile(buffer, posJ, posI + 1, visualInfo);
 		}
