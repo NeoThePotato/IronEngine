@@ -198,7 +198,7 @@ namespace Game
 
 		private void StartUIManager()
 		{
-			UIManager.StackNewMenu(MenuFactory.GetInGameMenu(this));
+			UIManager.StackNewMenu(MenuFactory.GetInGameMenu(this, UIManager));
 			Debug.Assert(State == LevelState.Menu);
 		}
 

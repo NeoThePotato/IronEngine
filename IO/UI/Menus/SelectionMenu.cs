@@ -48,7 +48,7 @@ namespace IO.UI.Menus
 		public override bool Exit
         { get; set; }
 
-        public SelectionMenu(PlayerInputManager inputManager, Dictionary<string, Action?> actions, int dimJ, int dimI, string? title = null) : base(inputManager)
+        public SelectionMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Dictionary<string, Action?> actions, int dimJ, int dimI, string? title = null) : base(inputManager, parentUIManager)
         {
 			Title = title ?? string.Empty;
             if (dimJ * dimI >= actions.Count)
@@ -64,7 +64,7 @@ namespace IO.UI.Menus
             }
         }
 
-		public SelectionMenu(PlayerInputManager inputManager, Dictionary<string, Action?> actions, string?[,] strings, string? title = null) : base(inputManager)
+		public SelectionMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Dictionary<string, Action?> actions, string?[,] strings, string? title = null) : base(inputManager, parentUIManager)
 		{
 			Title = title ?? string.Empty;
 			Actions = actions;

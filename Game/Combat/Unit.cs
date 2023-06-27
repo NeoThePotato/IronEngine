@@ -232,7 +232,7 @@ namespace Game.Combat
             }
 		}
 
-        public Equipment? Equip(Equipment equipment)
+        public void Equip(ref Equipment? equipment)
         {
             Equipment? unEquippedItem = equipment;
 
@@ -252,7 +252,7 @@ namespace Game.Combat
 					break;
 			}
 
-            return unEquippedItem;
+			equipment = unEquippedItem;
 		}
 
 		public string GetStats()

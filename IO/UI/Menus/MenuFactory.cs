@@ -1,23 +1,25 @@
 ﻿using Game;
+using Game.Combat;
 using Game.Items;
+using Game.Items.Equipment;
 
 namespace IO.UI.Menus
 {
 	static class MenuFactory
 	{
-		public static SelectionMenu GetConfirmPortalMenu(LevelManager levelManager)
+		public static SelectionMenu GetConfirmPortalMenu(LevelManager levelManager, GameUIManager parentUIManager)
 		{
 			Action onTrue = () => levelManager.MoveToNextLevel();
 			Action onFalse = () => levelManager.UIManager.ForceExitCurrentMenu();
 
-			return GetConfirmMenu(levelManager.InputManager, "Are you sure you want to proceed?", onTrue, onFalse);
+			return GetConfirmMenu(levelManager.InputManager, parentUIManager, "Are you sure you want to proceed?", onTrue, onFalse);
 		}
 
-		public static SelectionMenu GetInGameMenu(LevelManager levelManager)
+		public static SelectionMenu GetInGameMenu(LevelManager levelManager, GameUIManager parentUIManager)
 		{
-			Action returnToGame = () => levelManager.UIManager.ForceExitCurrentMenu(); // This is some cyclical shit
+			Action returnToGame = () => parentUIManager.ForceExitCurrentMenu();
 			Action openStatsMenu = () => throw new NotImplementedException();
-			Action openInventoryMenu = () => levelManager.UIManager.StackNewMenu(GetContainerMenu(levelManager.InputManager, levelManager.PlayerInventory));
+			Action openInventoryMenu = () => levelManager.UIManager.StackNewMenu(GetContainerMenu(levelManager.InputManager, levelManager.UIManager, (Unit)levelManager.PlayerEntity.Entity, levelManager.PlayerInventory));
 			Action quitGame = () => levelManager.Exit();
 
 			var actions = new Dictionary<string, Action?>()
@@ -28,15 +30,29 @@ namespace IO.UI.Menus
 				{ "Quit", quitGame}
 			};
 
-			return new SelectionMenu(levelManager.InputManager, actions, 4, 1);
+			return new SelectionMenu(levelManager.InputManager, parentUIManager, actions, 4, 1);
 		}
 
-		public static ContainerMenu GetContainerMenu(PlayerInputManager inputManager, params Container[] containers)
+		public static ContainerMenu GetContainerMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Unit playerUnit, params Container[] containers)
 		{
-			return new ContainerMenu(inputManager, containers);
+			return new ContainerMenu(inputManager, parentUIManager, playerUnit, containers);
 		}
 
-		private static SelectionMenu GetConfirmMenu(PlayerInputManager inputManager, string query, Action onTrue, Action onFalse)
+		public static SelectionMenu GetEquipmentMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, ContainerMenu parent, Equipment equipment, Unit unit)
+		{
+			Action equip = () => { parent.EquipSelectedOnUnit(unit); parentUIManager.ForceExitCurrentMenu(); };
+			Action discard = () => { parent.RemoveItemAtSelection(); parentUIManager.ForceExitCurrentMenu(); };
+
+			var actions = new Dictionary<string, Action?>()
+			{
+				{ "Equip", equip},
+				{ "Discard", discard},
+			};
+
+			return new SelectionMenu(inputManager, parentUIManager, actions, 2, 1, equipment.Name);
+		}
+
+		private static SelectionMenu GetConfirmMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, string query, Action onTrue, Action onFalse)
 		{
 			var actions = new Dictionary<string, Action?>()
 			{
@@ -44,7 +60,7 @@ namespace IO.UI.Menus
 				{ "No", onFalse},
 			};
 
-			return new SelectionMenu(inputManager, actions, 1, 2, query);
+			return new SelectionMenu(inputManager, parentUIManager, actions, 1, 2, query);
 		}
 	}
 }

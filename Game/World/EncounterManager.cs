@@ -104,7 +104,7 @@ namespace Game.World
 		{
 			var container = (Container)_encounteredEntity;
 			DataLog.WriteLine($"{PlayerUnit} has found {container}");
-			UIManager.StackNewMenu(MenuFactory.GetContainerMenu(InputManager, PlayerInventory, container));
+			UIManager.StackNewMenu(MenuFactory.GetContainerMenu(InputManager, UIManager, PlayerUnit, PlayerInventory, container));
 			Exit = true;
 		}
 
@@ -147,7 +147,7 @@ namespace Game.World
 			if (portal.PortalType == PortalType.Exit)
 			{
 				DataLog.WriteLine($"{PlayerUnit} has found {portal}");
-				UIManager.StackNewMenu(MenuFactory.GetConfirmPortalMenu(_levelManager));
+				UIManager.StackNewMenu(MenuFactory.GetConfirmPortalMenu(_levelManager, UIManager));
 			}
 			Exit = true;
 		}

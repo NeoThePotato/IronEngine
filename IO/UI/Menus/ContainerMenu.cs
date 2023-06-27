@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using Game.Combat;
 using Game.Items;
+using Game.Items.Equipment;
 using IO.Render;
 
 namespace IO.UI.Menus
@@ -11,11 +13,13 @@ namespace IO.UI.Menus
 		{ get; private set; }
 		public Container[] Containers
 		{ get; private set; }
+		public Unit PlayerUnit
+		{ get; private set; }
 		public int SelectedItemIndex
 		{ get; private set; }
 		public int SelectedContainerIndex
 		{ get; private set; }
-		public Item? SelectedItem
+		public Item SelectedItem
 		{ get; private set; }
 		public bool ItemSelected
 		{ get => SelectedItem != null; }
@@ -26,14 +30,15 @@ namespace IO.UI.Menus
 		public override bool Exit
 		{ get; set; }
 
-		public ContainerMenu(PlayerInputManager inputManager, params Container[] containers) : base(inputManager)
+		public ContainerMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Unit playerUnit, params Container[] containers) : base(inputManager, parentUIManager)
 		{
+			PlayerUnit = playerUnit;
 			var sb = new StringBuilder(50);
 
 			foreach (var container in containers)
 				sb.Append($"{container.Name} | ");
 			Containers = containers;
-			Menu = new SelectionMenu(inputManager, null, GetStrings(), sb.ToString());
+			Menu = new SelectionMenu(inputManager, parentUIManager, null, GetStrings(), sb.ToString());
 		}
 
 		public override void Start()
@@ -47,38 +52,54 @@ namespace IO.UI.Menus
 			
 			Debug.Assert(!(itemSelected && Menu.Exit));
 
-			if (Menu.Exit && !ItemSelected && !itemSelected)
+			if (Menu.Exit && !ItemSelected && !itemSelected) // Exit menu
 			{
 				Exit = true;
 				return null;
 			}
-			else if (Menu.Exit && ItemSelected)
+			else if (Menu.Exit && ItemSelected) // Release item #1 selection
 			{
 				SelectedItem = null;
 				Menu.Continue();
 			}
-			else if (!ItemSelected && itemSelected)
+			else if (!ItemSelected && itemSelected) // Select item #1
 			{
 				SelectedCurrentItem();
 			}
-			else if (ItemSelected && itemSelected)
+			else if (ItemSelected && itemSelected) // Select item #2
 			{
-				SwapSelectedWithCursor();
-				RefreshMenuStrings();
+				if (GetItemAtCursor() == SelectedItem) // Item #1 is #2
+					ParentUIManager.StackNewMenu(MenuFactory.GetEquipmentMenu(InputManager, ParentUIManager, this, (Equipment)SelectedItem, PlayerUnit));
+				else // Item #1 is not #2
+					SwapSelectedWithCursor();
 				SelectedItem = null;
 			}
+			RefreshMenuStrings();
 
 			return null;
 		}
 
 		public Item? GetItemAtCursor()
 		{
-			return Containers[Menu.CursorJ].Items[Menu.CursorI];
+			return Containers[Menu.CursorI].Items[Menu.CursorJ];
 		}
 
 		public Item? GetItemAtSelection()
 		{
 			return Containers[SelectedContainerIndex].Items[SelectedItemIndex];
+		}
+
+		public Item? RemoveItemAtSelection()
+		{
+			return Containers[SelectedContainerIndex].RemoveItem(SelectedItemIndex);
+		}
+
+		public void EquipSelectedOnUnit(Unit unit)
+		{
+			Debug.Assert(GetItemAtSelection() is Equipment);
+			var equipment = (Equipment?)Containers[SelectedContainerIndex].RemoveItem(SelectedItemIndex);
+			unit.Equip(ref equipment);
+			Containers[SelectedContainerIndex].TryAddItem(equipment, SelectedItemIndex);
 		}
 
 		public override Renderer GetRenderer()

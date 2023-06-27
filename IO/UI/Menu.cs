@@ -3,8 +3,10 @@
 namespace IO.UI
 {
     abstract class Menu
-    {
-        public PlayerInputManager InputManager
+	{
+		public GameUIManager ParentUIManager
+		{ get; private set; }
+		public PlayerInputManager InputManager
         { get; private set; }
         public abstract int LengthJ
         { get; }
@@ -15,12 +17,13 @@ namespace IO.UI
         public abstract bool Exit
         { get; set; }
 
-        public Menu(PlayerInputManager inputManager)
-        {
-            InputManager = inputManager;
-        }
+        public Menu(PlayerInputManager inputManager, GameUIManager parentUIManager)
+		{
+			InputManager = inputManager;
+			ParentUIManager = parentUIManager;
+		}
 
-        public abstract void Start();
+		public abstract void Start();
 
         public abstract string? Update();
 
