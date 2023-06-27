@@ -59,29 +59,19 @@ namespace IO.Render
 
 		private void RenderEntityAtTile(FrameBuffer buffer, int posJ, int posI, VisualEntityInfo visualInfo)
 		{
-			buffer.Char[posJ, posI] = visualInfo.character;
-			buffer.Foreground[posJ, posI] = visualInfo.foregroundColor;
+			buffer.Char[posJ, posI] = visualInfo.character ?? buffer.Char[posJ, posI];
+			buffer.Foreground[posJ, posI] = visualInfo.foregroundColor ?? buffer.Foreground[posJ, posI];
 		}
 
 		public struct VisualEntityInfo
 		{
-			public char character;
-			public byte foregroundColor;
+			public char? character;
+			public byte? foregroundColor;
 
-			public VisualEntityInfo(char character, byte foregroundColor)
+			public VisualEntityInfo(char? character, byte? foregroundColor)
 			{
 				this.character = character;
 				this.foregroundColor = foregroundColor;
-			}
-
-			public (char, byte) GetFrameBufferTuple()
-			{
-				return GetFrameBufferTuple(this);
-			}
-
-			public static (char, byte) GetFrameBufferTuple(VisualEntityInfo info)
-			{
-				return (info.character, info.foregroundColor);
 			}
 		}
 	}
