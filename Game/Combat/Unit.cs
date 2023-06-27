@@ -131,14 +131,14 @@ namespace Game.Combat
             Evasion = evasion;
             MaxHealingPower = initialHealingPower;
             HealingPowerDecay = healingPowerDecay;
-            Weapon = weapon;
-            Shield = shield;
-            BodyArmor = bodyArmor;
+            _equippedWeapon = weapon;
+			_equippedShield = shield;
+			_equippedBodyArmor = bodyArmor;
             _visualInfo = visualInfo;
             ResetTempStats();
         }
 
-		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon weapon, Shield shield, BodyArmor bodyArmor) : this(name, level, HP, strength, evasion, initialHealingPower, healingPowerDecay, weapon, shield, bodyArmor, Assets.EntitiesVisualInfo.UNIT_ENEMY)
+		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor) : this(name, level, HP, strength, evasion, initialHealingPower, healingPowerDecay, weapon, shield, bodyArmor, Assets.EntitiesVisualInfo.UNIT_ENEMY)
 		{
 
 		}
