@@ -211,7 +211,7 @@ namespace Game
 
 		private LevelState GetLevelState()
 		{
-			if (PendingExit)
+			if (PendingExit || ((Unit)PlayerEntity.Entity).Dead)
 				return LevelState.Exit;
 			else if (InEncounter)
 				return LevelState.Encounter;
