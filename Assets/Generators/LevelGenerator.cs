@@ -2,7 +2,6 @@
 using Game.Items;
 using Game.Combat;
 using Game.Progression;
-using Assets.EquipmentTemplates;
 using static Assets.MapTemplates;
 using static Assets.Generators.LevelGenerator.Direction;
 
@@ -30,13 +29,13 @@ namespace Assets.Generators
 		public static Level MakeLevel(Unit playerUnit, out MapEntity playerEntity, DifficultyProfile difficulty)
 		{
 			Level level = MakeEmptyLevel(GetRandomMapMeta());
-			playerEntity = level.AddEntityAtEntryTile(playerUnit);
 			var tileDirectionMap = GetTileDirectionMap(level.Map);
 			GeneratePortals(level);
 			GenerateDoors(level, difficulty, tileDirectionMap);
 			GenerateChests(level, difficulty, tileDirectionMap);
 			GenerateTraps(level, difficulty, level.Map.TileSize);
 			GenerateEnemies(level, difficulty, level.Map.TileSize);
+			playerEntity = level.AddEntityAtEntryTile(playerUnit);
 
             return level;
 		}

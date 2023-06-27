@@ -118,10 +118,14 @@ namespace Game
 		private void UpdatePlayerMovement()
 		{
 			var movementDirection = new Direction(InputManager.GetMovementVector(Point2D.POINTS_PER_TILE));
-			Level.MoveEntity(PlayerEntity, movementDirection, out MapEntity? encounteredEntity);
+			Level.MoveEntity(PlayerEntity, movementDirection, out List<MapEntity> encounteredEntities);
 
-			if (encounteredEntity != null)
+			if (encounteredEntities.Any())
+			{
+				MapEntity encounteredEntity = encounteredEntities.Last();
+				encounteredEntities.Remove(encounteredEntity);
 				StartEncounter(encounteredEntity);
+			}
 		}
 
 		private void UpdateOtherEntitiesMovement()
@@ -153,10 +157,10 @@ namespace Game
 			if (entity.Dir.Mag == 0)
                 entity.Dir = Direction.GetRandomDirection(); // Start moving in random direction
 
-			if (!Level.MoveEntity(entity, out MapEntity? encounteredEntity))
+			if (!Level.MoveEntity(entity, out List<MapEntity> encounteredEntities))
 				entity.Dir = Direction.GetRandomDirection(); // Move or change direction
 
-            if (encounteredEntity == PlayerEntity)
+            if (encounteredEntities.Contains(PlayerEntity))
                 StartEncounter(entity); // Encounter player
         }
 

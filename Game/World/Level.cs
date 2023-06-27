@@ -1,5 +1,4 @@
 ﻿using static Game.World.Point2D;
-using static Game.World.Direction;
 using System.Diagnostics;
 
 namespace Game.World
@@ -9,6 +8,7 @@ namespace Game.World
 		private Map _map;
 		private List<MapEntity> _entities;
 		private MapMetadata _metadata;
+		private List<MapEntity> _entitiesList;
 
 		public Map Map
 		{ get => _map; private set => _map = value; }
@@ -22,6 +22,7 @@ namespace Game.World
 			_map = map;
 			_entities = new List<MapEntity>();
 			_metadata = metadata;
+			_entitiesList = new List<MapEntity>(_entities.Count);
 		}
 
 		#region ENTITY_SPAWNING
@@ -61,9 +62,9 @@ namespace Game.World
 		#endregion
 
 		#region ENTITY_MOVEMENT
-		public bool MoveEntity(MapEntity entity, Direction direction, out MapEntity? otherEntity)
+		public bool MoveEntity(MapEntity entity, Direction direction, out List<MapEntity> occupiedBy)
 		{
-			if (CanEntityMoveTo(entity, direction, out otherEntity))
+			if (CanEntityMoveTo(entity, direction, out occupiedBy))
 			{
 				entity.Move(direction);
 
@@ -77,9 +78,9 @@ namespace Game.World
 			}
         }
 
-        public bool MoveEntity(MapEntity entity, out MapEntity? otherEntity)
+        public bool MoveEntity(MapEntity entity, out List<MapEntity> occupiedBy)
         {
-			return MoveEntity(entity, entity.Dir, out otherEntity);
+			return MoveEntity(entity, entity.Dir, out occupiedBy);
         }
 
 		private void MoveEntityToEdgeOfTile(MapEntity entity, Direction direction)
@@ -92,39 +93,24 @@ namespace Game.World
 		#endregion
 
 		#region SPATIAL_CHECKS
-		public bool CanEntityMoveTo(MapEntity entity, Direction targetDir, out MapEntity? occupiedBy)
+		public bool CanEntityMoveTo(MapEntity entity, Direction targetDir, out List<MapEntity> occupiedBy)
 		{
 			return CanEntityMoveTo(entity, entity.Pos, targetDir, out occupiedBy);
 		}
-		public bool CanEntityMoveTo(MapEntity entity, Point2D startingPoint, Direction targetDir, out MapEntity? occupiedBy)
+		
+		public bool CanEntityMoveTo(MapEntity entity, Point2D startingPoint, Direction targetDir, out List<MapEntity> occupiedBy)
 		{
-			occupiedBy = null;
+			_entitiesList.Clear();
+			occupiedBy = _entitiesList;
 			var newPos = entity.ProjectedNewLocation(startingPoint, targetDir);
 
 			if (TileTraversable(newPos))
 			{
-				if (!TileOccupied(newPos, out occupiedBy))
-				{
+				if (!TileOccupied(newPos, entity) || AllPassable(occupiedBy))
 					return true;
-				}
-				else if (occupiedBy == entity)
-				{
-					occupiedBy = null;
-					return true;
-				}
-				else if (occupiedBy.Passable)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
 			}
-			else
-			{
-				return false;
-			}
+
+			return false;
 		}
 
 		public bool CanEntityMoveTo(MapEntity entity, MapEntity other)
@@ -132,7 +118,7 @@ namespace Game.World
 			Debug.Assert(entity != other);
 			bool inLineOfSight = CanEntityMoveTo(entity, other.Pos, out var occupiedBy);
 
-			return inLineOfSight || occupiedBy == other;
+			return inLineOfSight || occupiedBy.Contains(other);
 		}
 
 		/// <summary>
@@ -142,7 +128,7 @@ namespace Game.World
 		/// <param name="targetPos">Target point to check if entity can move to.</param>
 		/// <param name="occupiedBy">Returns entity standing in the way, null if there isn't any.</param>
 		/// <returns>true</returns>
-		public bool CanEntityMoveTo(MapEntity entity, Point2D targetPos, out MapEntity? occupiedBy)
+		public bool CanEntityMoveTo(MapEntity entity, Point2D targetPos, out List<MapEntity> occupiedBy)
 		{
 			Debug.Assert(entity.Moveable);
 			int stepsCounter = 0;
@@ -165,7 +151,7 @@ namespace Game.World
 					return false;
 				}
 			}
-			occupiedBy = GetEntityAt(targetPos);
+			occupiedBy = GetEntitiesAt(targetPos);
 
 			return true;
 		}
@@ -185,22 +171,44 @@ namespace Game.World
 			return !Map.GetTileInfo(pos).passable;
 		}
 
-		private bool TileOccupied(Point2D pos, out MapEntity? occupiedBy)
+		private bool TileOccupied(Point2D pos)
 		{
-			occupiedBy = GetEntityAt(pos);
+			var occupiedBy = GetEntitiesAt(pos);
 
-			return occupiedBy != null;
+			return occupiedBy.Any();
 		}
 
-		private MapEntity? GetEntityAt(Point2D pos)
+		private bool TileOccupied(Point2D pos, MapEntity exceptFor)
 		{
+			var occupiedBy = GetEntitiesAt(pos, exceptFor);
+
+			return occupiedBy.Any();
+		}
+
+		private List<MapEntity> GetEntitiesAt(Point2D pos)
+		{
+			_entitiesList.Clear();
+
 			foreach (var entity in Entities)
 			{
 				if (SameTile(entity.Pos, pos))
-					return entity;
+					_entitiesList.Add(entity);
 			}
 
-			return null;
+			return _entitiesList;
+		}
+
+		private List<MapEntity> GetEntitiesAt(Point2D pos, MapEntity exceptFor)
+		{
+			_entitiesList = GetEntitiesAt(pos);
+			_entitiesList.Remove(exceptFor);
+
+			return _entitiesList;
+		}
+
+		private bool AllPassable(List<MapEntity> entities)
+		{
+			return entities.All(e => e.Passable);
 		}
 		#endregion
 	}
