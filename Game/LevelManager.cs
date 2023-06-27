@@ -184,6 +184,7 @@ namespace Game
 		{
 			EncounterManager = new EncounterManager(this, other.Entity);
 			Debug.Assert(State == LevelState.Encounter);
+			EncounterManager.Start();
 
 			if (EncounterManager.Exit)
 				EncounterManager = null;

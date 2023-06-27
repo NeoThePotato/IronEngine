@@ -3,43 +3,61 @@ using IO.UI;
 using Game.Combat;
 using Game.Items;
 using IO.UI.Menus;
+using System.Diagnostics;
 
 namespace Game.World
 {
     class EncounterManager
     {
-		private LevelManager _levelManager; // TODO The following fields should be computational properties of "_levelManager"
-		private PlayerInputManager _inputManager;
-		private GameUIManager _uiManager;
-		private Container _playerInventory;
-		private Unit _unit;
+		private LevelManager _levelManager;
         private Entity _encounteredEntity;
         private CombatManager? _combatManager;
-		private DataLog _dataLog;
-		public EncounterType _encounterType;
+		public EncounterType encounterType;
 
+		private PlayerInputManager InputManager
+		{ get => _levelManager.InputManager; }
+		private GameUIManager UIManager
+		{ get => _levelManager.UIManager; }
+		private Container PlayerInventory
+		{ get => _levelManager.PlayerInventory; }
+		private Unit PlayerUnit
+		{ get => (Unit)_levelManager.PlayerEntity.Entity; }
+		private DataLog DataLog
+		{ get => _levelManager.DataLog; }
 		public bool Exit
         { get; private set; }
 
 		public EncounterManager(LevelManager levelManager, Entity encounteredEntity)
 		{
 			_levelManager = levelManager;
-			_inputManager = levelManager.InputManager;
-			_uiManager = levelManager.UIManager;
-			_playerInventory = levelManager.PlayerInventory;
-			_unit = (Unit)levelManager.PlayerEntity.Entity;
 			_encounteredEntity = encounteredEntity;
-			_encounterType = encounteredEntity.EncounterType;
-			_dataLog = levelManager.DataLog;
-			Start(_encounterType);
+			encounterType = encounteredEntity.EncounterType;
 		}
 
-        public void Update()
-        {
-            Update(_encounterType);
+		public void Update()
+		{
+			Debug.Assert(!Exit);
+			switch (encounterType)
+			{
+				case EncounterType.Combat:
+					UpdateCombat();
+					break;
+				case EncounterType.Container:
+					UpdateContainer();
+					break;
+				case EncounterType.Trap:
+					UpdateTrap();
+					break;
+				case EncounterType.Door:
+					UpdateDoor();
+					break;
+				case EncounterType.Portal:
+					UpdatePortal();
+					break;
+			}
 		}
 
-		private void Start(EncounterType encounterType)
+		public void Start()
 		{
 			switch (encounterType)
 			{
@@ -61,36 +79,14 @@ namespace Game.World
 			}
 		}
 
-		private void Update(EncounterType encounterType)
-        {
-            switch(encounterType)
-			{
-				case EncounterType.Combat:
-					UpdateCombat();
-					break;
-				case EncounterType.Container:
-					UpdateContainer();
-					break;
-				case EncounterType.Trap:
-					UpdateTrap();
-					break;
-				case EncounterType.Door:
-					UpdateDoor();
-					break;
-				case EncounterType.Portal:
-					UpdatePortal();
-					break;
-			}
-		}
-
 		private void StartCombat()
 		{
 			var unit = (Unit)_encounteredEntity;
 
 			if (!unit.Dead)
 			{
-				_dataLog.WriteLine($"{_unit} has encountered a {unit}");
-				_combatManager = new CombatManager(_unit, unit);
+				DataLog.WriteLine($"{PlayerUnit} has encountered a {unit}");
+				_combatManager = new CombatManager(PlayerUnit, unit);
 			}
 			else
 			{
@@ -107,8 +103,8 @@ namespace Game.World
 		private void StartContainer()
 		{
 			var container = (Container)_encounteredEntity;
-			_dataLog.WriteLine($"{_unit} has found {container}");
-			_uiManager.StackNewMenu(MenuFactory.GetContainerMenu(_inputManager, _playerInventory, container));
+			DataLog.WriteLine($"{PlayerUnit} has found {container}");
+			UIManager.StackNewMenu(MenuFactory.GetContainerMenu(InputManager, PlayerInventory, container));
 			Exit = true;
 		}
 
@@ -123,8 +119,8 @@ namespace Game.World
 
 			if (trap.Armed)
 			{
-				_dataLog.WriteLine($"{_unit} has stepped on {trap}");
-				trap.TriggerTrap(_unit, _dataLog);
+				DataLog.WriteLine($"{PlayerUnit} has stepped on {trap}");
+				trap.TriggerTrap(PlayerUnit, DataLog);
 			}
 			Exit = true;
 		}
@@ -150,8 +146,8 @@ namespace Game.World
 
 			if (portal.PortalType == PortalType.Exit)
 			{
-				_dataLog.WriteLine($"{_unit} has found {portal}");
-				_uiManager.StackNewMenu(MenuFactory.GetConfirmPortalMenu(_levelManager));
+				DataLog.WriteLine($"{PlayerUnit} has found {portal}");
+				UIManager.StackNewMenu(MenuFactory.GetConfirmPortalMenu(_levelManager));
 			}
 			Exit = true;
 		}
