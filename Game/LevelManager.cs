@@ -78,7 +78,6 @@ namespace Game
 					UpdateWorld();
 					break;
 			}
-			PurgeDeadEntities();
 		}
 
 		public void MoveToNextLevel()
@@ -95,6 +94,7 @@ namespace Game
 		private void UpdateWorld()
 		{
 			Debug.Assert(State == LevelState.World);
+			PurgeDeadEntities();
 
 			if (UIManager.StartMenuCondition) // Enter in-game menu
 				StartUIManager();
@@ -175,6 +175,7 @@ namespace Game
 		{
 			Debug.Assert(State == LevelState.Encounter);
 			EncounterManager.Update();
+			PurgeDeadEntities();
 
 			if (EncounterManager.Exit)
 				EncounterManager = null;
