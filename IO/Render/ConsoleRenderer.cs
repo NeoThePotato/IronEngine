@@ -14,8 +14,6 @@ namespace IO.Render
 	class ConsoleRenderer : Renderer
 	{
 		private static readonly bool IS_WINDOWS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-		private static readonly int MAX_RES_WIDTH = 200; // TODO Make this an option
-		private static readonly int MAX_RES_HEIGHT = 60;
 
 		private FrameBuffer _frameBuffer;
 
@@ -36,19 +34,11 @@ namespace IO.Render
 		private int BufferLength
 		{ get => BufferSizeJ * BufferSizeI; }
 		public override int SizeJ
-		{ get => MaxSizeJ; }
+		{ get => ChildRenderer.SizeJ; }
 		public override int SizeI
-		{ get => MaxSizeI; }
+		{ get => ChildRenderer.SizeI; }
 		public (int, int) Size
 		{ get => (SizeJ, SizeI); }
-		public override int MaxSizeJ
-		{ get => new[] { MAX_RES_HEIGHT, ChildRenderer.MaxSizeJ, WindowHeight}.Min(); }
-		public override int MaxSizeI
-		{ get => new[] { MAX_RES_WIDTH, ChildRenderer.MaxSizeI, WindowWidth}.Min(); }
-		public override int MinSizeJ
-		{ get => ChildRenderer.MinSizeJ; }
-		public override int MinSizeI
-		{ get => ChildRenderer.MinSizeI; }
 		public ulong CurrentTick
 		{ get; private set; }
 
@@ -203,8 +193,8 @@ namespace IO.Render
 		[SupportedOSPlatform("windows")]
 		private void UpdateConsoleWindowSize()
 		{
-			int width = Utility.ClampRange(WindowWidth, MinSizeI, MaxSizeI);
-			int height = Utility.ClampRange(WindowHeight, MinSizeJ, MaxSizeJ);
+			int width = Utility.ClampRange(WindowWidth, SizeI, LargestWindowWidth);
+			int height = Utility.ClampRange(WindowHeight, SizeJ, LargestWindowHeight);
 			UpdateConsoleWindowSize(width, height);
 		}
 
@@ -225,7 +215,7 @@ namespace IO.Render
 		[SupportedOSPlatform("windows")]
 		private bool ConsoleWindowSizeOutOfBounds()
 		{
-			return WindowHeight < MinSizeJ || WindowHeight > LargestWindowHeight || WindowWidth < MinSizeI || WindowWidth > LargestWindowWidth;
+			return WindowHeight < SizeJ || WindowHeight > LargestWindowHeight || WindowWidth < SizeI || WindowWidth > LargestWindowWidth;
 		}
 
 		[SupportedOSPlatform("windows")]
