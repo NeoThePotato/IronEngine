@@ -91,13 +91,20 @@ namespace IO.UI.Menus
 
 		public Item? RemoveItemAtSelection()
 		{
-			return Containers[SelectedContainerIndex].RemoveItem(SelectedItemIndex);
+			Item? item = Containers[SelectedContainerIndex].RemoveItem(SelectedItemIndex);
+			if (item != null)
+				ParentUIManager.DataLog.WriteLine($"{item} was discarded");
+
+			return item;
 		}
 
 		public void EquipSelectedOnUnit(Unit unit)
 		{
 			Debug.Assert(GetItemAtSelection() is Equipment);
 			var equipment = (Equipment?)Containers[SelectedContainerIndex].RemoveItem(SelectedItemIndex);
+
+			if (equipment != null)
+				ParentUIManager.DataLog.WriteLine($"{unit} equipped the {equipment}");
 			unit.Equip(ref equipment);
 			Containers[SelectedContainerIndex].TryAddItem(equipment, SelectedItemIndex);
 		}
