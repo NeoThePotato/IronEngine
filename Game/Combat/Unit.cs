@@ -3,6 +3,7 @@ using Game.Items.Equipment;
 using Assets.EquipmentTemplates;
 using Game.Progression;
 using static IO.Render.EntityRenderer;
+using static Game.Combat.UnitStats;
 
 namespace Game.Combat
 {
@@ -11,11 +12,6 @@ namespace Game.Combat
         // Permanent Stats
         private string _name = "";
         private int _level = 1;
-        private int _maxHP = 1;
-        private int _strength = 0;
-        private float _evasion = 0f;
-        private float _maxHealingPower = 0f;
-        private float _healingPowerDecay = 0f;
         // Temporary Stats
         private int _currentHP;
         private float _currentHealingPower;
@@ -31,37 +27,16 @@ namespace Game.Combat
         {
             get => _name;
         }
+        public UnitStats Stats
+        { get; private set; }
         public int MaxHP
-        {
-            get => _maxHP;
-
-            private set
-            {
-                int modifyHP = value - _maxHP;
-                _maxHP += modifyHP;
-                _maxHP = Utility.ClampMin(MaxHP, 1);
-                CurrentHP += modifyHP;
-            }
-        }
-        public int Strength
-        {
-            get => _strength;
-            private set => _strength = Utility.ClampMin(value, 0);
-        }
+        { get => Stats.MaxHP; }
+        public int BaseDamage
+        { get => Stats.BaseDamage; }
         public float Evasion
         {
             get => _evasion;
             private set => _evasion = Utility.ClampRange(value, 0f, 1f);
-        }
-        public int CurrentHP
-        {
-            get => _currentHP;
-            private set => _currentHP = Utility.ClampRange(value, 0, MaxHP);
-        }
-        public float CurrentHealingPower
-        {
-            get => _currentHealingPower;
-            private set => _currentHealingPower = Utility.ClampRange(value, 0f, 1f);
         }
         public float MaxHealingPower
         {
@@ -72,8 +47,18 @@ namespace Game.Combat
         {
             get => _healingPowerDecay;
             private set => _healingPowerDecay = Utility.ClampRange(value, 0f, 1f);
-        }
-        public bool Blocking
+		}
+		public int CurrentHP
+		{
+			get => _currentHP;
+			private set => _currentHP = Utility.ClampRange(value, 0, MaxHP);
+		}
+		public float CurrentHealingPower
+		{
+			get => _currentHealingPower;
+			private set => _currentHealingPower = Utility.ClampRange(value, 0f, 1f);
+		}
+		public bool Blocking
         {
             get => _blocking;
             private set => _blocking = value;
@@ -84,7 +69,7 @@ namespace Game.Combat
         }
         public int EffectiveAttack
         {
-            get => Strength + Weapon.Damage;
+            get => BaseDamage + Weapon.Damage;
         }
         public int EffectiveDefense
         {
@@ -127,7 +112,7 @@ namespace Game.Combat
             _name = name;
             _level = level;
             MaxHP = HP;
-            Strength = strength;
+            BaseDamage = strength;
             Evasion = evasion;
             MaxHealingPower = initialHealingPower;
             HealingPowerDecay = healingPowerDecay;
@@ -209,25 +194,22 @@ namespace Game.Combat
             Blocking = false;
         }
 
-        public void UpgradeStat(UnitStat stat, GrowthProfile growthProfile)
+        public void UpgradeStat(Stat stat, GrowthProfile growthProfile)
         {
 			_level++;
             switch (stat)
             {
-                case UnitStat.HP:
+                case Stat.HP:
                     MaxHP += growthProfile.maxHP;
                     break;
-                case UnitStat.Strength:
-                    Strength += growthProfile.strength;
+                case Stat.Strength:
+                    BaseDamage += growthProfile.strength;
                     break;
-                case UnitStat.Evasion:
+                case Stat.Evasion:
                     Evasion += (1f - Evasion) * growthProfile.evasion;
                     break;
-                case UnitStat.HealingPower:
+                case Stat.HealingPower:
                     MaxHealingPower += (1f - MaxHealingPower) * growthProfile.maxHealingPower;
-                    break;
-                case UnitStat.HealingPowerDecay:
-                    HealingPowerDecay *= (1f - growthProfile.healingPowerDecay);
                     break;
             }
 		}
@@ -259,7 +241,7 @@ namespace Game.Combat
         {
             return $"{this}" +
                 $"\nHP: {CurrentHP}/{MaxHP}" +
-                $"\nStrength: {Strength}" +
+                $"\nBase Damage: {BaseDamage}" +
                 $"\nEvasion: {Evasion * 100f:0.00}%" +
                 $"\nWeapon: {Weapon.GetStats()}" +
                 $"\nShield: {Shield.GetStats()}" +
@@ -271,7 +253,7 @@ namespace Game.Combat
         {
             return $"{this}" +
                 $"\nHP: {CurrentHP}/{MaxHP}" +
-                $"\nAttack Power: {EffectiveAttack} ({Strength}+{Weapon.Damage})" +
+                $"\nAttack Power: {EffectiveAttack} ({BaseDamage}+{Weapon.Damage})" +
                 $"\nDefense: {EffectiveDefense} ({BodyArmor.Defense}+{(Blocking ? Shield.Defense : 0)})" +
                 $"\nEvasion: {Evasion * 100f:0.00}%" +
                 $"\nHealing Power: {EffectiveHealPower} ({CurrentHealingPower * 100f:0.00}%)";
@@ -304,14 +286,60 @@ namespace Game.Combat
         }
     }
 
-    enum UnitStat
+    struct UnitStats
     {
-        HP,
-        Strength,
-        Evasion,
-        HealingPower,
-        HealingPowerDecay,
-    }
+		#region CONSTS
+		private const float MAX_EVASION = 1f;
+		private const float MAX_HEALING_POWER = 1f;
+		#endregion
+		#region BASE_STATS
+		public int TotalBaseStats
+		{ get => Vitality + Strength + Speed + Intelligence; }
+		public int Vitality
+        { get; private set; }
+		public int Strength
+		{ get; private set; }
+		public int Speed
+		{ get; private set; }
+		public int Intelligence
+		{ get; private set; }
+		#endregion
+		#region EXTRA_STATS
+		public int MaxHP
+		{ get => 10*Vitality + 2*Strength + TotalBaseStats/2; }
+		public int BaseDamage
+		{ get => 5*Strength + 2*Speed + TotalBaseStats/2; }
+		public float BaseEvasion
+		{ get => Utility.ClampMax(0.05f*Speed + 0.01f*TotalBaseStats, MAX_EVASION); }
+		public float EvasionDecay
+		{ get => ; }
+		public float BaseHealingPower
+		{ get => Utility.ClampMax(0.03f * (Vitality + Intelligence), MAX_HEALING_POWER); }
+		public float HealingPowerDecay
+        { get => ; }
+		#endregion
+
+		public UnitStats(int vitality, int strength, int speed, int intelligence)
+        {
+            Vitality = vitality;
+            Strength = strength;
+            Speed = speed;
+            Intelligence = intelligence;
+        }
+
+        public override string ToString()
+        {
+            return $"VIT: {Vitality}\nSTR: {Strength}\nSPD: {Speed}\nINT: {Intelligence}";
+        }
+
+		public enum Stat
+		{
+			Vitality,
+			Strength,
+			Speed,
+			Intelligence,
+		}
+	}
 
     enum UnitAction
     {
