@@ -16,7 +16,7 @@ namespace IO.Render
 		public override int SizeJ
 		{ get => BorderLinesJ.Length + LevelManagerRenderer.SizeJ + GameManager.DataLog.MAX_SIZE; }
 		public override int SizeI
-		{ get => BorderLinesI.Length + LevelManagerRenderer.SizeI; }
+		{ get => BorderLinesI.Length + LevelManagerRenderer.SizeI + GameUIManagerRenderer.SIDEBAR_WIDTH; }
 		private int[] BorderLinesJ
 		{ get; }
 		private int[] BorderLinesI
@@ -28,7 +28,7 @@ namespace IO.Render
 			UIManagerRenderer = new GameUIManagerRenderer(GameManager.UIManager, this);
 			LevelManagerRenderer = new LevelManagerRenderer(GameManager);
 			BorderLinesJ = new int[3];
-			BorderLinesI = new int[2];
+			BorderLinesI = new int[3];
 		}
 
 		public override void Render(FrameBuffer buffer)
@@ -68,9 +68,12 @@ namespace IO.Render
 			buffer.Char[BorderLinesJ[0], BorderLinesI[0]] = '╔';
 			buffer.Char[BorderLinesJ[1], BorderLinesI[0]] = '╠';
 			buffer.Char[BorderLinesJ[2], BorderLinesI[0]] = '╚';
-			buffer.Char[BorderLinesJ[0], BorderLinesI[1]] = '╗';
-			buffer.Char[BorderLinesJ[1], BorderLinesI[1]] = '╣';
-			buffer.Char[BorderLinesJ[2], BorderLinesI[1]] = '╝';
+			buffer.Char[BorderLinesJ[0], BorderLinesI[1]] = '╦';
+			buffer.Char[BorderLinesJ[1], BorderLinesI[1]] = '╬';
+			buffer.Char[BorderLinesJ[2], BorderLinesI[1]] = '╩';
+			buffer.Char[BorderLinesJ[0], BorderLinesI[2]] = '╗';
+			buffer.Char[BorderLinesJ[1], BorderLinesI[2]] = '╣';
+			buffer.Char[BorderLinesJ[2], BorderLinesI[2]] = '╝';
 		}
 
 		private void ValidateBorderSizes()
@@ -80,6 +83,7 @@ namespace IO.Render
 			BorderLinesJ[2] = LevelManagerRenderer.SizeJ + GameManager.UIManager.DataLog.MAX_SIZE + 2;
 			BorderLinesI[0] = 0;
 			BorderLinesI[1] = LevelManagerRenderer.SizeI + 1;
+			BorderLinesI[2] = LevelManagerRenderer.SizeI + GameUIManagerRenderer.SIDEBAR_WIDTH + 2;
 		}
 	}
 }
