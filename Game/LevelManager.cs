@@ -107,7 +107,7 @@ namespace Game
 
 		private void PurgeDeadEntities()
 		{
-			for (int i = Entities.Count - 1; i > 0; i--)
+			for (int i = Entities.Count - 1; i >= 0; i--)
 			{
 				if (Entities[i].Entity.MarkForDelete)
 					Entities.RemoveAt(i);
