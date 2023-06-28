@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
@@ -12,6 +13,10 @@ namespace IO.Render
 	/// </summary>
 	class ConsoleRenderer : Renderer
 	{
+		private static readonly bool IS_WINDOWS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+		private static readonly int MAX_RES_WIDTH = 200; // TODO Make this an option
+		private static readonly int MAX_RES_HEIGHT = 60;
+
 		private FrameBuffer _frameBuffer;
 
 		private FrameBuffer FrameBuffer {
@@ -31,11 +36,19 @@ namespace IO.Render
 		private int BufferLength
 		{ get => BufferSizeJ * BufferSizeI; }
 		public override int SizeJ
-		{ get => ChildRenderer.SizeJ; }
+		{ get => MaxSizeJ; }
 		public override int SizeI
-		{ get => ChildRenderer.SizeI; }
+		{ get => MaxSizeI; }
 		public (int, int) Size
 		{ get => (SizeJ, SizeI); }
+		public override int MaxSizeJ
+		{ get => new[] { MAX_RES_HEIGHT, ChildRenderer.MaxSizeJ, WindowHeight}.Min(); }
+		public override int MaxSizeI
+		{ get => new[] { MAX_RES_WIDTH, ChildRenderer.MaxSizeI, WindowWidth}.Min(); }
+		public override int MinSizeJ
+		{ get => ChildRenderer.MinSizeJ; }
+		public override int MinSizeI
+		{ get => ChildRenderer.MinSizeI; }
 		public ulong CurrentTick
 		{ get; private set; }
 
@@ -45,21 +58,18 @@ namespace IO.Render
 			UpdateFrameBufferSize();
 			UpdateStringBufferCapacity();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-			{
+			if (IS_WINDOWS)
 				Utility.EnableVirtualTerminalProcessing();
-				AdjustConsoleBufferSize();
-			}
 		}
 
 		public void RenderFrame(ulong currentTick)
 		{
 			CurrentTick = currentTick;
+			Validate();
 			UpdateFrameBuffer();
 			UpdateStringBuffer();
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-				AdjustConsoleWindow();
-			Write(StringBuffer);
+			PrepareConsoleWindow();
+			WriteStringToConsole();
 		}
 
 		public override void Render(FrameBuffer buffer)
@@ -70,19 +80,24 @@ namespace IO.Render
 		public override void Validate()
 		{
 			ChildRenderer.Validate();
+			ValidateFrameBufferSize();
+			ValidateStringBufferCapacity();
+			ValidateConsoleWindow();
 		}
 
 		private void UpdateFrameBuffer()
 		{
-			Validate();
-			ValidateFrameBufferSize();
 			Render(_frameBuffer);
 		}
 
 		private void UpdateStringBuffer()
 		{
-			ValidateStringBufferCapacity();
 			ParseFrameBufferToStringBuffer();
+		}
+
+		private void WriteStringToConsole()
+		{
+			Write(StringBuffer);
 		}
 
 		private void ParseFrameBufferToStringBuffer()
@@ -158,27 +173,43 @@ namespace IO.Render
 
 		#region CONSOLE_WINDOW_MANIPULATION
 		[SupportedOSPlatform("windows")]
-		private void AdjustConsoleWindow()
+		private void ValidateConsoleWindow()
 		{
-			CursorVisible = false;
-			AdjustConsoleWindowSize();
-			SetCursorPosition(0, 0);
-			AdjustConsoleBufferSize();
-			SetWindowPosition(0, 0);
+			ValidateConsoleWindowSize();
+			ValidateConsoleBufferSize();
+		}
+
+		private void PrepareConsoleWindow()
+		{
+			try
+			{
+				CursorVisible = false;
+				SetCursorPosition(0, 0);
+				SetWindowPosition(0, 0);
+			}
+			catch (ArgumentOutOfRangeException)
+			{
+
+			}
 		}
 
 		[SupportedOSPlatform("windows")]
-		private void AdjustConsoleWindowSize()
+		private void ValidateConsoleWindowSize()
 		{
-			int desiredWindowWidth = Math.Min(LargestWindowWidth, BufferSizeI);
-			int desiredWindowHeight = Math.Min(LargestWindowHeight, BufferSizeJ);
-
-			if (WindowWidth != desiredWindowWidth || WindowHeight != desiredWindowHeight)
-				AdjustConsoleWindowSize(desiredWindowWidth, desiredWindowHeight);
+			if (ConsoleWindowSizeOutOfBounds())
+				UpdateConsoleWindowSize();
 		}
 
 		[SupportedOSPlatform("windows")]
-		private static void AdjustConsoleWindowSize(int sizeI, int sizeJ)
+		private void UpdateConsoleWindowSize()
+		{
+			int width = Utility.ClampRange(WindowWidth, MinSizeI, MaxSizeI);
+			int height = Utility.ClampRange(WindowHeight, MinSizeJ, MaxSizeJ);
+			UpdateConsoleWindowSize(width, height);
+		}
+
+		[SupportedOSPlatform("windows")]
+		private static void UpdateConsoleWindowSize(int sizeI, int sizeJ)
 		{
 			try
 			{
@@ -192,23 +223,33 @@ namespace IO.Render
 		}
 
 		[SupportedOSPlatform("windows")]
-		private void AdjustConsoleBufferSize()
+		private bool ConsoleWindowSizeOutOfBounds()
 		{
-			int desiredBufferWidth = Math.Min(WindowWidth, BufferSizeI);
-			int desiredBufferHeight = Math.Min(WindowHeight, BufferSizeJ);
-
-			if (BufferWidth != desiredBufferWidth || BufferHeight != desiredBufferHeight)
-				AdjustConsoleBufferSize(desiredBufferWidth, desiredBufferHeight);
+			return WindowHeight < MinSizeJ || WindowHeight > LargestWindowHeight || WindowWidth < MinSizeI || WindowWidth > LargestWindowWidth;
 		}
-		
+
 		[SupportedOSPlatform("windows")]
-		private static void AdjustConsoleBufferSize(int sizeI, int sizeJ)
+		private void ValidateConsoleBufferSize()
 		{
-			if (sizeI < WindowWidth || sizeJ < WindowHeight || sizeI < CursorLeft || sizeJ < CursorTop)
-			{
-				AdjustConsoleWindowSize(sizeI, sizeJ);
+			if (BufferWidth != WindowWidth || BufferHeight != WindowHeight)
+				UpdateConsoleBufferSize();
+		}
+
+		[SupportedOSPlatform("windows")]
+		private void UpdateConsoleBufferSize()
+		{
+			UpdateConsoleBufferSize(WindowWidth, WindowHeight);
+		}
+
+		[SupportedOSPlatform("windows")]
+		private static void UpdateConsoleBufferSize(int sizeI, int sizeJ)
+		{
+			if (sizeI < CursorLeft || sizeJ < CursorTop)
 				SetCursorPosition(0, 0);
-			}
+
+			if (sizeI < WindowWidth || sizeJ < WindowHeight)
+				UpdateConsoleWindowSize(sizeI, sizeJ);
+
 			try
 			{
 				SetBufferSize(sizeI, sizeJ);
