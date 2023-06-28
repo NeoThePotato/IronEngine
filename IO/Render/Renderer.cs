@@ -9,6 +9,14 @@
 		{ get; }
 		public abstract int SizeI
 		{ get; }
+		public virtual int MaxSizeJ
+		{ get => SizeJ; }
+		public virtual int MaxSizeI
+		{ get => SizeI; }
+		public virtual int MinSizeJ
+		{ get => SizeJ; }
+		public virtual int MinSizeI
+		{ get => SizeI; }
 
 		public abstract void Render(FrameBuffer buffer);
 
