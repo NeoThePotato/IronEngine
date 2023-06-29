@@ -292,7 +292,7 @@ namespace Game.Combat
 		public int BaseDamage
 		{ get => Strength / 2 + Speed / 5 + TotalBaseStats / 10; }
 		public float BaseEvasion
-		{ get => Utility.ClampMax(0.05f * Speed + 0.01f * TotalBaseStats, 1f); }
+		{ get => Utility.ClampMax(0.02f * Speed + 0.01f * TotalBaseStats, 1f); }
 		public float EvasionDecay
 		{ get => Utility.ClampRange(0.7f / (float)Math.Sqrt(Speed + TotalBaseStats / 5), 0f, 1f); }
 		public float BaseHealingPower
