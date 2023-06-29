@@ -118,6 +118,16 @@ namespace Game.Combat
 
 		}
 
+		public Unit(string name, int level, int vitality, int strength, int speed, int intelligence, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor) : this(name, level, new UnitStats(vitality, strength, speed, intelligence), weapon, shield, bodyArmor, Assets.EntitiesVisualInfo.UNIT_ENEMY)
+		{
+
+		}
+
+		public Unit(string name, int level, int vitality, int strength, int speed, int intelligence, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor, VisualEntityInfo visualInfo) : this(name, level, new UnitStats(vitality, strength, speed, intelligence), weapon, shield, bodyArmor, visualInfo)
+		{
+
+		}
+
 		public Unit(Unit other) : this(other._name, other._level, other.Stats, other._equippedWeapon, other._equippedShield, other._equippedBodyArmor, other.VisualInfo)
         {
 
