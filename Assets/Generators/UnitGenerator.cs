@@ -13,6 +13,7 @@ namespace Assets.Generators
 			{UnitTemplates.fae,				new SpawnProfile(2, 6)},
 			{UnitTemplates.spawnOfTwilight,	new SpawnProfile(4, 2)},
 			{UnitTemplates.antiHero,		new SpawnProfile(10, 2)},
+			{UnitTemplates.archDemon,		new SpawnProfile(15, 1)}
 		};
 
 		public static Unit? MakeUnit(DifficultyProfile difficultyProfile)
