@@ -356,6 +356,18 @@ namespace Game.Combat
 			return (Stat)(Random.Shared.Next(0, Enum.GetNames(typeof(Stat)).Length));
 		}
 
+		public static UnitStats operator + (UnitStats s)
+			=> s;
+
+		public static UnitStats operator -(UnitStats s)
+			=> new UnitStats(-s.Vitality, -s.Strength, -s.Speed, -s.Intelligence);
+
+		public static UnitStats operator +(UnitStats s1, UnitStats s2)
+			=> new UnitStats(s1.Vitality + s2.Vitality, s1.Strength + s2.Strength, s1.Speed + s2.Speed, s1.Intelligence + s2.Intelligence);
+
+		public static UnitStats operator -(UnitStats s1, UnitStats s2)
+			=> new UnitStats(s1.Vitality - s2.Vitality, s1.Strength - s2.Strength, s1.Speed - s2.Speed, s1.Intelligence - s2.Intelligence);
+
 		public override string ToString()
         {
             return $"VIT: {Vitality}\nSTR: {Strength}\nSPD: {Speed}\nINT: {Intelligence}";
