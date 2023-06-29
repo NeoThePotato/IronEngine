@@ -30,7 +30,7 @@ namespace Game.Combat
         public UnitStats Stats
         { get; private set; }
         public int MaxHP
-        { get => Stats.MaxHP; }
+        { get => Stats.HP; }
         public int BaseDamage
         { get => Stats.BaseDamage; }
         public float Evasion
@@ -288,10 +288,6 @@ namespace Game.Combat
 
     struct UnitStats
     {
-		#region CONSTS
-		private const float MAX_EVASION = 1f;
-		private const float MAX_HEALING_POWER = 1f;
-		#endregion
 		#region BASE_STATS
 		public int TotalBaseStats
 		{ get => Vitality + Strength + Speed + Intelligence; }
@@ -305,18 +301,22 @@ namespace Game.Combat
 		{ get; private set; }
 		#endregion
 		#region EXTRA_STATS
-		public int MaxHP
-		{ get => 10*Vitality + 2*Strength + TotalBaseStats/2; }
+		public int HP
+		{ get => Utility.ClampMin(10 * Vitality + 2 * Strength + TotalBaseStats / 2, 1); }
 		public int BaseDamage
-		{ get => 5*Strength + 2*Speed + TotalBaseStats/2; }
+		{ get => 5 * Strength + 2 * Speed + TotalBaseStats/2; }
 		public float BaseEvasion
-		{ get => Utility.ClampMax(0.05f*Speed + 0.01f*TotalBaseStats, MAX_EVASION); }
+		{ get => Utility.ClampMax(0.05f * Speed + 0.01f * TotalBaseStats, 1f); }
 		public float EvasionDecay
-		{ get => ; }
+		{ get => Utility.ClampRange(0.7f / (float)Math.Sqrt(Speed + TotalBaseStats / 5), 0f, 1f); }
 		public float BaseHealingPower
-		{ get => Utility.ClampMax(0.03f * (Vitality + Intelligence), MAX_HEALING_POWER); }
+		{ get => Utility.ClampMax(0.04f * (Vitality + Intelligence), 1f); }
 		public float HealingPowerDecay
-        { get => ; }
+        { get => Utility.ClampRange(1f / (float)Math.Sqrt(Vitality + Intelligence), 0f, 1f); }
+        public int MovementSpeed
+        { get => Utility.ClampRange(((Speed/2 + TotalBaseStats/5)*Point2D.POINTS_PER_TILE)/64, 16, Point2D.POINTS_PER_TILE); }
+		public int DetectionRange
+		{ get => (Intelligence / 5 + TotalBaseStats / 15) * Point2D.POINTS_PER_TILE; }
 		#endregion
 
 		public UnitStats(int vitality, int strength, int speed, int intelligence)
