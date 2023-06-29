@@ -32,14 +32,9 @@ namespace Assets.Generators
 		{
 			while (levels > 0)
 			{
-				unit.LevelUp(GetRandomStat());
+				unit.LevelUp(UnitStats.GetRandomStat());
 				levels--;
 			}
-		}
-
-		private static UnitStats.Stat GetRandomStat()
-		{
-			return (UnitStats.Stat)(Random.Shared.Next(0, Enum.GetNames(typeof(UnitStats.Stat)).Length));
 		}
 	}
 }

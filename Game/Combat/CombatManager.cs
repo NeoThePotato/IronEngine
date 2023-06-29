@@ -1,4 +1,6 @@
-﻿namespace Game.Combat
+﻿using Game.World;
+
+namespace Game.Combat
 {
     class CombatManager
     {
@@ -158,7 +160,7 @@
         }
         private bool CPUCanHeal
         {
-            get => CPUUnit.EffectiveHealPower > 0;
+            get => CPUUnit.EffectiveBaseHealPower > 0;
         }
         private bool CPUCanBlock
         {
@@ -166,7 +168,7 @@
         }
         private bool CPUCanOutHealFatalAttack
         {
-            get => CPUCanHeal && CPUUnit.CurrentHP + CPUUnit.EffectiveHealPower - DamageFromPlayer > 0;
+            get => CPUCanHeal && CPUUnit.CurrentHP + CPUUnit.EffectiveBaseHealPower - DamageFromPlayer > 0;
         }
         private bool CPUCanBlockFatalAttack
         {
@@ -202,5 +204,35 @@
             else
                 return UnitAction.Attack; // Desperate efforts
         }
-    }
+	}
+
+	struct CombatFeedback
+	{
+		public Entity actor;
+		public Entity other;
+		public FeedbackType type;
+		public int numericAmount;
+
+		public string ParseFeedback()
+		{
+			switch (type)
+			{
+				case FeedbackType.Hit: return $"{actor} attacked {other} and dealt {numericAmount} damage.";
+				case FeedbackType.Block: return $"{actor}'s attack was blocked but dealt {numericAmount} damage to {other}.";
+				case FeedbackType.Evade: return $"{actor}'s attack missed {other}.";
+				case FeedbackType.Raise: return $"{actor} raised their shield.";
+				case FeedbackType.Heal: return $"{actor} healed for {numericAmount} HP.";
+				default: return "";
+			}
+		}
+
+		public enum FeedbackType
+		{
+			Hit,
+			Block,
+			Evade,
+			Raise,
+			Heal
+		}
+	}
 }

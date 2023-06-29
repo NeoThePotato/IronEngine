@@ -1,10 +1,8 @@
 ﻿using Game.World;
 using Game.Items.Equipment;
 using Assets.EquipmentTemplates;
-using Game.Progression;
 using static IO.Render.EntityRenderer;
 using static Game.Combat.UnitStats;
-using System;
 
 namespace Game.Combat
 {
@@ -24,31 +22,34 @@ namespace Game.Combat
         // Other
         private VisualEntityInfo _visualInfo = Assets.EntitiesVisualInfo.UNIT_ENEMY;
 
-        public override string Name
+		#region NAME
+		public override string Name
         {
             get => _name;
-        }
-        public UnitStats Stats
+		}
+		public override int Level
+		{ get => _level; }
+		#endregion
+		#region COMBAT_STATS
+		public UnitStats Stats
         { get; private set; }
         public int MaxHP
         { get => Stats.HP; }
         public int BaseDamage
         { get => Stats.BaseDamage; }
         public float Evasion
-        {
-            get => _evasion;
-            private set => _evasion = Utility.ClampRange(value, 0f, 1f);
-        }
+        { get => Stats.BaseEvasion; }
         public float MaxHealingPower
-        {
-            get => _maxHealingPower;
-            private set => _maxHealingPower = Utility.ClampRange(value, 0f, 1f);
-        }
+        { get => Stats.BaseHealingPower; }
         public float HealingPowerDecay
-        {
-            get => _healingPowerDecay;
-            private set => _healingPowerDecay = Utility.ClampRange(value, 0f, 1f);
-		}
+        { get => Stats.HealingPowerDecay; }
+		public int EffectiveAttack
+		{ get => BaseDamage + Weapon.Damage; }
+		public int EffectiveDefense
+		{ get => BodyArmor.Defense + (Blocking ? Shield.Defense : 0); }
+		public int EffectiveBaseHealPower
+		{ get => (int)(CurrentHealingPower * MaxHP); }
+		#region TEMP_STATS
 		public int CurrentHP
 		{
 			get => _currentHP;
@@ -60,63 +61,51 @@ namespace Game.Combat
 			private set => _currentHealingPower = Utility.ClampRange(value, 0f, 1f);
 		}
 		public bool Blocking
-        {
-            get => _blocking;
-            private set => _blocking = value;
-        }
-        public bool Dead
-        {
-            get => CurrentHP == 0;
-        }
-        public int EffectiveAttack
-        {
-            get => BaseDamage + Weapon.Damage;
-        }
-        public int EffectiveDefense
-        {
-            get => BodyArmor.Defense + (Blocking ? Shield.Defense : 0);
-        }
-        public int EffectiveHealPower
-        {
-            get => (int)(CurrentHealingPower * MaxHP);
-        }
-        public Weapon Weapon
-        {
-            get => _equippedWeapon ?? Weapons.nothing;
-            set => _equippedWeapon = value;
-        }
-        public Shield Shield
-        {
-            get => _equippedShield ?? Shields.nothing;
-            set => _equippedShield = value;
-        }
-        public BodyArmor BodyArmor
-        {
-            get => _equippedBodyArmor ?? BodyArmors.nothing;
-            set => _equippedBodyArmor = value;
-        }
-		public override int Level
-        { get => _level; }
+		{
+			get => _blocking;
+			private set => _blocking = value;
+		}
+		#endregion
+		#endregion
+		#region EQUIPMENT
+		public Weapon Weapon
+		{
+			get => _equippedWeapon ?? Weapons.nothing;
+			set => _equippedWeapon = value;
+		}
+		public Shield Shield
+		{
+			get => _equippedShield ?? Shields.nothing;
+			set => _equippedShield = value;
+		}
+		public BodyArmor BodyArmor
+		{
+			get => _equippedBodyArmor ?? BodyArmors.nothing;
+			set => _equippedBodyArmor = value;
+		}
+		#endregion
+		#region FLAGS
+		public bool Dead
+        { get => CurrentHP <= 0; }
 		public override bool Passable
         { get => Dead; }
         public override bool Moveable
-        { get => true; }
+        { get => !Dead; }
         public override bool MarkForDelete
         { get => Dead; }
-        public override EncounterManager.EncounterType EncounterType
+		#endregion
+		#region OTHER
+		public override EncounterManager.EncounterType EncounterType
         { get => EncounterManager.EncounterType.Combat; }
 		public override VisualEntityInfo VisualInfo
         { get => _visualInfo; }
+		#endregion
 
-		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor, VisualEntityInfo visualInfo)
+		public Unit(string name, int level, UnitStats stats, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor, VisualEntityInfo visualInfo)
         {
             _name = name;
             _level = level;
-            MaxHP = HP;
-            BaseDamage = strength;
-            Evasion = evasion;
-            MaxHealingPower = initialHealingPower;
-            HealingPowerDecay = healingPowerDecay;
+            Stats = stats;
             _equippedWeapon = weapon;
 			_equippedShield = shield;
 			_equippedBodyArmor = bodyArmor;
@@ -124,12 +113,12 @@ namespace Game.Combat
             ResetTempStats();
         }
 
-		public Unit(string name, int level, int HP, int strength, float evasion, float initialHealingPower, float healingPowerDecay, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor) : this(name, level, HP, strength, evasion, initialHealingPower, healingPowerDecay, weapon, shield, bodyArmor, Assets.EntitiesVisualInfo.UNIT_ENEMY)
+		public Unit(string name, int level, UnitStats stats, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor) : this(name, level, stats, weapon, shield, bodyArmor, Assets.EntitiesVisualInfo.UNIT_ENEMY)
 		{
 
 		}
 
-		public Unit(Unit other) : this(other._name, other._level, other._maxHP, other._strength, other._evasion, other._maxHealingPower, other._healingPowerDecay, other._equippedWeapon, other._equippedShield, other._equippedBodyArmor, other.VisualInfo)
+		public Unit(Unit other) : this(other._name, other._level, other.Stats, other._equippedWeapon, other._equippedShield, other._equippedBodyArmor, other.VisualInfo)
         {
 
         }
@@ -167,7 +156,7 @@ namespace Game.Combat
         {
             CheckValidState();
             int previousHP = CurrentHP;
-            HealBy(EffectiveHealPower);
+            HealBy(EffectiveBaseHealPower);
             ReduceHealingPower();
             feedback.actor = this;
             feedback.other = this;
@@ -233,7 +222,7 @@ namespace Game.Combat
                 $"\nWeapon: {Weapon.GetStats()}" +
                 $"\nShield: {Shield.GetStats()}" +
                 $"\nBody Armor: {BodyArmor.GetStats()}" +
-                $"\nHealing Power: {EffectiveHealPower} ({CurrentHealingPower * 100f:0.00}%)";
+                $"\nHealing Power: {EffectiveBaseHealPower} ({CurrentHealingPower * 100f:0.00}%)";
         }
 
         public string GetCombatStats()
@@ -243,7 +232,7 @@ namespace Game.Combat
                 $"\nAttack Power: {EffectiveAttack} ({BaseDamage}+{Weapon.Damage})" +
                 $"\nDefense: {EffectiveDefense} ({BodyArmor.Defense}+{(Blocking ? Shield.Defense : 0)})" +
                 $"\nEvasion: {Evasion * 100f:0.00}%" +
-                $"\nHealing Power: {EffectiveHealPower} ({CurrentHealingPower * 100f:0.00}%)";
+                $"\nHealing Power: {EffectiveBaseHealPower} ({CurrentHealingPower * 100f:0.00}%)";
         }
 
         private void HealBy(int heal)
@@ -314,23 +303,47 @@ namespace Game.Combat
             Intelligence = intelligence;
 		}
 
-		public void UpgradeStat(Stat stat, int amount = 1)
+		public UnitStats(UnitStats other) : this(other.Vitality, other.Strength, other.Speed, other.Intelligence)
+        {
+
+		}
+
+		public UnitStats(int total) : this(0, 0, 0, 0)
+		{
+			UpgradeRandomStat(total);
+		}
+
+		public void UpgradeStat(Stat stat, int by = 1)
 		{
 			switch (stat)
 			{
 				case Stat.VIT:
-					Vitality += amount;
+					Vitality += by;
 					break;
 				case Stat.STR:
-					Strength += amount;
+					Strength += by;
 					break;
 				case Stat.SPD:
-					Speed += amount;
+					Speed += by;
 					break;
 				case Stat.INT:
-					Intelligence += amount;
+					Intelligence += by;
 					break;
 			}
+		}
+
+		public void UpgradeRandomStat(int total = 1)
+		{
+			while (total > 0)
+			{
+				UpgradeStat(GetRandomStat());
+				total--;
+			}
+		}
+
+		public static Stat GetRandomStat()
+		{
+			return (Stat)(Random.Shared.Next(0, Enum.GetNames(typeof(Stat)).Length));
 		}
 
 		public override string ToString()
@@ -352,35 +365,5 @@ namespace Game.Combat
         Attack,
         Defend,
         Heal
-    }
-
-    struct CombatFeedback
-    {
-        public Entity actor;
-        public Entity other;
-        public FeedbackType type;
-        public int numericAmount;
-
-        public string ParseFeedback()
-        {
-            switch (type)
-            {
-                case FeedbackType.Hit: return $"{actor} attacked {other} and dealt {numericAmount} damage.";
-                case FeedbackType.Block: return $"{actor}'s attack was blocked but dealt {numericAmount} damage to {other}.";
-                case FeedbackType.Evade: return $"{actor}'s attack missed {other}.";
-                case FeedbackType.Raise: return $"{actor} raised their shield.";
-                case FeedbackType.Heal: return $"{actor} healed for {numericAmount} HP.";
-                default: return "";
-            }
-        }
-
-        public enum FeedbackType
-        {
-            Hit,
-            Block,
-            Evade,
-            Raise,
-            Heal
-        }
     }
 }
