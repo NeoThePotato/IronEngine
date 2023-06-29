@@ -86,7 +86,7 @@ namespace Game.World
 			if (!unit.Dead)
 			{
 				DataLog.WriteLine($"{PlayerUnit} has encountered a {unit}");
-				_combatManager = new CombatManager(PlayerUnit, unit);
+				_combatManager = new CombatManager(PlayerUnit, unit, DataLog);
 			}
 			else
 			{

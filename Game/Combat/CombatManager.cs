@@ -1,22 +1,29 @@
 ﻿using Game.World;
+using IO.UI;
 
 namespace Game.Combat
 {
     class CombatManager
     {
-        private Unit _playerUnit;
-        private Unit _cpuUnit;
+        private Unit PlayerUnit
+        { get; set; }
+        private Unit CPUUnit
+		{ get; set; }
+		private DataLog DataLog
+		{ get; set; }
+        private CPUAI AI
+        { get; set; }
 
-        private bool BothAlive
-        {
-            get => !_playerUnit.Dead && !_cpuUnit.Dead;
-        }
+		private bool BothAlive
+        { get => !PlayerUnit.Dead && !CPUUnit.Dead; }
 
-        public CombatManager(Unit playerUnit, Unit cpuUnit)
+        public CombatManager(Unit playerUnit, Unit cpuUnit, DataLog dataLog)
         {
-            _playerUnit = playerUnit;
-            _cpuUnit = cpuUnit;
-        }
+            PlayerUnit = playerUnit;
+            CPUUnit = cpuUnit;
+            DataLog = dataLog;
+            AI = new CPUAI(CPUUnit, PlayerUnit);
+		}
 
         public Unit Combat()
         {
@@ -30,28 +37,28 @@ namespace Game.Combat
         private void CombatInitiate()
 		{
 			Console.Clear();
-			Console.WriteLine($"{_playerUnit} has encountered a {_cpuUnit}.");
+			Console.WriteLine($"{PlayerUnit} has encountered a {CPUUnit}.");
             Utility.BlockUntilKeyDown();
         }
 
         private void CombatLoop()
         {
-            Unit actingUnit = _playerUnit;
-            Unit passiveUnit = _cpuUnit;
+            Unit actingUnit = PlayerUnit;
+            Unit passiveUnit = CPUUnit;
             CombatFeedback combatFeedback = new CombatFeedback();
 
             // Main combat loop
             while (BothAlive)
             {
-                // Print combat status
-                Console.Clear();
+				// Print combat status
+				Console.Clear();
                 Console.WriteLine(
-                    $"{_playerUnit.GetCombatStats()}\n\n" +
-                    $"{_cpuUnit.GetCombatStats()}\n\n" +
+                    $"{PlayerUnit.GetCombatStats()}\n\n" +
+                    $"{CPUUnit.GetCombatStats()}\n\n" +
                     $"{actingUnit}'s turn.\n");
 
                 // Action phase
-                UnitAction action = actingUnit == _playerUnit ? GetPlayerAction() : GetCPUAction();
+                UnitAction action = actingUnit == PlayerUnit ? GetPlayerAction() : GetCPUAction();
                 DoAction(action, actingUnit, passiveUnit, ref combatFeedback);
 
                 // End of action phase
@@ -65,13 +72,13 @@ namespace Game.Combat
 
         private void CombatEnd()
         {
-            Console.WriteLine($"{GetWinner()} wins!");
+            DataLog.WriteLine($"{GetWinner()} wins!");
         }
 
         private UnitAction GetPlayerAction()
         {
-            Console.WriteLine(
-                $"What will {_playerUnit} do?\n" +
+			Console.WriteLine(
+                $"What will {PlayerUnit} do?\n" +
                 $"{GetPlayerOptions()}");
 
             return GetPlayerInput() switch
@@ -86,9 +93,8 @@ namespace Game.Combat
         private UnitAction GetCPUAction()
         {
             Thread.Sleep(300);
-            CPUAI ai = new CPUAI(_cpuUnit, _playerUnit);
 
-            return ai.GetCPUAction();
+            return AI.GetCPUAction();
         }
 
         private void DoAction(UnitAction action, Unit actingUnit, Unit passiveUnit, ref CombatFeedback feedback)
@@ -131,12 +137,18 @@ namespace Game.Combat
 
         private Unit GetWinner()
         {
-            return _cpuUnit.Dead ? _playerUnit : _cpuUnit;
+            return CPUUnit.Dead ? PlayerUnit : CPUUnit;
         }
+	}
 
-    }
+	enum UnitAction
+	{
+		Attack,
+		Defend,
+		Heal
+	}
 
-    struct CPUAI
+	struct CPUAI
     {
         private Unit PlayerUnit;
         private Unit CPUUnit;

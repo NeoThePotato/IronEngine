@@ -14,7 +14,8 @@ namespace Game.Combat
         // Temporary Stats
         private int _currentHP;
         private float _currentHealingPower;
-        private bool _blocking;
+		private float _currentEvasion;
+		private bool _blocking;
         // Equipment
         private Weapon? _equippedWeapon;
         private Shield? _equippedShield;
@@ -24,9 +25,7 @@ namespace Game.Combat
 
 		#region NAME
 		public override string Name
-        {
-            get => _name;
-		}
+        { get => _name; }
 		public override int Level
 		{ get => _level; }
 		#endregion
@@ -39,7 +38,9 @@ namespace Game.Combat
         { get => Stats.BaseDamage; }
         public float Evasion
         { get => Stats.BaseEvasion; }
-        public float MaxHealingPower
+		public float EvasionDecay
+		{ get => Stats.EvasionDecay; }
+		public float MaxHealingPower
         { get => Stats.BaseHealingPower; }
         public float HealingPowerDecay
         { get => Stats.HealingPowerDecay; }
@@ -59,6 +60,11 @@ namespace Game.Combat
 		{
 			get => _currentHealingPower;
 			private set => _currentHealingPower = Utility.ClampRange(value, 0f, 1f);
+		}
+		public float CurrentEvasion
+		{
+			get => _currentEvasion;
+			private set => _currentEvasion = Utility.ClampRange(value, 0f, 1f);
 		}
 		public bool Blocking
 		{
@@ -144,7 +150,8 @@ namespace Game.Combat
 		public void TakeDamage(int damage, ref CombatFeedback feedback)
 		{
 			CheckValidState();
-			if (!AttemptDodge())
+
+			if (!AttemptEvasion())
 			{
 				if (Blocking)
 					feedback.type = CombatFeedback.FeedbackType.Block;
@@ -157,6 +164,7 @@ namespace Game.Combat
 			}
 			else
 			{
+				ReduceEvasion();
 				feedback.type = CombatFeedback.FeedbackType.Evade;
 				feedback.numericAmount = 0;
 			}
@@ -190,6 +198,7 @@ namespace Game.Combat
         public void ResetTempStats()
         {
             CurrentHP = MaxHP;
+			CurrentEvasion = Evasion;
             CurrentHealingPower = MaxHealingPower;
             Blocking = false;
         }
@@ -198,6 +207,7 @@ namespace Game.Combat
         {
 			_level++;
             Stats.UpgradeStat(stat);
+			ResetTempStats();
 		}
 
         public void Equip(ref Equipment? equipment)
@@ -223,29 +233,12 @@ namespace Game.Combat
 			equipment = unEquippedItem;
 		}
 
-		public string GetStats()
-        {
-            return $"{this}" +
-                $"\nHP: {CurrentHP}/{MaxHP}" +
-                $"\nBase Damage: {BaseDamage}" +
-                $"\nEvasion: {Evasion * 100f:0.00}%" +
-                $"\nWeapon: {Weapon.GetStats()}" +
-                $"\nShield: {Shield.GetStats()}" +
-                $"\nBody Armor: {BodyArmor.GetStats()}" +
-                $"\nHealing Power: {EffectiveBaseHealPower} ({CurrentHealingPower * 100f:0.00}%)";
-        }
+		private int GetUnblockedDamage(int damage)
+		{
+			return Utility.ClampMin(damage - EffectiveDefense, 1);
+		}
 
-        public string GetCombatStats()
-        {
-            return $"{this}" +
-                $"\nHP: {CurrentHP}/{MaxHP}" +
-                $"\nAttack Power: {EffectiveAttack} ({BaseDamage}+{Weapon.Damage})" +
-                $"\nDefense: {EffectiveDefense} ({BodyArmor.Defense}+{(Blocking ? Shield.Defense : 0)})" +
-                $"\nEvasion: {Evasion * 100f:0.00}%" +
-                $"\nHealing Power: {EffectiveBaseHealPower} ({CurrentHealingPower * 100f:0.00}%)";
-        }
-
-        private void HealBy(int heal)
+		private void HealBy(int heal)
         {
             CurrentHP += heal;
         }
@@ -255,17 +248,39 @@ namespace Game.Combat
             CurrentHealingPower *= 1f - HealingPowerDecay;
         }
 
-        private int GetUnblockedDamage(int damage)
+        private bool AttemptEvasion()
         {
-            return Utility.ClampMin(damage - EffectiveDefense, 1);
-        }
+            return CurrentEvasion >= Random.Shared.NextDouble();
+		}
 
-        private bool AttemptDodge()
-        {
-            return Evasion >= Random.Shared.NextDouble();
-        }
+		private void ReduceEvasion()
+		{
+			CurrentEvasion *= 1f - EvasionDecay;
+		}
 
-        private void CheckValidState()
+		public string GetStats()
+		{
+			return $"{this}" +
+				$"\nHP: {CurrentHP}/{MaxHP}" +
+				$"\nBase Damage: {BaseDamage}" +
+				$"\nEvasion: {Evasion * 100f:0.00}%" +
+				$"\nWeapon: {Weapon.GetStats()}" +
+				$"\nShield: {Shield.GetStats()}" +
+				$"\nBody Armor: {BodyArmor.GetStats()}" +
+				$"\nHealing Power: {EffectiveBaseHealPower} ({CurrentHealingPower * 100f:0.00}%)";
+		}
+
+		public string GetCombatStats()
+		{
+			return $"{this}" +
+				$"\nHP: {CurrentHP}/{MaxHP}" +
+				$"\nAttack Power: {EffectiveAttack} ({BaseDamage}+{Weapon.Damage})" +
+				$"\nDefense: {EffectiveDefense} ({BodyArmor.Defense}+{(Blocking ? Shield.Defense : 0)})" +
+				$"\nEvasion: {CurrentEvasion * 100f:0.00}%" +
+				$"\nHealing Power: {EffectiveBaseHealPower} ({CurrentHealingPower * 100f:0.00}%)";
+		}
+
+		private void CheckValidState()
         {
             if (Dead)
                 throw new InvalidOperationException($"{this} is dead and cannot act.");
@@ -381,11 +396,4 @@ namespace Game.Combat
 			INT,
 		}
 	}
-
-    enum UnitAction
-    {
-        Attack,
-        Defend,
-        Heal
-    }
 }
