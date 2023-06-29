@@ -14,7 +14,7 @@
         public string GetStats()
         {
             return $"{this}\n" +
-                    $"	Defense: {Defense}";
+                    $" Defense: {Defense}";
         }
 
         public override string ToString()

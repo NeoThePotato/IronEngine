@@ -16,7 +16,7 @@ namespace Game.Items.Equipment
 		public string GetStats()
         {
             return $"{this}\n" +
-                    $"	Damage: {Damage}";
+                    $" Damage: {Damage}";
         }
 
         public override string ToString()
