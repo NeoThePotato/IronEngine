@@ -33,7 +33,7 @@ namespace Assets.Generators
 		{
 			while (levels > 0)
 			{
-				unit.LevelUp(UnitStats.GetRandomStat());
+				unit.LevelUp(Stats.GetRandomStat());
 				levels--;
 			}
 		}

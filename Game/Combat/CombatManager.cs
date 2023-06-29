@@ -174,7 +174,7 @@ namespace Game.Combat
         }
         private bool CPUCanHeal
         {
-            get => CPUUnit.EffectiveBaseHealPower > 0;
+            get => CPUUnit.EffectiveHealPower > 0;
         }
         private bool CPUCanBlock
         {
@@ -182,7 +182,7 @@ namespace Game.Combat
         }
         private bool CPUCanOutHealFatalAttack
         {
-            get => CPUCanHeal && CPUUnit.CurrentHP + CPUUnit.EffectiveBaseHealPower - DamageFromPlayer > 0;
+            get => CPUCanHeal && CPUUnit.CurrentHP + CPUUnit.EffectiveHealPower - DamageFromPlayer > 0;
         }
         private bool CPUCanBlockFatalAttack
         {
