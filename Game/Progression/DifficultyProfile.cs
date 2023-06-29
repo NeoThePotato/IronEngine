@@ -3,7 +3,6 @@
     class DifficultyProfile
     {
         private int _level; // A multiplier for all other stats (This increases as the game progressed)
-        private readonly GrowthProfile _enemyGrowthProfile; // Multiply enemy Unit stats by this
         private readonly int _baseEnemyDensity; // Tiles per enemy
         private readonly int _baseTrapDensity; // Tiles per trap
         private readonly float _baseDoorChance; // Chance to generate doors in alleyways
@@ -15,8 +14,6 @@
         { get; private set; }
         public int Level
         { get => _level; set => _level = value; }
-        public GrowthProfile EnemyGrowthProfile
-		{ get => _enemyGrowthProfile; }
         public int EnemyDensity
         { get => Utility.ClampMin(_baseEnemyDensity - Level / 5, 1); }
         public int TrapDensity
@@ -30,11 +27,10 @@
 		public int MaxNumOfChests
 		{ get => _baseMaxNumOfChests + Level / 10; }
 
-		public DifficultyProfile(string name, GrowthProfile enemyGrowthProfile, int baseEnemyDensity, int baseTrapDensity, float baseDoorChance, int baseMaxNumOfDoors, float baseChestChance, int baseMaxNumOfChests)
+		public DifficultyProfile(string name, int baseEnemyDensity, int baseTrapDensity, float baseDoorChance, int baseMaxNumOfDoors, float baseChestChance, int baseMaxNumOfChests)
         {
             Name = name ?? string.Empty;
             Level = 1;
-			_enemyGrowthProfile = enemyGrowthProfile;
             _baseEnemyDensity = baseEnemyDensity;
             _baseTrapDensity = baseTrapDensity;
             _baseDoorChance = baseDoorChance;

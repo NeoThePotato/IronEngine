@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Game.Combat;
 using Game.Items.Equipment;
-using static Assets.GrowthProfileTemplates;
 using Assets.EquipmentTemplates;
 
 namespace Game

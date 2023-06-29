@@ -4,6 +4,7 @@ using Assets.EquipmentTemplates;
 using Game.Progression;
 using static IO.Render.EntityRenderer;
 using static Game.Combat.UnitStats;
+using System;
 
 namespace Game.Combat
 {
@@ -194,24 +195,10 @@ namespace Game.Combat
             Blocking = false;
         }
 
-        public void UpgradeStat(Stat stat, GrowthProfile growthProfile)
+        public void LevelUp(Stat stat)
         {
 			_level++;
-            switch (stat)
-            {
-                case Stat.HP:
-                    MaxHP += growthProfile.maxHP;
-                    break;
-                case Stat.Strength:
-                    BaseDamage += growthProfile.strength;
-                    break;
-                case Stat.Evasion:
-                    Evasion += (1f - Evasion) * growthProfile.evasion;
-                    break;
-                case Stat.HealingPower:
-                    MaxHealingPower += (1f - MaxHealingPower) * growthProfile.maxHealingPower;
-                    break;
-            }
+            Stats.UpgradeStat(stat);
 		}
 
         public void Equip(ref Equipment? equipment)
@@ -325,19 +312,38 @@ namespace Game.Combat
             Strength = strength;
             Speed = speed;
             Intelligence = intelligence;
-        }
+		}
 
-        public override string ToString()
+		public void UpgradeStat(Stat stat, int amount = 1)
+		{
+			switch (stat)
+			{
+				case Stat.VIT:
+					Vitality += amount;
+					break;
+				case Stat.STR:
+					Strength += amount;
+					break;
+				case Stat.SPD:
+					Speed += amount;
+					break;
+				case Stat.INT:
+					Intelligence += amount;
+					break;
+			}
+		}
+
+		public override string ToString()
         {
             return $"VIT: {Vitality}\nSTR: {Strength}\nSPD: {Speed}\nINT: {Intelligence}";
         }
 
 		public enum Stat
 		{
-			Vitality,
-			Strength,
-			Speed,
-			Intelligence,
+			VIT,
+			STR,
+			SPD,
+			INT,
 		}
 	}
 

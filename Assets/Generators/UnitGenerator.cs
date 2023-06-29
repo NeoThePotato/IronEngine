@@ -22,15 +22,24 @@ namespace Assets.Generators
 			if (unit != null)
 			{
 				unit = new Unit(unit);
-				GrowUnit(ref unit, difficultyProfile.Level, difficultyProfile.EnemyGrowthProfile);
+				GrowUnit(ref unit, difficultyProfile.Level);
 			}
 
 			return unit;
 		}
 
-		private static void GrowUnit(ref Unit unit, int levels, GrowthProfile profile)
+		public static void GrowUnit(ref Unit unit, int levels)
 		{
-			profile.GrowUnit(ref unit, levels);
+			while (levels > 0)
+			{
+				unit.LevelUp(GetRandomStat());
+				levels--;
+			}
+		}
+
+		private static UnitStats.Stat GetRandomStat()
+		{
+			return (UnitStats.Stat)(Random.Shared.Next(0, Enum.GetNames(typeof(UnitStats.Stat)).Length));
 		}
 	}
 }

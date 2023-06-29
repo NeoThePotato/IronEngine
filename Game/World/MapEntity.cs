@@ -1,5 +1,6 @@
 ﻿using static Game.World.Direction;
 using static Game.World.Point2D;
+using Game.Combat;
 
 namespace Game.World
 {
@@ -8,9 +9,6 @@ namespace Game.World
 		private Direction _direction;
 		private MapEntity? _target;
 		private Point2D _targetPos;
-		public const int MAX_MOVEMENT_SPEED = POINTS_PER_TILE;
-		public const int MOVEMENT_SPEED = MAX_MOVEMENT_SPEED / 4; // TODO Replace with entity "SPD" stat or something
-		public static readonly int DETECTION_RANGE = TileToPoint(3); // TODO Replace with entity "INT" stat or something
 
 		public Entity Entity
 		{ get; set; }
@@ -22,9 +20,9 @@ namespace Game.World
 			set => _direction = value;
 		}
 		public int MovementSpeed
-		{ get => Utility.ClampMax(MOVEMENT_SPEED, MAX_MOVEMENT_SPEED); }
+		{ get => EncounterType == EncounterManager.EncounterType.Combat ? ((Unit)Entity).Stats.MovementSpeed : 0; }
 		public int DetectionRange
-		{ get => DETECTION_RANGE; }
+		{ get => EncounterType == EncounterManager.EncounterType.Combat ? ((Unit)Entity).Stats.DetectionRange : 0; }
 		public Point2D TargetPos
 		{ get => IsTargeting ? _targetPos : Pos; set => _targetPos = value; }
 		public MapEntity? Target
@@ -42,6 +40,8 @@ namespace Game.World
 		{ get => Entity.Passable; }
 		public bool Moveable
 		{ get => Entity.Moveable && MovementSpeed > 1; }
+		public EncounterManager.EncounterType EncounterType
+		{ get => Entity.EncounterType; }
 
 		public MapEntity(Entity entity, Point2D pos)
 		{
