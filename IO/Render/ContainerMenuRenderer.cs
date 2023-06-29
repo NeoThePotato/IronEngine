@@ -23,21 +23,20 @@ namespace IO.Render
 		{
 			ContainerMenu = containerMenu;
 			MenuManagerRenderer = new SelectionMenuRenderer(Menu);
-
 		}
 
-		public override void Render(FrameBuffer frameBuffer)
+		public override void Render(FrameBuffer buffer)
 		{
-			MenuManagerRenderer.Render(frameBuffer);
-			frameBuffer = MenuManagerRenderer.BaseMenuOffset(frameBuffer);
+			MenuManagerRenderer.Render(buffer);
+			buffer = new FrameBuffer(buffer, MenuManagerRenderer.SelectionMenuOffsetJ, 0);
 
 			if (ContainerMenu.ItemSelected)
-				HighlightSelection(frameBuffer);
+				HighlightSelection(buffer);
 		}
 		
-		private void HighlightSelection(FrameBuffer frameBuffer)
+		private void HighlightSelection(FrameBuffer buffer)
 		{
-			RenderText(new FrameBuffer(frameBuffer, ContainerMenu.SelectedItemIndex, LengthPerString * ContainerMenu.SelectedContainerIndex), ContainerMenu.GetItemAtSelection().ToString(), LengthPerString, COLOR_WHITE, HIGHLIGHTED_BG_COLOR);
+			RenderTextSingleLine(new FrameBuffer(buffer, ContainerMenu.SelectedItemIndex, LengthPerString * ContainerMenu.SelectedContainerIndex), ContainerMenu.GetItemAtSelection().ToString(), LengthPerString, COLOR_WHITE, HIGHLIGHTED_BG_COLOR);
 		}
 	}
 }

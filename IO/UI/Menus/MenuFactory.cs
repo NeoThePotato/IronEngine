@@ -68,7 +68,7 @@ namespace IO.UI.Menus
 			if (playerUnit.CanLevelUp)
 				actions.Add("Level Up", levelUp);
 
-			return new SelectionMenu(inputManager, parentUIManager, actions, 1, actions.Count, statsMenuText);
+			return new SelectionMenu(inputManager, parentUIManager, actions, 1, actions.Count, $"Stats", statsMenuText);
 		}
 
 		private static SelectionMenu GetConfirmMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, string query, Action onTrue, Action onFalse)

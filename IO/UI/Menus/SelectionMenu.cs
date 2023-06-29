@@ -11,6 +11,8 @@ namespace IO.UI.Menus
 
 		public string Title
 		{ get; private set; }
+		public string Body
+		{ get; private set; }
         public string?[,] Strings
         { get; private set; }
 		public Dictionary<string, Action?>? Actions
@@ -45,13 +47,17 @@ namespace IO.UI.Menus
 		{ get => DimI * ColumnLength; }
 		public bool HasTitle
 		{ get => Title != string.Empty; }
+		public bool HasBody
+		{ get => Body != string.Empty; }
 		public override bool Exit
         { get; set; }
 
-        public SelectionMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Dictionary<string, Action?> actions, int dimJ, int dimI, string? title = null) : base(inputManager, parentUIManager)
+        public SelectionMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Dictionary<string, Action?> actions, int dimJ, int dimI, string? title = null, string? body = null) : base(inputManager, parentUIManager)
         {
 			Title = title ?? string.Empty;
-            if (dimJ * dimI >= actions.Count)
+			Body = body ?? string.Empty;
+
+			if (dimJ * dimI >= actions.Count)
             {
 				Actions = actions;
 				Strings = GetStringMatrix(actions.Keys.ToArray(), dimJ, dimI);
@@ -64,9 +70,10 @@ namespace IO.UI.Menus
             }
         }
 
-		public SelectionMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Dictionary<string, Action?> actions, string?[,] strings, string? title = null) : base(inputManager, parentUIManager)
+		public SelectionMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Dictionary<string, Action?> actions, string?[,] strings, string? title = null, string? body = null) : base(inputManager, parentUIManager)
 		{
 			Title = title ?? string.Empty;
+			Body = body ?? string.Empty;
 			Actions = actions;
 			Strings = strings;
 			UpdateLongestString();

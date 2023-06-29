@@ -25,15 +25,15 @@
 			}
 		}
 
-		public static void RenderText(FrameBuffer buffer, string str, int length, byte textColor = COLOR_WHITE, byte bgColor = COLOR_BLACK)
+		public static void RenderTextSingleLine(FrameBuffer buffer, string str, int length, byte textColor = COLOR_WHITE, byte bgColor = COLOR_BLACK)
 		{
-			int i = 0;
+			int c = 0;
 
-			for (; i < str.Length; i++)
-				buffer[0, i] = (str[i], textColor, bgColor);
+			for (; c < str.Length; c++)
+				buffer[0, c] = (str[c], textColor, bgColor);
 
-			for (; i < length; i++)
-				buffer[0, i] = EMPTY_CHAR;
+			for (; c < length; c++)
+				buffer[0, c] = EMPTY_CHAR;
 		}
 
 		public static void RenderText(FrameBuffer buffer, IEnumerable<string> str, int length, byte textColor = COLOR_WHITE, byte fgColor = COLOR_BLACK)
@@ -43,7 +43,7 @@
 			foreach (var line in str)
 			{
 				var fb = new FrameBuffer(buffer, j, 0);
-				RenderText(fb, line, length);
+				RenderTextSingleLine(fb, line, length);
 				j++;
 			}
 		}
