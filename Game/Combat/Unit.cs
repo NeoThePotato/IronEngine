@@ -290,7 +290,7 @@ namespace Game.Combat
 		public int HP
 		{ get => Utility.ClampMin(10 * Vitality + 2 * Strength + TotalBaseStats / 2, 1); }
 		public int BaseDamage
-		{ get => 5 * Strength + 2 * Speed + TotalBaseStats/2; }
+		{ get => Strength / 2 + Speed / 5 + TotalBaseStats / 10; }
 		public float BaseEvasion
 		{ get => Utility.ClampMax(0.05f * Speed + 0.01f * TotalBaseStats, 1f); }
 		public float EvasionDecay
@@ -300,9 +300,9 @@ namespace Game.Combat
 		public float HealingPowerDecay
         { get => Utility.ClampRange(1f / (float)Math.Sqrt(Vitality + Intelligence), 0f, 1f); }
         public int MovementSpeed
-        { get => Utility.ClampRange(((Speed/2 + TotalBaseStats/5)*Point2D.POINTS_PER_TILE)/64, 16, Point2D.POINTS_PER_TILE); }
+        { get => Utility.ClampRange((int)(((Speed/2f + TotalBaseStats/5f)*Point2D.POINTS_PER_TILE)/32), 16, Point2D.POINTS_PER_TILE); }
 		public int DetectionRange
-		{ get => (Intelligence / 5 + TotalBaseStats / 15) * Point2D.POINTS_PER_TILE; }
+		{ get => (int)((Intelligence / 5f + TotalBaseStats / 10f) * Point2D.POINTS_PER_TILE); }
 		#endregion
 
 		public UnitStats(int vitality, int strength, int speed, int intelligence)
