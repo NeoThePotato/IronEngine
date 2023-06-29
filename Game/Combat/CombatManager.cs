@@ -72,8 +72,10 @@ namespace Game.Combat
 
         private void CombatEnd()
         {
-            DataLog.WriteLine($"{GetWinner()} wins!");
-        }
+            Unit winner = GetWinner();
+			DataLog.WriteLine($"{winner} wins!");
+			winner.ResetPostCombatTempStats();
+		}
 
         private UnitAction GetPlayerAction()
         {
