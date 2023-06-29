@@ -6,7 +6,7 @@
 
 		public static int GetExpAtLevel(int level)
 		{
-			return (level * EXP_PER_LEVEL);
+			return (EXP_PER_LEVEL * (level - 1));
 		}
 
 		public static int GetTotalExpToLevel(int level)
