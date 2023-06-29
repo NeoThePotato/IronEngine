@@ -7,16 +7,18 @@ namespace IO.UI.Menus
 {
 	static class MenuFactory
 	{
-		public static SelectionMenu GetConfirmPortalMenu(LevelManager levelManager, GameUIManager parentUIManager)
+		public static SelectionMenu GetConfirmPortalMenu(LevelManager levelManager)
 		{
+			var parentUIManager = levelManager.UIManager;
 			Action onTrue = () => levelManager.MoveToNextLevel();
 			Action onFalse = () => levelManager.UIManager.ForceExitCurrentMenu();
 
 			return GetConfirmMenu(levelManager.InputManager, parentUIManager, "Are you sure you want to proceed?", onTrue, onFalse);
 		}
 
-		public static SelectionMenu GetInGameMenu(LevelManager levelManager, GameUIManager parentUIManager)
+		public static SelectionMenu GetInGameMenu(LevelManager levelManager)
 		{
+			var parentUIManager = levelManager.UIManager;
 			Action returnToGame = () => parentUIManager.ForceExitCurrentMenu();
 			Action openStatsMenu = () => throw new NotImplementedException();
 			Action openInventoryMenu = () => levelManager.UIManager.StackNewMenu(GetContainerMenu(levelManager.InputManager, levelManager.UIManager, (Unit)levelManager.PlayerEntity.Entity, levelManager.PlayerInventory));
@@ -38,9 +40,9 @@ namespace IO.UI.Menus
 			return new ContainerMenu(inputManager, parentUIManager, playerUnit, containers);
 		}
 
-		public static SelectionMenu GetEquipmentMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, ContainerMenu parent, Equipment equipment, Unit unit)
+		public static SelectionMenu GetEquipmentMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, ContainerMenu parent, Equipment equipment, Unit playerUnit)
 		{
-			Action equip = () => { parent.EquipSelectedOnUnit(unit); parentUIManager.ForceExitCurrentMenu(); };
+			Action equip = () => { parent.EquipSelectedOnUnit(playerUnit); parentUIManager.ForceExitCurrentMenu(); };
 			Action discard = () => { parent.RemoveItemAtSelection(); parentUIManager.ForceExitCurrentMenu(); };
 
 			var actions = new Dictionary<string, Action?>()

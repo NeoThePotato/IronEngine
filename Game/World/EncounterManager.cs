@@ -147,7 +147,7 @@ namespace Game.World
 			if (portal.PortalType == PortalType.Exit)
 			{
 				DataLog.WriteLine($"{PlayerUnit} has found {portal}");
-				UIManager.StackNewMenu(MenuFactory.GetConfirmPortalMenu(_levelManager, UIManager));
+				UIManager.StackNewMenu(MenuFactory.GetConfirmPortalMenu(_levelManager));
 			}
 			Exit = true;
 		}
