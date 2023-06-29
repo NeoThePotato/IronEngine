@@ -12,12 +12,14 @@ namespace IO.Render
 		public override int SizeJ
 		{ get => Menu.DimJ; }
 		public override int SizeI
-		{ get => Menu.DimI * LengthPerString; }
+		{ get => Math.Max(Menu.DimI * LengthPerSelectionString, BodyLengthI); }
 		public int BodyOffsetJ
 		{ get => Menu.HasTitle ? 1 : 0; }
+		public int BodyLengthI
+		{ get; private set; }
 		public int SelectionMenuOffsetJ
 		{ get => BodyOffsetJ + (Menu.HasBody ? Body.Length : 0); }
-		public int LengthPerString
+		public int LengthPerSelectionString
 		{ get => Menu.LongestString + SPACE_BETWEEN_COLS; }
 		public string[] Body
 		{ get; private set; }
@@ -25,7 +27,12 @@ namespace IO.Render
 		public SelectionMenuRenderer(SelectionMenu selectionMenu)
 		{
 			Menu = selectionMenu;
-			Body = Menu.Body.Split('\n');
+
+			if (Menu.HasBody)
+			{
+				Body = Menu.Body.Split('\n');
+				BodyLengthI = Body.MaxBy(x => x.Length).Length;
+			}
 		}
 
 		public override void Render(FrameBuffer buffer)
@@ -40,13 +47,14 @@ namespace IO.Render
 
 		private void RenderTitle(FrameBuffer buffer)
 		{
-			RenderTextSingleLine(buffer, Menu.Title, Menu.Title.Length);
+			if (Menu.HasTitle)
+				RenderTextSingleLine(buffer, Menu.Title, Menu.Title.Length);
 		}
 
 		private void RenderBody(FrameBuffer buffer)
 		{
-			var length = Body.Max()!;
-			RenderText(buffer, Body, length.Length);
+			if (Menu.HasBody)
+				RenderText(buffer, Body, BodyLengthI);
 		}
 
 		private void RenderBaseMenu(FrameBuffer buffer)
@@ -58,12 +66,12 @@ namespace IO.Render
 		private void RenderCol(FrameBuffer buffer, int col)
 		{
 			var rowEnum = Enumerable.Range(0, Menu.DimJ).Select(row => Menu.Strings[row, col] != null ? Menu.Strings[row, col] : "");
-			RenderText(new FrameBuffer(buffer, 0, LengthPerString * col), rowEnum, LengthPerString);
+			RenderText(new FrameBuffer(buffer, 0, LengthPerSelectionString * col), rowEnum, LengthPerSelectionString);
 		}
 
 		private void HighlightSelection(FrameBuffer buffer)
 		{
-			RenderTextSingleLine(new FrameBuffer(buffer, SelectionMenuOffsetJ+Menu.CursorJ, LengthPerString * Menu.CursorI), Menu.GetOptionAtCursor(), LengthPerString, COLOR_WHITE, HIGHLIGHTED_BG_COLOR);
+			RenderTextSingleLine(new FrameBuffer(buffer, SelectionMenuOffsetJ+Menu.CursorJ, LengthPerSelectionString * Menu.CursorI), Menu.GetOptionAtCursor(), LengthPerSelectionString, COLOR_WHITE, HIGHLIGHTED_BG_COLOR);
 		}
 	}
 }
