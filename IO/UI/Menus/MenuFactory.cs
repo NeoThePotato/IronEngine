@@ -75,22 +75,28 @@ namespace IO.UI.Menus
 		{
 			var unitStats = playerUnit.Stats;
 			var level = playerUnit.Level;
-			Action vitUp = () => { playerUnit.LevelUp(Stats.Stat.VIT); parentUIManager.ForceExitCurrentMenu(); };
-			Action strUp = () => { playerUnit.LevelUp(Stats.Stat.STR); parentUIManager.ForceExitCurrentMenu(); };
-			Action spdUp = () => { playerUnit.LevelUp(Stats.Stat.SPD); parentUIManager.ForceExitCurrentMenu(); };
-			Action intUp = () => { playerUnit.LevelUp(Stats.Stat.INT); parentUIManager.ForceExitCurrentMenu(); };
+			Action restartStatsMenu = () => {
+				parentUIManager.ForceExitCurrentMenu();
+				parentUIManager.ForceExitCurrentMenu();
+				parentUIManager.StackNewMenu(GetPlayerStatsMenu(inputManager, parentUIManager, playerUnit));
+			};
+			Action<Stats.Stat> levelUpAndGoBackToStatsMenu = (stat) => { playerUnit.LevelUp(stat); restartStatsMenu(); };
+			Action vitUp = () => levelUpAndGoBackToStatsMenu(Stats.Stat.VIT);
+			Action strUp = () => levelUpAndGoBackToStatsMenu(Stats.Stat.STR);
+			Action spdUp = () => levelUpAndGoBackToStatsMenu(Stats.Stat.SPD);
+			Action intUp = () => levelUpAndGoBackToStatsMenu(Stats.Stat.INT);
 			Action back = () => parentUIManager.ForceExitCurrentMenu();
 
 			var actions = new Dictionary<string, Action?>()
 			{
-				{ $"VIT: {unitStats.Vitality} +1", vitUp},
-				{ $"STR: {unitStats.Strength} +1", strUp},
-				{ $"SPD: {unitStats.Speed} +1", spdUp},
-				{ $"INT: {unitStats.Intelligence} +1", intUp},
+				{ $"VIT: {unitStats.Vitality} -> {unitStats.Vitality+1}", vitUp},
+				{ $"STR: {unitStats.Strength} -> {unitStats.Strength+1}", strUp},
+				{ $"SPD: {unitStats.Speed} -> {unitStats.Speed+1}", spdUp},
+				{ $"INT: {unitStats.Intelligence} -> {unitStats.Intelligence+1}", intUp},
 				{"Back", back}
 			};
 
-			return new SelectionMenu(inputManager, parentUIManager, actions, 4, actions.Count, $"Lv {level} -> {level+1}");
+			return new SelectionMenu(inputManager, parentUIManager, actions, actions.Count, 1, $"Lv {level} -> {level+1}");
 		}
 
 		private static SelectionMenu GetConfirmMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, string query, Action onTrue, Action onFalse)
