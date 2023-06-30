@@ -255,7 +255,7 @@ namespace Game.Combat
 
 		public void AddExp(int exp, DataLog dataLog)
 		{
-			if (ExpToNextLevel < exp)
+			if (!CanLevelUp && ExpToNextLevel < exp)
 				dataLog.WriteLine($"{this} has leveled up");
 
 			TotalExp += exp;
