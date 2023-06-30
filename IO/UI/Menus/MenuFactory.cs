@@ -43,7 +43,7 @@ namespace IO.UI.Menus
 		public static SelectionMenu GetEquipmentMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, ContainerMenu parent, Equipment equipment, Unit playerUnit)
 		{
 			Action equip = () => { parent.EquipSelectedOnUnit(playerUnit); parentUIManager.ForceExitCurrentMenu(); };
-			Action discard = () => { parent.RemoveItemAtSelection(); parentUIManager.ForceExitCurrentMenu(); };
+			Action discard = () => { parent.RemoveItemAtSelection()!.DiscardThis(playerUnit, parentUIManager.DataLog); parentUIManager.ForceExitCurrentMenu(); };
 
 			var actions = new Dictionary<string, Action?>()
 			{

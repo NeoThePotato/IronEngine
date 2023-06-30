@@ -3,7 +3,9 @@
     abstract class Armor : Equipment
     {
         public override string Name { get; }
-        public int Defense { get; private set; }
+		public override int Value
+		{ get => Defense; }
+		public int Defense { get; private set; }
 
         public Armor(string name, int defense)
         {

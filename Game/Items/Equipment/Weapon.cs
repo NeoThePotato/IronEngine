@@ -5,9 +5,11 @@ namespace Game.Items.Equipment
     class Weapon : Equipment
     {
         public override string Name { get; }
-        public int Damage { get; private set; }
+		public override int Value
+        { get => Damage; }
+		public int Damage { get; private set; }
 
-        public Weapon(string name, int damage)
+		public Weapon(string name, int damage)
         {
             Name = name;
             Damage = damage;

@@ -92,8 +92,6 @@ namespace IO.UI.Menus
 		public Item? RemoveItemAtSelection()
 		{
 			Item? item = Containers[SelectedContainerIndex].RemoveItem(SelectedItemIndex);
-			if (item != null)
-				ParentUIManager.DataLog.WriteLine($"{item} was discarded");
 
 			return item;
 		}
