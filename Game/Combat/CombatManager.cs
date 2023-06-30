@@ -73,7 +73,10 @@ namespace Game.Combat
         private void CombatEnd()
         {
             Unit winner = GetWinner();
-			DataLog.WriteLine($"{winner} wins!");
+            Unit loser = GetLoser();
+            int xpGain = loser.GetExpOnDeath();
+			DataLog.WriteLine($"{winner} has defeated {loser} and gained {xpGain} Exp");
+            winner.AddExp(xpGain, DataLog);
 			winner.ResetPostCombatTempStats();
 		}
 
@@ -140,7 +143,12 @@ namespace Game.Combat
         private Unit GetWinner()
         {
             return CPUUnit.Dead ? PlayerUnit : CPUUnit;
-        }
+		}
+
+		private Unit GetLoser()
+		{
+			return PlayerUnit.Dead ? PlayerUnit : CPUUnit;
+		}
 	}
 
 	enum UnitAction

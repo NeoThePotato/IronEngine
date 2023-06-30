@@ -3,6 +3,7 @@ using Game.Items.Equipment;
 using Assets.EquipmentTemplates;
 using static Game.Combat.Stats;
 using static IO.Render.EntityRenderer;
+using IO.UI;
 
 namespace Game.Combat
 {
@@ -108,7 +109,7 @@ namespace Game.Combat
 		public int NextLevelTotalExp
 		{ get => Progression.Leveling.GetTotalExpToLevel(Level+1); }
 		public bool CanLevelUp
-		{ get => TotalExp > NextLevelTotalExp; }
+		{ get => TotalExp >= NextLevelTotalExp; }
 		#endregion
 		#region FLAGS
 		public bool Dead
@@ -252,11 +253,24 @@ namespace Game.Combat
 			equipment = unEquippedItem;
 		}
 
+		public void AddExp(int exp, DataLog dataLog)
+		{
+			if (ExpToNextLevel < exp)
+				dataLog.WriteLine($"{this} has leveled up");
+
+			TotalExp += exp;
+		}
+
 		public void LevelUp(Stat stat)
 		{
 			_level++;
 			Stats.UpgradeStat(stat);
 			ResetAllTempStats();
+		}
+
+		public int GetExpOnDeath()
+		{
+			return (Level * Stats.TotalBaseStats) / 4;
 		}
 		#endregion
 		#region GET_STATS
