@@ -13,6 +13,7 @@ namespace Game.Combat
 		// Permanent Stats (Never changes)
 		private string _name = "";
 		// Mid-Temporary Stats (Changes, persists between encounters)
+		private Stats _stats;
 		private int _currentHP;
 		private float _currentHealingPower;
 		// High-Temporary Stats (Changes, doesn't persist between encounters)
@@ -36,7 +37,7 @@ namespace Game.Combat
 		#endregion
 		#region STATS
 		public Stats Stats
-		{ get; private set; }
+		{ get => _stats; private set => _stats = value; }
 		public int MaxHP
 		{ get => Stats.HP; }
 		public int BaseDamage
@@ -264,7 +265,7 @@ namespace Game.Combat
 		public void LevelUp(Stat stat)
 		{
 			_level++;
-			Stats.UpgradeStat(stat);
+			UpgradeStat(ref _stats, stat);
 			ResetAllTempStats();
 		}
 

@@ -50,33 +50,33 @@ namespace Game.Combat
 
 		public Stats(int total) : this(0, 0, 0, 0)
 		{
-			UpgradeRandomStat(total);
+			UpgradeRandomStat(ref this, total);
 		}
 
-		public void UpgradeStat(Stat stat, int by = 1)
+		public static void UpgradeStat(ref Stats stats, Stat stat, int by = 1)
 		{
 			switch (stat)
 			{
 				case Stat.VIT:
-					Vitality += by;
+					stats.Vitality += by;
 					break;
 				case Stat.STR:
-					Strength += by;
+					stats.Strength += by;
 					break;
 				case Stat.SPD:
-					Speed += by;
+					stats.Speed += by;
 					break;
 				case Stat.INT:
-					Intelligence += by;
+					stats.Intelligence += by;
 					break;
 			}
 		}
 
-		public void UpgradeRandomStat(int total = 1)
+		public static void UpgradeRandomStat(ref Stats stats, int total = 1)
 		{
 			while (total > 0)
 			{
-				UpgradeStat(GetRandomStat());
+				UpgradeStat(ref stats, GetRandomStat());
 				total--;
 			}
 		}
