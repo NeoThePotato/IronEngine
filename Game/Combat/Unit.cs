@@ -277,7 +277,7 @@ namespace Game.Combat
 		#region GET_STATS
 		public string GetStats()
 		{
-			return $"{Name}/{MaxHP}\nLevel: {Level}\nExp: {TotalExp}/{NextLevelTotalExp}\nHP: {CurrentHP}\nBase Damage: {BaseDamage}\nHealing Power: {EffectiveHealPower} ({CurrentHealingPower * 100f:0.00}%)\nEvasion: {Evasion * 100f:0.00}%\nWeapon: {Weapon.GetStats()}\nShield: {Shield.GetStats()}\nBody Armor: {BodyArmor.GetStats()}";
+			return $"{Name}\nLevel: {Level}\nExp: {TotalExp}/{NextLevelTotalExp}\nHP: {CurrentHP}/{MaxHP}\nBase Damage: {BaseDamage}\nHealing Power: {EffectiveHealPower} ({CurrentHealingPower * 100f:0.00}%)\nEvasion: {Evasion * 100f:0.00}%\nWeapon: {Weapon.GetStats()}\nShield: {Shield.GetStats()}\nBody Armor: {BodyArmor.GetStats()}";
 		}
 
 		public string GetCombatStats()
