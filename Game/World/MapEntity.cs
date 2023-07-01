@@ -65,6 +65,17 @@ namespace Game.World
 			Pos = new Point2D();
 			Dir = TranslateDirection(Directions.None);
 		}
+		public static bool operator ==(MapEntity? e1, MapEntity? e2)
+		{
+			if (e1 is not null & e2 is not null)
+				return e1!.Entity == e2!.Entity;
+			else if (e1 is null & e2 is null)
+				return true;
+			else
+				return false;
+		}
+		public static bool operator !=(MapEntity? e1, MapEntity? e2)
+			=> !(e1 == e2);
 
 		public void Move()
 		{
