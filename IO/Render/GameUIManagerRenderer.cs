@@ -94,20 +94,26 @@ namespace IO.Render
 
 		private void RenderLocationBox(FrameBuffer buffer)
 		{
-			int boxHeight = GameUIManager.DATALOG_LENGTH;
-			Level level = GameManager.LevelManager.Level;
-			Map map = level.Map;
-			Point2D playerLocation = GameManager.LevelManager.PlayerEntity.Pos;
-			Map.TileInfo tileInfo = map.GetTileInfo(playerLocation);
-			var entitiesOnTile = level.GetEntitiesAt(playerLocation);
+			var boxHeight = GameUIManager.DATALOG_LENGTH;
+			var level = GameManager.LevelManager.Level;
+			var map = level.Map;
+			var location = GameManager.LevelManager.PlayerEntity.Pos;
+			var tileInfo = MapRenderer.GetTileInfoAt(map, location);
+			var entitiesOnTile = level.GetEntitiesAt(location);
 
+			// Print tile coordinates
+			RenderTextSingleLine(buffer, $"{location.TileJ}, {location.TileI}", SIDEBAR_WIDTH);
+
+			// Print tile floor
 			buffer = new FrameBuffer(buffer, boxHeight - 1, 0);
-			RenderTextSingleLine(buffer, tileInfo.name, SIDEBAR_WIDTH);
+			RenderTextSingleLine(buffer, tileInfo.tileInfo.name, SIDEBAR_WIDTH, tileInfo.foregroundColor);
 
-			for (int j = 0; j < Math.Min(entitiesOnTile.Count, boxHeight - 1); j++)
+			// Print entities on current tile
+			for (int j = 0; j < Math.Min(entitiesOnTile.Count, boxHeight - 2); j++)
 			{
 				buffer = new FrameBuffer(buffer, -1, 0);
-				RenderTextSingleLine(buffer, entitiesOnTile[j].ToString(), SIDEBAR_WIDTH);
+				var entity = entitiesOnTile[j];
+				RenderTextSingleLine(buffer, entity.ToString(), SIDEBAR_WIDTH, entity.Entity.VisualInfo.foregroundColor!.Value);
 			}
 		}
 	}

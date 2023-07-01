@@ -63,8 +63,7 @@ namespace IO.Render
 			{
 				for (int i = 0; i < Map.TileSizeI; i++)
 				{
-					var info = VisualTileInfo.GetVisualTileInfo(Map.TileMap[j, i]);
-					RenderToCache(j, i, info);
+					RenderToCache(j, i, GetTileInfoAt(j, i));
 				}
 			}
 		}
@@ -88,6 +87,21 @@ namespace IO.Render
 		private void UpdateCacheSize()
 		{
 			_mapCache = new FrameBuffer(SizeJ, SizeI);
+		}
+
+		private VisualTileInfo GetTileInfoAt(int j, int i)
+		{
+			return GetTileInfoAt(Map, j, i);
+		}
+
+		public static VisualTileInfo GetTileInfoAt(Map map, int j, int i)
+		{
+			return VisualTileInfo.GetVisualTileInfo(map.TileMap[j, i]);
+		}
+
+		public static VisualTileInfo GetTileInfoAt(Map map, Point2D point)
+		{
+			return GetTileInfoAt(map, point.TileJ, point.TileI);
 		}
 
 		public struct VisualTileInfo
