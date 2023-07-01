@@ -40,6 +40,8 @@ namespace Game.World
 		{ get => Entity.Passable; }
 		public bool Moveable
 		{ get => Entity.Moveable && MovementSpeed > 1; }
+		public virtual bool RequiresInteraction
+		{ get => Entity.RequiresInteraction; }
 		public EncounterManager.EncounterType EncounterType
 		{ get => Entity.EncounterType; }
 

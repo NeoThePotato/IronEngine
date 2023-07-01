@@ -19,7 +19,9 @@ namespace Game.World
         { get => true; }
         public override bool Moveable
         { get => false; }
-        public override bool MarkForDelete
+		public override bool RequiresInteraction
+		{ get => false; }
+		public override bool MarkForDelete
 		{ get => false; }
         public override EncounterManager.EncounterType EncounterType
 		{ get => EncounterManager.EncounterType.Trap; }

@@ -120,11 +120,12 @@ namespace Game
 			var movementDirection = new Direction(InputManager.GetMovementVector(Point2D.POINTS_PER_TILE));
 			Level.MoveEntity(PlayerEntity, movementDirection, out List<MapEntity> encounteredEntities);
 
-			if (encounteredEntities.Any())
+			while (encounteredEntities.Any())
 			{
 				MapEntity encounteredEntity = encounteredEntities.Last();
 				encounteredEntities.Remove(encounteredEntity);
-				StartEncounter(encounteredEntity);
+				if (encounteredEntity.RequiresInteraction == InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Confirm))
+					StartEncounter(encounteredEntity);
 			}
 		}
 

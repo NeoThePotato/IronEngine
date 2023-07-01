@@ -12,6 +12,8 @@ namespace Game.World
 		{ get; }
 		public abstract bool Moveable
 		{ get; }
+		public virtual bool RequiresInteraction
+		{ get => Passable; }
 		public abstract bool MarkForDelete
 		{ get; }
 		public abstract EncounterManager.EncounterType EncounterType
