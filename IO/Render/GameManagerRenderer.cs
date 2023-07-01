@@ -33,15 +33,21 @@ namespace IO.Render
 
 		public override void Render(FrameBuffer buffer)
 		{
-			RenderBorders(buffer); // TODO Probably cache this
-			LevelManagerRenderer.Render(buffer);
+			LevelManagerRenderer.Render(new FrameBuffer(buffer, 1, 1));
 			UIManagerRenderer.Render(buffer);
 		}
 
-		public override void Validate()
+		public override void RenderToCache(FrameBuffer buffer)
 		{
-			LevelManagerRenderer.Validate();
-			ValidateBorderSizes();
+			UpdateBorderSizes();
+			RenderBorders(buffer);
+			buffer = new FrameBuffer(buffer, 1, 1);
+			LevelManagerRenderer.RenderToCache(buffer);
+		}
+
+		public override bool Validate()
+		{
+			return LevelManagerRenderer.Validate();
 		}
 
 		private void RenderBorders(FrameBuffer buffer)
@@ -76,7 +82,7 @@ namespace IO.Render
 			buffer.Char[BorderLinesJ[2], BorderLinesI[2]] = '╝';
 		}
 
-		private void ValidateBorderSizes()
+		private void UpdateBorderSizes()
 		{
 			BorderLinesJ[0] = 0;
 			BorderLinesJ[1] = LevelManagerRenderer.SizeJ + 1;

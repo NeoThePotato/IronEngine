@@ -44,7 +44,7 @@ namespace IO.Render
 			if (UIManager.InMenu)
 			{
 				CurrentMenuRenderer = UIManager.GetCurrentMenu()!.GetRenderer();
-				CurrentMenuRenderer.Render(buffer);
+				CurrentMenuRenderer.Render(new FrameBuffer(buffer, 1, 1));
 			}
 		}
 

@@ -15,20 +15,18 @@ namespace IO.Render
 	{
 		private static readonly bool IS_WINDOWS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-		private FrameBuffer _frameBuffer;
-
-		private FrameBuffer FrameBuffer {
-			get => _frameBuffer;
-			set => _frameBuffer = value;
-		}
+		private FrameBuffer FrameBufferCurrent
+		{ get; set; }
+		private FrameBuffer FrameBufferCache
+		{ get; set; }
 		private StringBuilder StringBuffer
 		{ get; set; }
 		private Renderer ChildRenderer
 		{ get; set; }
 		private int BufferSizeJ
-		{ get => FrameBuffer.SizeJ; }
+		{ get => FrameBufferCurrent.SizeJ; }
 		private int BufferSizeI
-		{ get => FrameBuffer.SizeI; }
+		{ get => FrameBufferCurrent.SizeI; }
 		private (int, int) BufferSize
 		{ get => (BufferSizeJ, BufferSizeI); }
 		private int BufferLength
@@ -47,6 +45,8 @@ namespace IO.Render
 			ChildRenderer = childRenderer;
 			UpdateFrameBufferSize();
 			UpdateStringBufferCapacity();
+			Validate();
+			UpdateCacheFrameBuffer();
 
 			if (IS_WINDOWS)
 				Utility.EnableVirtualTerminalProcessing();
@@ -55,8 +55,9 @@ namespace IO.Render
 		public void RenderFrame(ulong currentTick)
 		{
 			CurrentTick = currentTick;
-			Validate();
-			UpdateFrameBuffer();
+			if (!Validate())
+				UpdateCacheFrameBuffer();
+			UpdateCurrentFrameBuffer();
 			UpdateStringBuffer();
 			PrepareConsoleWindow();
 			WriteStringToConsole();
@@ -67,17 +68,33 @@ namespace IO.Render
 			ChildRenderer.Render(buffer);
 		}
 
-		public override void Validate()
+		public override void RenderToCache(FrameBuffer buffer)
 		{
-			ChildRenderer.Validate();
-			ValidateFrameBufferSize();
-			ValidateStringBufferCapacity();
-			ValidateConsoleWindow();
+			ChildRenderer.RenderToCache(buffer);
 		}
 
-		private void UpdateFrameBuffer()
+		public override bool Validate()
 		{
-			Render(_frameBuffer);
+			bool valid = true;
+
+			valid = valid & ChildRenderer.Validate();
+			valid = valid & ValidateFrameBufferSize();
+			ValidateStringBufferCapacity();
+			valid = valid & ValidateConsoleWindow();
+			Debug.WriteLineIf(!valid, "ConsoleRenderer was validated");
+
+			return valid;
+		}
+
+		private void UpdateCacheFrameBuffer()
+		{
+			ChildRenderer.RenderToCache(FrameBufferCache);
+		}
+
+		private void UpdateCurrentFrameBuffer()
+		{
+			FrameBuffer.Copy(FrameBufferCurrent, FrameBufferCache);
+			Render(FrameBufferCurrent);
 		}
 
 		private void UpdateStringBuffer()
@@ -100,7 +117,7 @@ namespace IO.Render
 			{
 				for (int i = 0; i < BufferSizeI; i++)
 				{
-					(char currentChar, byte currentFGColor, byte currentBGColor) = FrameBuffer[j, i];
+					(char currentChar, byte currentFGColor, byte currentBGColor) = FrameBufferCurrent[j, i];
 
 					if (currentFGColor != previousFGColor)
 						StringBuffer.Append($"\x1b[38;5;{(int)currentFGColor}m");
@@ -118,10 +135,14 @@ namespace IO.Render
 		}
 
 		#region BUFFER_SIZE_MANIPULATION
-		private void ValidateFrameBufferSize()
+		private bool ValidateFrameBufferSize()
 		{
-			if (BufferSize != Size)
+			bool valid = BufferSize == Size;
+
+			if (!valid)
 				UpdateFrameBufferSize();
+
+			return valid;
 		}
 
 		private void UpdateFrameBufferSize()
@@ -133,13 +154,18 @@ namespace IO.Render
 
 		private void UpdateFrameBufferSize(int sizeJ, int sizeI)
 		{
-			FrameBuffer = new FrameBuffer(sizeJ, sizeI);
+			FrameBufferCurrent = new FrameBuffer(sizeJ, sizeI);
+			FrameBufferCache = new FrameBuffer(sizeJ, sizeI);
 		}
 
-		private void ValidateStringBufferCapacity()
+		private bool ValidateStringBufferCapacity()
 		{
-			if (StringBuffer == null || StringBuffer.Capacity < BufferLength)
+			bool invalid = StringBuffer == null || StringBuffer.Capacity < BufferLength;
+
+			if (invalid)
 				UpdateStringBufferCapacity();
+
+			return !invalid;
 		}
 
 		private void UpdateStringBufferCapacity()
@@ -163,10 +189,9 @@ namespace IO.Render
 
 		#region CONSOLE_WINDOW_MANIPULATION
 		[SupportedOSPlatform("windows")]
-		private void ValidateConsoleWindow()
+		private bool ValidateConsoleWindow()
 		{
-			ValidateConsoleWindowSize();
-			ValidateConsoleBufferSize();
+			return ValidateConsoleWindowSize() & ValidateConsoleBufferSize();
 		}
 
 		private void PrepareConsoleWindow()
@@ -184,10 +209,14 @@ namespace IO.Render
 		}
 
 		[SupportedOSPlatform("windows")]
-		private void ValidateConsoleWindowSize()
+		private bool ValidateConsoleWindowSize()
 		{
-			if (ConsoleWindowSizeOutOfBounds())
+			bool invalid = ConsoleWindowSizeOutOfBounds();
+
+			if (invalid)
 				UpdateConsoleWindowSize();
+
+			return !invalid;
 		}
 
 		[SupportedOSPlatform("windows")]
@@ -219,10 +248,14 @@ namespace IO.Render
 		}
 
 		[SupportedOSPlatform("windows")]
-		private void ValidateConsoleBufferSize()
+		private bool ValidateConsoleBufferSize()
 		{
-			if (BufferWidth != WindowWidth || BufferHeight != WindowHeight)
+			bool valid = BufferWidth != WindowWidth || BufferHeight != WindowHeight;
+
+			if (!valid)
 				UpdateConsoleBufferSize();
+
+			return valid;
 		}
 
 		[SupportedOSPlatform("windows")]

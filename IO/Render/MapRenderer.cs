@@ -25,12 +25,22 @@ namespace IO.Render
 		{
 			Map = map;
 			UpdateCacheSize();
-			RenderToCache();
+			RenderToLocalCache();
 		}
 
 		public override void Render(FrameBuffer buffer)
 		{
 			FrameBuffer.Copy(buffer, _mapCache);
+		}
+
+		public override void RenderToCache(FrameBuffer buffer)
+		{
+			Render(buffer);
+		}
+
+		public override bool Validate()
+		{
+			return ValidateCacheSize();
 		}
 
 		public static (int, int) PointToCharPos(Point2D point)
@@ -41,7 +51,7 @@ namespace IO.Render
 			return (charPosJ, charPosI);
 		}
 
-		private void RenderToCache()
+		private void RenderToLocalCache()
 		{
 			ValidateCacheSize();
 			RenderTileDataToCache();
@@ -65,10 +75,14 @@ namespace IO.Render
 			_mapCache[j, i * STRECH_I + 1] = VisualTileInfo.GetFrameBufferTuple(info);
 		}
 
-		private void ValidateCacheSize()
+		private bool ValidateCacheSize()
 		{
-			if (CacheSize != Size)
+			bool valid = CacheSize == Size;
+
+			if (!valid)
 				UpdateCacheSize();
+
+			return valid;
 		}
 
 		private void UpdateCacheSize()

@@ -12,7 +12,15 @@
 
 		public abstract void Render(FrameBuffer buffer);
 
-		public virtual void Validate() { }
+		public virtual void RenderToCache(FrameBuffer buffer)
+		{
+
+		}
+
+		public virtual bool Validate()
+		{
+			return true;
+		}
 
 		public static void RenderText(FrameBuffer buffer, string str, byte textColor = COLOR_WHITE)
 		{

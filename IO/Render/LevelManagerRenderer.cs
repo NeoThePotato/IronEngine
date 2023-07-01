@@ -23,20 +23,17 @@ namespace IO.Render
 
 		public override void Render(FrameBuffer buffer)
 		{
-			switch (LevelManager.State)
-			{
-				case LevelManager.LevelState.Encounter:
-					RenderEncounter(buffer);
-					break;
-				case LevelManager.LevelState.World:
-					RenderWorld(buffer);
-					break;
-			}
+			LevelRenderer.Render(buffer);
 		}
 
-		public override void Validate()
+		public override void RenderToCache(FrameBuffer buffer)
 		{
-			ValidateCurrentLevel();
+			LevelRenderer.RenderToCache(buffer);
+		}
+
+		public override bool Validate()
+		{
+			return ValidateCurrentLevel();
 		}
 
 		private void RenderEncounter(FrameBuffer buffer)
@@ -44,15 +41,14 @@ namespace IO.Render
             // TODO I probably need a dedicated EncounterRenderer
         }
 
-        private void RenderWorld(FrameBuffer buffer)
+		private bool ValidateCurrentLevel()
 		{
-			LevelRenderer.Render(new FrameBuffer(buffer, 1, 1));
-		}
+			bool invalid = LevelRenderer.Level != LevelManager.Level;
 
-		private void ValidateCurrentLevel()
-		{
-			if (LevelRenderer.Level != LevelManager.Level)
+			if (invalid)
 				LevelRenderer = new LevelRenderer(LevelManager.Level);
+
+			return !invalid;
 		}
 	}
 }
