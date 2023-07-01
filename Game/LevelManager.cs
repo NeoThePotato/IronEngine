@@ -122,7 +122,7 @@ namespace Game
 
 			while (encounteredEntities.Any())
 			{
-				MapEntity encounteredEntity = encounteredEntities.Last();
+				MapEntity encounteredEntity = encounteredEntities.First();
 				encounteredEntities.Remove(encounteredEntity);
 				if (encounteredEntity.RequiresInteraction == InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Confirm))
 					StartEncounter(encounteredEntity);
