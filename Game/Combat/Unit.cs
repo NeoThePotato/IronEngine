@@ -165,55 +165,45 @@ namespace Game.Combat
 		}
 		#endregion
 		#region COMBAT_ACTIONS
-		public void AttackOther(Unit other, ref CombatFeedback feedback)
+		public void AttackOther(Unit other, DataLog dataLog)
 		{
 			CheckValidState();
-			feedback.actor = this;
-			feedback.other = other;
-			other.TakeDamage(EffectiveAttack, ref feedback);
+			dataLog.WriteLine($"{this} attacked {other}");
+			other.TakeDamage(EffectiveAttack, dataLog);
 		}
 
-		public void TakeDamage(int damage, ref CombatFeedback feedback)
+		public void TakeDamage(int damage, DataLog dataLog)
 		{
 			CheckValidState();
 
 			if (!AttemptEvasion())
 			{
-				if (Blocking)
-					feedback.type = CombatFeedback.FeedbackType.Block;
-				else
-					feedback.type = CombatFeedback.FeedbackType.Hit;
 				int finalDamage = GetUnblockedDamage(damage);
-				feedback.numericAmount = finalDamage;
 				CurrentHP -= finalDamage;
+				dataLog.WriteLine($"{this}{(Blocking ? " has blocked the attack and" : "")} took {finalDamage} damage");
 				Blocking = false;
 			}
 			else
 			{
 				ReduceEvasion();
-				feedback.type = CombatFeedback.FeedbackType.Evade;
-				feedback.numericAmount = 0;
+				dataLog.WriteLine($"{this} has dodged the attack");
 			}
 		}
 
-		public void HealSelf(ref CombatFeedback feedback)
+		public void HealSelf(DataLog dataLog)
 		{
 			CheckValidState();
 			int previousHP = CurrentHP;
 			HealBy(EffectiveHealPower);
 			ReduceHealingPower();
-			feedback.actor = this;
-			feedback.other = this;
-			feedback.type = CombatFeedback.FeedbackType.Heal;
-			feedback.numericAmount = CurrentHP - previousHP;
+			dataLog.WriteLine($"{this} healed for {CurrentHP - previousHP} HP");
 		}
 
-		public void RaiseShield(ref CombatFeedback feedback)
+		public void RaiseShield(DataLog dataLog)
 		{
 			CheckValidState();
 			Blocking = true;
-			feedback.actor = this;
-			feedback.type = CombatFeedback.FeedbackType.Raise;
+			dataLog.WriteLine($"{this} raised their shield");
 		}
 		#endregion
 		#region RESET_TEMP_STATS

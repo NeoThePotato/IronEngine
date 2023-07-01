@@ -19,15 +19,16 @@ namespace IO.UI.Menus
 		public static SelectionMenu GetInGameMenu(LevelManager levelManager)
 		{
 			var parentUIManager = levelManager.UIManager;
+			var playerUnit = (Unit)levelManager.PlayerEntity.Entity;
 			Action returnToGame = () => parentUIManager.ForceExitCurrentMenu();
-			Action openStatsMenu = () => levelManager.UIManager.StackNewMenu(GetPlayerStatsMenu(levelManager.InputManager, levelManager.UIManager, (Unit)levelManager.PlayerEntity.Entity));
-			Action openInventoryMenu = () => levelManager.UIManager.StackNewMenu(GetContainerMenu(levelManager.InputManager, levelManager.UIManager, (Unit)levelManager.PlayerEntity.Entity, levelManager.PlayerInventory));
+			Action openStatsMenu = () => levelManager.UIManager.StackNewMenu(GetPlayerStatsMenu(levelManager.InputManager, parentUIManager, playerUnit));
+			Action openInventoryMenu = () => levelManager.UIManager.StackNewMenu(GetContainerMenu(levelManager.InputManager, parentUIManager, playerUnit, levelManager.PlayerInventory));
 			Action quitGame = () => levelManager.Exit();
 
 			var actions = new Dictionary<string, Action?>()
 			{
 				{ "Return", returnToGame},
-				{ "Stats", openStatsMenu},
+				{ $"{playerUnit.Name}", openStatsMenu},
 				{ "Inventory", openInventoryMenu},
 				{ "Quit", quitGame}
 			};
@@ -57,12 +58,19 @@ namespace IO.UI.Menus
 		public static SelectionMenu GetPlayerStatsMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Unit playerUnit)
 		{
 			var statsMenuText = playerUnit.GetStats();
+			Action restartStatsMenu = () => {
+				parentUIManager.ForceExitCurrentMenu();
+				parentUIManager.ForceExitCurrentMenu();
+				parentUIManager.StackNewMenu(GetPlayerStatsMenu(inputManager, parentUIManager, playerUnit));
+			};
 			Action back = () => parentUIManager.ForceExitCurrentMenu();
+			Action heal = () => { playerUnit.HealSelf(parentUIManager.DataLog); restartStatsMenu(); };
 			Action levelUp = () => parentUIManager.StackNewMenu(GetPlayerLevelUpMenu(inputManager, parentUIManager, playerUnit));
 
 			var actions = new Dictionary<string, Action?>()
 			{
-				{"Back", back}
+				{"Back", back},
+				{"Heal", heal}
 			};
 
 			if (playerUnit.CanLevelUp)

@@ -45,7 +45,6 @@ namespace Game.Combat
         {
             Unit actingUnit = PlayerUnit;
             Unit passiveUnit = CPUUnit;
-            CombatFeedback combatFeedback = new CombatFeedback();
 
             // Main combat loop
             while (BothAlive)
@@ -59,10 +58,10 @@ namespace Game.Combat
 
                 // Action phase
                 UnitAction action = actingUnit == PlayerUnit ? GetPlayerAction() : GetCPUAction();
-                DoAction(action, actingUnit, passiveUnit, ref combatFeedback);
+                DoAction(action, actingUnit, passiveUnit);
 
                 // End of action phase
-                Console.WriteLine(combatFeedback.ParseFeedback());
+                Console.WriteLine(DataLog.Last()); // TODO Temporary until I have CombatManager as an updateable
                 Utility.BlockUntilKeyDown();
 
                 // Prepare for next turn
@@ -102,18 +101,18 @@ namespace Game.Combat
             return AI.GetCPUAction();
         }
 
-        private void DoAction(UnitAction action, Unit actingUnit, Unit passiveUnit, ref CombatFeedback feedback)
+        private void DoAction(UnitAction action, Unit actingUnit, Unit passiveUnit)
         {
             switch (action)
             {
                 case UnitAction.Attack:
-                    actingUnit.AttackOther(passiveUnit, ref feedback);
+                    actingUnit.AttackOther(passiveUnit, DataLog);
                     break;
                 case UnitAction.Defend:
-                    actingUnit.RaiseShield(ref feedback);
+                    actingUnit.RaiseShield(DataLog);
                     break;
                 case UnitAction.Heal:
-                    actingUnit.HealSelf(ref feedback);
+                    actingUnit.HealSelf(DataLog);
                     break;
             }
         }
@@ -226,35 +225,5 @@ namespace Game.Combat
             else
                 return UnitAction.Attack; // Desperate efforts
         }
-	}
-
-	struct CombatFeedback
-	{
-		public Entity actor;
-		public Entity other;
-		public FeedbackType type;
-		public int numericAmount;
-
-		public string ParseFeedback()
-		{
-			switch (type)
-			{
-				case FeedbackType.Hit: return $"{actor} attacked {other} and dealt {numericAmount} damage.";
-				case FeedbackType.Block: return $"{actor}'s attack was blocked but dealt {numericAmount} damage to {other}.";
-				case FeedbackType.Evade: return $"{actor}'s attack missed {other}.";
-				case FeedbackType.Raise: return $"{actor} raised their shield.";
-				case FeedbackType.Heal: return $"{actor} healed for {numericAmount} HP.";
-				default: return "";
-			}
-		}
-
-		public enum FeedbackType
-		{
-			Hit,
-			Block,
-			Evade,
-			Raise,
-			Heal
-		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using Game.Combat;
-using IO.Render;
 using IO.UI;
 using static IO.Render.EntityRenderer;
 using static Assets.EntitiesVisualInfo;
@@ -47,12 +46,8 @@ namespace Game.World
 		{
 			if (Armed)
 			{
-				CombatFeedback combatFeedback = new CombatFeedback();
-				combatFeedback.actor = this;
-				combatFeedback.other = unit;
-				unit.TakeDamage(Damage, ref combatFeedback);
+				unit.TakeDamage(Damage, dataLog);
 				Armed = false;
-				dataLog.WriteLine(combatFeedback.ParseFeedback());
 			}
 		}
 	}
