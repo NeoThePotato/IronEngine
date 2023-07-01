@@ -11,7 +11,7 @@ namespace Assets.Generators
 			{UnitTemplates.bandit,			new SpawnProfile(2, 5)},
 			{UnitTemplates.imp,				new SpawnProfile(2, 6)},
 			{UnitTemplates.fae,				new SpawnProfile(2, 6)},
-			{UnitTemplates.spawnOfTwilight,	new SpawnProfile(4, 2)},
+			{UnitTemplates.mercenary,		new SpawnProfile(4, 2)},
 			{UnitTemplates.antiHero,		new SpawnProfile(10, 2)},
 			{UnitTemplates.archDemon,		new SpawnProfile(15, 1)}
 		};

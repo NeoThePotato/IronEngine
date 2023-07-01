@@ -12,7 +12,7 @@ namespace Assets
 		public static readonly Unit imp =				new Unit("Imp", 1, 2, 2, 4, 3, Weapons.magicWand, Shields.rustedBuckler, BodyArmors.tatteredRags);
 		public static readonly Unit fae =				new Unit("Fae", 1, 2, 1, 4, 5, Weapons.magicWand, null, BodyArmors.tatteredRags);
 		public static readonly Unit bandit =			new Unit("Bandit", 2, 3, 3, 4, 4, Weapons.steelSword, Shields.rustedBuckler, BodyArmors.leatherArmor);
-		public static readonly Unit spawnOfTwilight =	new Unit("Spawn of Twilight", 2, 5, 6, 6, 5, Weapons.umbraSword, Shields.steelBuckler, BodyArmors.blackRobes);
+		public static readonly Unit mercenary =			new Unit("Mercenary", 2, 4, 5, 5, 4, Weapons.scimitar, Shields.steelBuckler, BodyArmors.leatherArmor);
 		public static readonly Unit archDemon =			new Unit("Arch Demon", 3, 7, 6, 6, 6, Weapons.fieryGreatsword, Shields.towerShield, BodyArmors.moltenArmor);
 	}
 }
