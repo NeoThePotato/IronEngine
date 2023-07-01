@@ -27,9 +27,9 @@ namespace Assets
 			{'g', new VisualTileInfo(TileInfo.GetTileInfo('g'), '░', 34, 28)},
 			{'r', new VisualTileInfo(TileInfo.GetTileInfo('r'), '░', 250, 247)},
 			{'R', new VisualTileInfo(TileInfo.GetTileInfo('R'), '⌂', 241, 238)},
-			{'w', new VisualTileInfo(TileInfo.GetTileInfo('w'), '░', 91, 80)},
+			{'w', new VisualTileInfo(TileInfo.GetTileInfo('w'), '░', 69, 80)},
 			{'W', new VisualTileInfo(TileInfo.GetTileInfo('W'), '≈', 33, 32)},
-			{'p', new VisualTileInfo(TileInfo.GetTileInfo('p'), '≡', 240, 180)},
+			{'p', new VisualTileInfo(TileInfo.GetTileInfo('p'), '≡', 137, 180)},
 			{'P', new VisualTileInfo(TileInfo.GetTileInfo('P'), '▒', 52, 137)},
 			};
 	}
