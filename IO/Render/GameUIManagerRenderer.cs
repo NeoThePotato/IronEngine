@@ -10,7 +10,7 @@ namespace IO.Render
 		public const int SIDEBAR_WIDTH = 10;
 		public const int METER_WIDTH = 2;
 		public static readonly byte HP_COLOR = 1;
-		public static readonly byte XP_COLOR = 11;
+		public static readonly byte XP_COLOR = 3;
 		public static readonly byte BLANK_COLOR = 0;
 
 		private GameUIManager UIManager
