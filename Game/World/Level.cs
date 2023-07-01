@@ -185,7 +185,7 @@ namespace Game.World
 			return occupiedBy.Any();
 		}
 
-		private List<MapEntity> GetEntitiesAt(Point2D pos)
+		public List<MapEntity> GetEntitiesAt(Point2D pos)
 		{
 			_entitiesList.Clear();
 

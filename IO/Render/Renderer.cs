@@ -37,7 +37,7 @@
 		{
 			int c = 0;
 
-			for (; c < str.Length; c++)
+			for (; c < str.Length & c < length; c++)
 				buffer[0, c] = (str[c], textColor, bgColor);
 
 			for (; c < length; c++)
