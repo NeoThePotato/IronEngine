@@ -14,5 +14,6 @@ namespace Assets
 		public static readonly Unit bandit =			new Unit("Bandit", 2, 3, 3, 4, 4, Weapons.steelSword, Shields.rustedBuckler, BodyArmors.leatherArmor);
 		public static readonly Unit mercenary =			new Unit("Mercenary", 2, 4, 5, 5, 4, Weapons.scimitar, Shields.steelBuckler, BodyArmors.leatherArmor);
 		public static readonly Unit archDemon =			new Unit("Arch Demon", 3, 7, 6, 6, 6, Weapons.fieryGreatsword, Shields.towerShield, BodyArmors.moltenArmor);
+		public static readonly Unit finalBoss =			new Unit("Epitaph", 20, 15, 15, 15, 15, Weapons.bossWeapon, Shields.bossShield, BodyArmors.bossArmor);
 	}
 }
