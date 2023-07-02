@@ -9,6 +9,7 @@
         private readonly int _baseMaxNumOfDoors; // Max number of doors in a level
 		private readonly float _baseChestChance; // Chance to generate chests in corners
 		private readonly int _baseMaxNumOfChests; // Max number of chests in a level
+		private readonly int _finalBossSpawnLevel; // The level at which the final boss starts appearing
 
 		public string Name
         { get; private set; }
@@ -26,8 +27,10 @@
 		{ get => Utility.ClampRange(_baseChestChance - Level / 8, 0, 1); }
 		public int MaxNumOfChests
 		{ get => _baseMaxNumOfChests + Level / 10; }
+        public bool FinalBossCanSpawn
+        { get => _finalBossSpawnLevel <= Level; }
 
-		public DifficultyProfile(string name, int baseEnemyDensity, int baseTrapDensity, float baseDoorChance, int baseMaxNumOfDoors, float baseChestChance, int baseMaxNumOfChests)
+		public DifficultyProfile(string name, int baseEnemyDensity, int baseTrapDensity, float baseDoorChance, int baseMaxNumOfDoors, float baseChestChance, int baseMaxNumOfChests, int finalBossSpawnLevel)
         {
             Name = name ?? string.Empty;
             Level = 1;
@@ -37,6 +40,7 @@
             _baseMaxNumOfDoors = baseMaxNumOfDoors;
             _baseChestChance = baseChestChance;
             _baseMaxNumOfChests = baseMaxNumOfChests;
+            _finalBossSpawnLevel = finalBossSpawnLevel;
         }
 
         public void RaiseLevel(int by = 1)

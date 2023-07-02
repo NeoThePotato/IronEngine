@@ -26,7 +26,7 @@ namespace Assets.Generators
 				throw new NullReferenceException();
 		}
 
-		public static Level MakeLevel(Unit playerUnit, out MapEntity playerEntity, DifficultyProfile difficulty)
+		public static Level MakeLevel(Unit playerUnit, Unit bossUnit, out MapEntity playerEntity, DifficultyProfile difficulty)
 		{
 			Level level = MakeEmptyLevel(GetRandomMapMeta());
 			var tileDirectionMap = GetTileDirectionMap(level.Map);
@@ -34,7 +34,7 @@ namespace Assets.Generators
 			GenerateDoors(level, difficulty, tileDirectionMap);
 			GenerateChests(level, difficulty, tileDirectionMap);
 			GenerateTraps(level, difficulty, level.Map.TileSize);
-			GenerateEnemies(level, difficulty, level.Map.TileSize);
+			GenerateEnemies(level, difficulty, level.Map.TileSize, bossUnit);
 			playerEntity = level.AddEntityAtEntryTile(playerUnit);
 
             return level;
@@ -112,7 +112,7 @@ namespace Assets.Generators
 			}
 		}
 
-		private static void GenerateEnemies(Level level, DifficultyProfile difficulty, int mapSize)
+		private static void GenerateEnemies(Level level, DifficultyProfile difficulty, int mapSize, Unit bossUnit)
 		{
 			int numberOfEnemies = mapSize / difficulty.EnemyDensity;
 
@@ -123,6 +123,9 @@ namespace Assets.Generators
 				if (unit != null)
 					level.AddEntityAtRandomValidPoint(unit);
 			}
+
+			if (difficulty.FinalBossCanSpawn)
+				level.AddEntityAtRandomValidPoint(bossUnit);
 		}
 
         private static List<Point2D> GetValidDoorLocations(Direction[,] map)

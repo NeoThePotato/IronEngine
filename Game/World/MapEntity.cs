@@ -35,7 +35,7 @@ namespace Game.World
 			}
 		}
 		public bool IsTargeting
-		{ get => Target != null; }
+		{ get => Target != (MapEntity?)null; }
 		public bool Passable
 		{ get => Entity.Passable; }
 		public bool Moveable
@@ -65,6 +65,17 @@ namespace Game.World
 			Pos = new Point2D();
 			Dir = TranslateDirection(Directions.None);
 		}
+
+		public static bool operator ==(MapEntity e, Unit u)
+		{
+			return e.Entity == u;
+		}
+
+		public static bool operator !=(MapEntity e, Unit u)
+		{
+			return !(e == u);
+		}
+
 		public static bool operator ==(MapEntity? e1, MapEntity? e2)
 		{
 			if (e1 is not null & e2 is not null)
@@ -74,6 +85,7 @@ namespace Game.World
 			else
 				return false;
 		}
+
 		public static bool operator !=(MapEntity? e1, MapEntity? e2)
 			=> !(e1 == e2);
 

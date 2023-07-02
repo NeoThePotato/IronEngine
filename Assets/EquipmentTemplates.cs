@@ -15,6 +15,7 @@ namespace Assets.EquipmentTemplates
 		public static readonly Weapon magicWand = new Weapon("Magic Wand", 1);
 		public static readonly Weapon realTyrantGauntlets = new Weapon("Tyrant Gauntlets", 10);
 		public static readonly Weapon theArk = new Weapon("Ark of The Everything", 15);
+		public static readonly Weapon bossWeapon = new Weapon("Snake's Maw", 10);
 	}
 
 	static class Shields
@@ -26,6 +27,7 @@ namespace Assets.EquipmentTemplates
 		public static readonly Shield bulwark = new Shield("Bulwark", 4);
 		public static readonly Shield heroShield = new Shield("Shield of the Hero", 6);
 		public static readonly Shield calamityShield = new Shield("Shield of Calamity", 9);
+		public static readonly Shield bossShield = new Shield("Basilisk's Gaze", 8);
 	}
 
 	static class BodyArmors
@@ -39,5 +41,6 @@ namespace Assets.EquipmentTemplates
 		public static readonly BodyArmor mithrilChainmail = new BodyArmor("Mithril Chainmail", 5);
 		public static readonly BodyArmor kingSlayerArmor = new BodyArmor("King-Slayer Armor", 6);
 		public static readonly BodyArmor godSlayerArmor = new BodyArmor("God-Slayer Armor", 10);
+		public static readonly BodyArmor bossArmor = new BodyArmor("Serpent's Scales", 9);
 	}
 }

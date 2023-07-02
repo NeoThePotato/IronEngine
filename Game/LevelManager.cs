@@ -31,6 +31,8 @@ namespace Game
 		{ get => Level.Entities; }
 		public MapEntity PlayerEntity
 		{ get; private set; }
+		public Unit BossEntity
+		{ get; private set; }
 		public Container PlayerInventory
 		{ get; private set; }
 		public EncounterManager? EncounterManager
@@ -48,6 +50,7 @@ namespace Game
 		{
 			GameManager = gameManager;
 			DifficultyProfile = difficultyProfile;
+			BossEntity = new Unit(UnitTemplates.finalBoss);
 			PlayerEntity = new MapEntity(new Unit(UnitTemplates.hero));
             PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
 		}
@@ -56,7 +59,7 @@ namespace Game
 		{
 			EncounterManager = null;
 			UIManager.ExitAllMenus();
-			Level = LevelGenerator.MakeLevel((Unit)PlayerEntity.Entity, out MapEntity playerEntity, DifficultyProfile);
+			Level = LevelGenerator.MakeLevel((Unit)PlayerEntity.Entity, BossEntity, out MapEntity playerEntity, DifficultyProfile);
 			PlayerEntity = playerEntity;
 			DataLog.WriteLine($"{PlayerEntity} has arrived at {Level.Metadata.name}");
         }
@@ -213,7 +216,7 @@ namespace Game
 
 		private LevelState GetLevelState()
 		{
-			if (PendingExit || ((Unit)PlayerEntity.Entity).Dead)
+			if (PendingExit || ((Unit)PlayerEntity.Entity).Dead || BossEntity.Dead)
 				return LevelState.Exit;
 			else if (InEncounter)
 				return LevelState.Encounter;
