@@ -107,7 +107,7 @@ namespace Game.World
 		private void StartContainer()
 		{
 			var container = (Container)EncounteredEntity;
-			DataLog.WriteLine($"{PlayerUnit} has found {container}");
+			DataLog.WriteLine($"{PlayerUnit} has opened {container.Name}");
 			UIManager.StackNewMenu(MenuFactory.GetContainerMenu(InputManager, UIManager, PlayerUnit, PlayerInventory, container));
 			Exit = true;
 		}

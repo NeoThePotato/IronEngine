@@ -138,7 +138,7 @@ namespace IO.Render
 			{
 				buffer = new FrameBuffer(buffer, -1, 0);
 				var entity = entitiesOnTile[j];
-				RenderTextSingleLine(buffer, entity.ToString(), SIDEBAR_WIDTH, entity.Entity.VisualInfo.foregroundColor!.Value);
+				RenderTextSingleLine(buffer, entity.Entity.Name, SIDEBAR_WIDTH, entity.Entity.VisualInfo.foregroundColor!.Value);
 			}
 		}
 	}
