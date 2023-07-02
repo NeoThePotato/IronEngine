@@ -30,7 +30,7 @@ namespace IO.Render
 				RenderEntity(buffer, entity);
 		}
 
-		private void RenderEntity(FrameBuffer buffer, MapEntity entity)
+		private void RenderEntity(FrameBuffer buffer, LevelEntity entity)
 		{
 			if (entity.Moveable)
 				RenderEntityMoving(buffer, entity);
@@ -38,14 +38,14 @@ namespace IO.Render
 				RenderEntityStatic(buffer, entity);
 		}
 
-		private void RenderEntityMoving(FrameBuffer buffer, MapEntity entity)
+		private void RenderEntityMoving(FrameBuffer buffer, LevelEntity entity)
 		{
 			VisualEntityInfo visualInfo = entity.Entity.VisualInfo;
 			(int posJ, int posI) = MapRenderer.PointToCharPos(entity.Pos);
 			RenderEntityAtTile(buffer, posJ, posI, visualInfo);
 		}
 
-		private void RenderEntityStatic(FrameBuffer buffer, MapEntity entity)
+		private void RenderEntityStatic(FrameBuffer buffer, LevelEntity entity)
 		{
 			VisualEntityInfo visualInfo = entity.Entity.VisualInfo;
 			(int posJ, int posI) = MapRenderer.PointToCharPos(entity.Pos);

@@ -6,13 +6,13 @@ namespace Game.World
 	class Level
 	{
 		private Map _map;
-		private List<MapEntity> _entities;
+		private List<LevelEntity> _entities;
 		private MapMetadata _metadata;
-		private List<MapEntity> _entitiesList;
+		private List<LevelEntity> _entitiesList;
 
 		public Map Map
 		{ get => _map; private set => _map = value; }
-		public List<MapEntity> Entities
+		public List<LevelEntity> Entities
 		{ get => _entities; private set => _entities = value; }
         public MapMetadata Metadata
 		{ get => _metadata; private set => _metadata = value; }
@@ -20,36 +20,36 @@ namespace Game.World
         public Level(Map map, MapMetadata metadata)
 		{
 			_map = map;
-			_entities = new List<MapEntity>();
+			_entities = new List<LevelEntity>();
 			_metadata = metadata;
-			_entitiesList = new List<MapEntity>(_entities.Count);
+			_entitiesList = new List<LevelEntity>(_entities.Count);
 		}
 
 		#region ENTITY_SPAWNING
-		public MapEntity AddEntity(Entity entity, Point2D pos)
+		public LevelEntity AddEntity(Entity entity, Point2D pos)
 		{
-			var mapEntity = new MapEntity(entity, pos);
+			var mapEntity = new LevelEntity(entity, pos);
 			AddEntity(mapEntity);
 
 			return mapEntity;
 		}
 
-		public void AddEntity(MapEntity entity)
+		public void AddEntity(LevelEntity entity)
 		{
 			Entities.Add(entity);
         }
 
-        public MapEntity AddEntityAtEntryTile(Entity entity)
+        public LevelEntity AddEntityAtEntryTile(Entity entity)
         {
             return AddEntity(entity, Metadata.entryTile);
 		}
 
-		public MapEntity AddEntityAtExitTile(Entity entity)
+		public LevelEntity AddEntityAtExitTile(Entity entity)
 		{
 			return AddEntity(entity, Metadata.exitTile);
 		}
 
-		public MapEntity AddEntityAtRandomValidPoint(Entity entity)
+		public LevelEntity AddEntityAtRandomValidPoint(Entity entity)
 		{
 			Point2D randP;
 
@@ -62,7 +62,7 @@ namespace Game.World
 		#endregion
 
 		#region ENTITY_MOVEMENT
-		public bool MoveEntity(MapEntity entity, Direction direction, out List<MapEntity> occupiedBy)
+		public bool MoveEntity(LevelEntity entity, Direction direction, out List<LevelEntity> occupiedBy)
 		{
 			if (CanEntityMoveTo(entity, direction, out occupiedBy))
 			{
@@ -78,12 +78,12 @@ namespace Game.World
 			}
         }
 
-        public bool MoveEntity(MapEntity entity, out List<MapEntity> occupiedBy)
+        public bool MoveEntity(LevelEntity entity, out List<LevelEntity> occupiedBy)
         {
 			return MoveEntity(entity, entity.Dir, out occupiedBy);
         }
 
-		private void MoveEntityToEdgeOfTile(MapEntity entity, Direction direction)
+		private void MoveEntityToEdgeOfTile(LevelEntity entity, Direction direction)
 		{
 			var projectedPoint = entity.ProjectedNewLocation(direction);
 			var actualJ = Utility.ClampRange(projectedPoint.PointJ, TileToPoint(entity.Pos.TileJ), TileToPoint(entity.Pos.TileJ + 1) - 1);
@@ -93,12 +93,12 @@ namespace Game.World
 		#endregion
 
 		#region SPATIAL_CHECKS
-		public bool CanEntityMoveTo(MapEntity entity, Direction targetDir, out List<MapEntity> occupiedBy)
+		public bool CanEntityMoveTo(LevelEntity entity, Direction targetDir, out List<LevelEntity> occupiedBy)
 		{
 			return CanEntityMoveTo(entity, entity.Pos, targetDir, out occupiedBy);
 		}
 		
-		public bool CanEntityMoveTo(MapEntity entity, Point2D startingPoint, Direction targetDir, out List<MapEntity> occupiedBy)
+		public bool CanEntityMoveTo(LevelEntity entity, Point2D startingPoint, Direction targetDir, out List<LevelEntity> occupiedBy)
 		{
 			_entitiesList.Clear();
 			occupiedBy = _entitiesList;
@@ -113,7 +113,7 @@ namespace Game.World
 			return false;
 		}
 
-		public bool CanEntityMoveTo(MapEntity entity, MapEntity other)
+		public bool CanEntityMoveTo(LevelEntity entity, LevelEntity other)
 		{
 			Debug.Assert(entity != other);
 			bool inLineOfSight = CanEntityMoveTo(entity, other.Pos, out var occupiedBy);
@@ -128,7 +128,7 @@ namespace Game.World
 		/// <param name="targetPos">Target point to check if entity can move to.</param>
 		/// <param name="occupiedBy">Returns entity standing in the way, null if there isn't any.</param>
 		/// <returns>true</returns>
-		public bool CanEntityMoveTo(MapEntity entity, Point2D targetPos, out List<MapEntity> occupiedBy)
+		public bool CanEntityMoveTo(LevelEntity entity, Point2D targetPos, out List<LevelEntity> occupiedBy)
 		{
 			Debug.Assert(entity.Moveable);
 			int stepsCounter = 0;
@@ -178,14 +178,14 @@ namespace Game.World
 			return occupiedBy.Any();
 		}
 
-		private bool TileOccupied(Point2D pos, MapEntity exceptFor)
+		private bool TileOccupied(Point2D pos, LevelEntity exceptFor)
 		{
 			var occupiedBy = GetEntitiesAt(pos, exceptFor);
 
 			return occupiedBy.Any();
 		}
 
-		public List<MapEntity> GetEntitiesAt(Point2D pos)
+		public List<LevelEntity> GetEntitiesAt(Point2D pos)
 		{
 			_entitiesList.Clear();
 
@@ -198,7 +198,7 @@ namespace Game.World
 			return _entitiesList;
 		}
 
-		private List<MapEntity> GetEntitiesAt(Point2D pos, MapEntity exceptFor)
+		private List<LevelEntity> GetEntitiesAt(Point2D pos, LevelEntity exceptFor)
 		{
 			_entitiesList = GetEntitiesAt(pos);
 			_entitiesList.Remove(exceptFor);
@@ -206,7 +206,7 @@ namespace Game.World
 			return _entitiesList;
 		}
 
-		private bool AllPassable(List<MapEntity> entities)
+		private bool AllPassable(List<LevelEntity> entities)
 		{
 			return entities.All(e => e.Passable);
 		}

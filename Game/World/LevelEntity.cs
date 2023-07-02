@@ -4,10 +4,10 @@ using Game.Combat;
 
 namespace Game.World
 {
-	class MapEntity
+	class LevelEntity
 	{
 		private Direction _direction;
-		private MapEntity? _target;
+		private LevelEntity? _target;
 		private Point2D _targetPos;
 
 		public Entity Entity
@@ -25,7 +25,7 @@ namespace Game.World
 		{ get => EncounterType == EncounterManager.EncounterType.Combat ? ((Unit)Entity).Stats.DetectionRange : 0; }
 		public Point2D TargetPos
 		{ get => IsTargeting ? _targetPos : Pos; set => _targetPos = value; }
-		public MapEntity? Target
+		public LevelEntity? Target
 		{
 			get => _target;
 			set
@@ -35,7 +35,7 @@ namespace Game.World
 			}
 		}
 		public bool IsTargeting
-		{ get => Target != (MapEntity?)null; }
+		{ get => Target != (LevelEntity?)null; }
 		public bool Passable
 		{ get => Entity.Passable; }
 		public bool Moveable
@@ -45,38 +45,38 @@ namespace Game.World
 		public EncounterManager.EncounterType EncounterType
 		{ get => Entity.EncounterType; }
 
-		public MapEntity(Entity entity, Point2D pos)
+		public LevelEntity(Entity entity, Point2D pos)
 		{
 			Entity = entity;
 			Pos = pos;
 			Dir = TranslateDirection(Directions.None);
 		}
 
-		public MapEntity(Entity entity, Point2D pos, Direction dir)
+		public LevelEntity(Entity entity, Point2D pos, Direction dir)
 		{
 			Entity = entity;
 			Pos = pos;
 			Dir = dir;
 		}
 
-		public MapEntity(Entity entity)
+		public LevelEntity(Entity entity)
 		{
 			Entity = entity;
 			Pos = new Point2D();
 			Dir = TranslateDirection(Directions.None);
 		}
 
-		public static bool operator ==(MapEntity e, Unit u)
+		public static bool operator ==(LevelEntity e, Unit u)
 		{
 			return e.Entity == u;
 		}
 
-		public static bool operator !=(MapEntity e, Unit u)
+		public static bool operator !=(LevelEntity e, Unit u)
 		{
 			return !(e == u);
 		}
 
-		public static bool operator ==(MapEntity? e1, MapEntity? e2)
+		public static bool operator ==(LevelEntity? e1, LevelEntity? e2)
 		{
 			if (e1 is not null & e2 is not null)
 				return e1!.Entity == e2!.Entity;
@@ -86,7 +86,7 @@ namespace Game.World
 				return false;
 		}
 
-		public static bool operator !=(MapEntity? e1, MapEntity? e2)
+		public static bool operator !=(LevelEntity? e1, LevelEntity? e2)
 			=> !(e1 == e2);
 
 		public void Move()
@@ -110,7 +110,7 @@ namespace Game.World
 			return pos + EffectiveMovement(dir);
 		}
 
-		public bool OtherInDetectionRange(MapEntity other)
+		public bool OtherInDetectionRange(LevelEntity other)
 		{
 			return WithinDistance(Pos, other.Pos, DetectionRange);
 		}

@@ -27,9 +27,9 @@ namespace Game
 		{ get; private set; }
 		public Level Level
 		{ get; private set; }
-		public List<MapEntity> Entities
+		public List<LevelEntity> Entities
 		{ get => Level.Entities; }
-		public MapEntity PlayerEntity
+		public LevelEntity PlayerEntity
 		{ get; private set; }
 		public Unit BossEntity
 		{ get; private set; }
@@ -51,7 +51,7 @@ namespace Game
 			GameManager = gameManager;
 			DifficultyProfile = difficultyProfile;
 			BossEntity = new Unit(UnitTemplates.finalBoss);
-			PlayerEntity = new MapEntity(new Unit(UnitTemplates.hero));
+			PlayerEntity = new LevelEntity(new Unit(UnitTemplates.hero));
             PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
 		}
 
@@ -59,7 +59,7 @@ namespace Game
 		{
 			EncounterManager = null;
 			UIManager.ExitAllMenus();
-			Level = LevelGenerator.MakeLevel((Unit)PlayerEntity.Entity, BossEntity, out MapEntity playerEntity, DifficultyProfile);
+			Level = LevelGenerator.MakeLevel((Unit)PlayerEntity.Entity, BossEntity, out LevelEntity playerEntity, DifficultyProfile);
 			PlayerEntity = playerEntity;
 			DataLog.WriteLine($"{PlayerEntity} has arrived at {Level.Metadata.name}");
         }
@@ -121,11 +121,11 @@ namespace Game
 		private void UpdatePlayerMovement()
 		{
 			var movementDirection = new Direction(InputManager.GetMovementVector(Point2D.POINTS_PER_TILE));
-			Level.MoveEntity(PlayerEntity, movementDirection, out List<MapEntity> encounteredEntities);
+			Level.MoveEntity(PlayerEntity, movementDirection, out List<LevelEntity> encounteredEntities);
 
 			while (encounteredEntities.Any())
 			{
-				MapEntity encounteredEntity = encounteredEntities.First();
+				LevelEntity encounteredEntity = encounteredEntities.First();
 				encounteredEntities.Remove(encounteredEntity);
 				if (encounteredEntity.RequiresInteraction == InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Confirm))
 					StartEncounter(encounteredEntity);
@@ -141,7 +141,7 @@ namespace Game
 			}
 		}
 
-		private void AutoMoveEntity(MapEntity entity)
+		private void AutoMoveEntity(LevelEntity entity)
 		{
 			if (EntityDetectsPlayer(entity)) // Track player if in range
 			{
@@ -161,14 +161,14 @@ namespace Game
 			if (entity.Dir.Mag == 0)
                 entity.Dir = Direction.GetRandomDirection(); // Start moving in random direction
 
-			if (!Level.MoveEntity(entity, out List<MapEntity> encounteredEntities))
+			if (!Level.MoveEntity(entity, out List<LevelEntity> encounteredEntities))
 				entity.Dir = Direction.GetRandomDirection(); // Move or change direction
 
             if (encounteredEntities.Contains(PlayerEntity))
                 StartEncounter(entity); // Encounter player
         }
 
-		private bool EntityDetectsPlayer(MapEntity entity)
+		private bool EntityDetectsPlayer(LevelEntity entity)
 		{
 			return entity.OtherInDetectionRange(PlayerEntity) &&  Level.CanEntityMoveTo(entity, PlayerEntity);
 		}
@@ -185,7 +185,7 @@ namespace Game
 				EncounterManager = null;
 		}
 
-		private void StartEncounter(MapEntity other)
+		private void StartEncounter(LevelEntity other)
 		{
 			EncounterManager = new EncounterManager(this, other.Entity);
 			Debug.Assert(State == LevelState.Encounter);

@@ -26,7 +26,7 @@ namespace Assets.Generators
 				throw new NullReferenceException();
 		}
 
-		public static Level MakeLevel(Unit playerUnit, Unit bossUnit, out MapEntity playerEntity, DifficultyProfile difficulty)
+		public static Level MakeLevel(Unit playerUnit, Unit bossUnit, out LevelEntity playerEntity, DifficultyProfile difficulty)
 		{
 			Level level = MakeEmptyLevel(GetRandomMapMeta());
 			var tileDirectionMap = GetTileDirectionMap(level.Map);
@@ -96,7 +96,7 @@ namespace Assets.Generators
 			for (int i = 0; i < numberOfItems; i++)
 				treasureChest.TryAddItem(ItemGenerator.MakeItem(difficulty.Level));
 
-			level.AddEntity(new MapEntity(treasureChest, point));
+			level.AddEntity(new LevelEntity(treasureChest, point));
 		}
 
 		private static void GenerateTraps(Level level, DifficultyProfile difficulty, int mapSize)
