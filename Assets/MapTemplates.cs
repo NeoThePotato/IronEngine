@@ -11,7 +11,7 @@ namespace Assets
 			{ "Plains1",		new MapMetadata("Rocky Plains",			$"{MAPS_PATH}Plains1.txt",		Point2D.Tile(0, 50),	Point2D.Tile(37, 80))},
 			{ "Plains2",		new MapMetadata("Suspicious Structure",	$"{MAPS_PATH}Plains2.txt",		Point2D.Tile(29, 29),	Point2D.Tile(0, 26))},
 			{ "Village1",		new MapMetadata("Fancy village",		$"{MAPS_PATH}Village1.txt",		Point2D.Tile(28, 3),	Point2D.Tile(4, 43))},
-			{ "Village2",		new MapMetadata("Quiet village",		$"{MAPS_PATH}Village2.txt",     Point2D.Tile(30, 25),	Point2D.Tile(2, 47))},
+			{ "Village2",		new MapMetadata("Quiet village",		$"{MAPS_PATH}Village2.txt",     Point2D.Tile(29, 25),	Point2D.Tile(2, 47))},
 			{ "Village3",		new MapMetadata("Moat-Side village",	$"{MAPS_PATH}Village3.txt",		Point2D.Tile(29, 23),	Point2D.Tile(0, 23))},
 			{ "Palace1",		new MapMetadata("The Grand Palace",		$"{MAPS_PATH}Palace1.txt",		Point2D.Tile(41, 48),	Point2D.Tile(6, 97))},
 			{ "Sewers1",		new MapMetadata("Sewers Cistern",		$"{MAPS_PATH}Sewers1.txt",		Point2D.Tile(42, 50),	Point2D.Tile(0, 50))},
