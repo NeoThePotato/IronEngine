@@ -204,6 +204,10 @@ namespace IO.Render
 			{
 
 			}
+			catch (System.IO.IOException)
+			{
+
+			}
 		}
 
 		[SupportedOSPlatform("windows")]
