@@ -211,7 +211,7 @@ namespace IO.Render
 		[SupportedOSPlatform("windows")]
 		private bool ValidateConsoleWindowSize()
 		{
-			bool invalid = ConsoleWindowSizeOutOfBounds();
+			bool invalid = WindowHeight != SizeJ || WindowWidth != SizeI;
 
 			if (invalid)
 				UpdateConsoleWindowSize();
@@ -222,9 +222,7 @@ namespace IO.Render
 		[SupportedOSPlatform("windows")]
 		private void UpdateConsoleWindowSize()
 		{
-			int width = Utility.ClampRange(WindowWidth, SizeI, LargestWindowWidth);
-			int height = Utility.ClampRange(WindowHeight, SizeJ, LargestWindowHeight);
-			UpdateConsoleWindowSize(width, height);
+			UpdateConsoleWindowSize(SizeI, SizeJ);
 		}
 
 		[SupportedOSPlatform("windows")]
@@ -250,12 +248,12 @@ namespace IO.Render
 		[SupportedOSPlatform("windows")]
 		private bool ValidateConsoleBufferSize()
 		{
-			bool valid = BufferWidth != WindowWidth || BufferHeight != WindowHeight;
+			bool invalid = BufferWidth != WindowWidth || BufferHeight != WindowHeight;
 
-			if (!valid)
+			if (invalid)
 				UpdateConsoleBufferSize();
 
-			return valid;
+			return !invalid;
 		}
 
 		[SupportedOSPlatform("windows")]
