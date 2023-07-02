@@ -12,6 +12,8 @@ namespace IO.Render
 		public const int METER_WIDTH = 2;
 		public static readonly byte HP_COLOR = 1;
 		public static readonly byte XP_COLOR = 3;
+		public static readonly byte HL_COLOR = 10;
+		public static readonly byte EV_COLOR = 60;
 		public static readonly byte BLANK_COLOR = 0;
 
 		private GameUIManager UIManager
@@ -57,10 +59,9 @@ namespace IO.Render
 
 		private void RenderSideBar(FrameBuffer buffer)
 		{
-			var sideBarBuffer = new FrameBuffer(buffer, 1, GameManagerRenderer.LevelManagerRenderer.SizeI + 2);
-			RenderPlayerHP(sideBarBuffer);
-			RenderPlayerExp(new FrameBuffer(sideBarBuffer, 0, METER_WIDTH));
-			RenderLocationBox(new FrameBuffer(sideBarBuffer, SideBarSizeJ + 1));
+			buffer = new FrameBuffer(buffer, 1, GameManagerRenderer.LevelManagerRenderer.SizeI + 2);
+			RenderPlayerStatMeters(buffer);
+			RenderLocationBox(new FrameBuffer(buffer, SideBarSizeJ + 1));
 		}
 
 		private void RenderMeter(FrameBuffer buffer, float percentage, byte fullColor, byte emptyColor, string text, int length = 1)
@@ -78,6 +79,17 @@ namespace IO.Render
 			RenderText(new FrameBuffer(buffer, SideBarSizeJ-1), text);
 		}
 
+		private void RenderPlayerStatMeters(FrameBuffer buffer)
+		{
+			RenderPlayerHP(buffer);
+			buffer = new FrameBuffer(buffer, 0, METER_WIDTH);
+			RenderPlayerHealingPower(buffer);
+			buffer = new FrameBuffer(buffer, 0, METER_WIDTH);
+			RenderPlayerEvade(buffer);
+			buffer = new FrameBuffer(buffer, 0, METER_WIDTH);
+			RenderPlayerExp(buffer);
+		}
+
 		private void RenderPlayerHP(FrameBuffer buffer)
 		{
 			Unit player = (Unit)GameManager.LevelManager.PlayerEntity.Entity;
@@ -90,6 +102,20 @@ namespace IO.Render
 			Unit player = (Unit)GameManager.LevelManager.PlayerEntity.Entity;
 			float playerXPPercent = 1f - ((float)player.ExpToNextLevel / Leveling.GetExpAtLevel(player.Level + 1));
 			RenderMeter(buffer, playerXPPercent, XP_COLOR, BLANK_COLOR, "XP", METER_WIDTH);
+		}
+
+		private void RenderPlayerHealingPower(FrameBuffer buffer)
+		{
+			Unit player = (Unit)GameManager.LevelManager.PlayerEntity.Entity;
+			float playerHealPercent = (float)player.CurrentHealingPower / player.BaseHealingPower;
+			RenderMeter(buffer, playerHealPercent, HL_COLOR, BLANK_COLOR, "HL", METER_WIDTH);
+		}
+
+		private void RenderPlayerEvade(FrameBuffer buffer)
+		{
+			Unit player = (Unit)GameManager.LevelManager.PlayerEntity.Entity;
+			float playerEvadePercent = (float)player.CurrentEvasion / player.Evasion;
+			RenderMeter(buffer, playerEvadePercent, EV_COLOR, BLANK_COLOR, "EV", METER_WIDTH);
 		}
 
 		private void RenderLocationBox(FrameBuffer buffer)
