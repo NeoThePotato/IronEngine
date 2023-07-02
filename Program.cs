@@ -1,7 +1,4 @@
-﻿using Game;
-using IO.Render;
-
-static class Program
+﻿static class Program
 {
 	[STAThread]
 	static void Main(string[] args)

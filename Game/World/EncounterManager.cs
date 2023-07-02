@@ -1,19 +1,20 @@
-﻿using IO;
-using IO.UI;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Game.Combat;
 using Game.Items;
+using IO;
+using IO.UI;
 using IO.UI.Menus;
-using System.Diagnostics;
 
 namespace Game.World
 {
-    class EncounterManager
-    {
+	class EncounterManager
+	{
 		private LevelManager LevelManager
 		{ get; set; }
-        private Entity EncounteredEntity
+		private Entity EncounteredEntity
 		{ get; set; }
-        private CombatManager? CombatManager
+		private CombatManager? CombatManager
 		{ get; set; }
 		public EncounterType Type
 		{ get => EncounteredEntity.EncounterType; }
@@ -28,7 +29,7 @@ namespace Game.World
 		private DataLog DataLog
 		{ get => LevelManager.DataLog; }
 		public bool Exit
-        { get; private set; }
+		{ get; private set; }
 
 		public EncounterManager(LevelManager levelManager, Entity encounteredEntity)
 		{
@@ -39,6 +40,7 @@ namespace Game.World
 		public void Update()
 		{
 			Debug.Assert(!Exit);
+
 			switch (Type)
 			{
 				case EncounterType.Combat:
@@ -98,7 +100,7 @@ namespace Game.World
 
 		private void UpdateCombat()
 		{
-			CombatManager.Combat(); // TODO Make CombatManager an "Update" function and call it here
+			CombatManager!.Combat(); // TODO Make CombatManager an "Update" function and call it here
 			Exit = true;
 		}
 
@@ -160,12 +162,12 @@ namespace Game.World
 		}
 
 		public enum EncounterType
-        {
-            Combat,
-            Container,
-            Trap,
-            Door,
+		{
+			Combat,
+			Container,
+			Trap,
+			Door,
 			Portal
-        }
-    }
+		}
+	}
 }

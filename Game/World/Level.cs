@@ -1,5 +1,5 @@
-﻿using static Game.World.Point2D;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using static Game.World.Point2D;
 
 namespace Game.World
 {
@@ -14,10 +14,10 @@ namespace Game.World
 		{ get => _map; private set => _map = value; }
 		public List<LevelEntity> Entities
 		{ get => _entities; private set => _entities = value; }
-        public MapMetadata Metadata
+		public MapMetadata Metadata
 		{ get => _metadata; private set => _metadata = value; }
 
-        public Level(Map map, MapMetadata metadata)
+		public Level(Map map, MapMetadata metadata)
 		{
 			_map = map;
 			_entities = new List<LevelEntity>();
@@ -37,11 +37,11 @@ namespace Game.World
 		public void AddEntity(LevelEntity entity)
 		{
 			Entities.Add(entity);
-        }
+		}
 
-        public LevelEntity AddEntityAtEntryTile(Entity entity)
-        {
-            return AddEntity(entity, Metadata.entryTile);
+		public LevelEntity AddEntityAtEntryTile(Entity entity)
+		{
+			return AddEntity(entity, Metadata.entryTile);
 		}
 
 		public LevelEntity AddEntityAtExitTile(Entity entity)
@@ -76,14 +76,14 @@ namespace Game.World
 
 				return false;
 			}
-        }
+		}
 
-        public bool MoveEntity(LevelEntity entity, out List<LevelEntity> occupiedBy)
-        {
+		public bool MoveEntity(LevelEntity entity, out List<LevelEntity> occupiedBy)
+		{
 			return MoveEntity(entity, entity.Dir, out occupiedBy);
-        }
+		}
 
-		private void MoveEntityToEdgeOfTile(LevelEntity entity, Direction direction)
+		private static void MoveEntityToEdgeOfTile(LevelEntity entity, Direction direction)
 		{
 			var projectedPoint = entity.ProjectedNewLocation(direction);
 			var actualJ = Utility.ClampRange(projectedPoint.PointJ, TileToPoint(entity.Pos.TileJ), TileToPoint(entity.Pos.TileJ + 1) - 1);
@@ -131,10 +131,10 @@ namespace Game.World
 		public bool CanEntityMoveTo(LevelEntity entity, Point2D targetPos, out List<LevelEntity> occupiedBy)
 		{
 			Debug.Assert(entity.Moveable);
-			int stepsCounter = 0;
-			int maxSteps = (entity.DetectionRange/entity.MovementSpeed) + 1;
-			Point2D currentLocation = entity.Pos;
-			Direction currentTrajectory = new Direction(entity.Pos, targetPos);
+			var stepsCounter = 0;
+			var maxSteps = (entity.DetectionRange/entity.MovementSpeed) + 1;
+			var currentLocation = entity.Pos;
+			var currentTrajectory = new Direction(entity.Pos, targetPos);
 
 			while (!SameTile(currentLocation, targetPos))
 			{
@@ -206,7 +206,7 @@ namespace Game.World
 			return _entitiesList;
 		}
 
-		private bool AllPassable(List<LevelEntity> entities)
+		private static bool AllPassable(List<LevelEntity> entities)
 		{
 			return entities.All(e => e.Passable);
 		}

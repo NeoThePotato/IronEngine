@@ -63,7 +63,7 @@ namespace IO.File
 
         private static List<string> GetStringList(StreamReader sr)
         {
-            List<string> lines = new List<string>(10);
+            List<string> lines = new(10);
             string? line;
 
             while ((line = sr.ReadLine()) != null)

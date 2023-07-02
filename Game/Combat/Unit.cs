@@ -1,9 +1,9 @@
-﻿using Game.World;
+﻿using Assets.Templates;
 using Game.Items.Equipment;
-using Assets.EquipmentTemplates;
+using Game.World;
+using IO.UI;
 using static Game.Combat.Stats;
 using static IO.Render.EntityRenderer;
-using IO.UI;
 
 namespace Game.Combat
 {
@@ -11,7 +11,7 @@ namespace Game.Combat
 	{
 		#region FIELDS
 		// Permanent Stats (Never changes)
-		private string _name = "";
+		private readonly string _name = "";
 		// Mid-Temporary Stats (Changes, persists between encounters)
 		private Stats _stats;
 		private int _currentHP;
@@ -27,7 +27,7 @@ namespace Game.Combat
 		private int _level = 1;
 		private int _experience = 0;
 		// Other
-		private VisualEntityInfo _visualInfo = Assets.EntitiesVisualInfo.UNIT_ENEMY;
+		private VisualEntityInfo _visualInfo = EntitiesVisualInfo.UNIT_ENEMY;
 		#endregion
 
 		#region PROPERTIES
@@ -108,7 +108,7 @@ namespace Game.Combat
 		public int ExpToNextLevel
 		{ get => NextLevelTotalExp - TotalExp; }
 		public int NextLevelTotalExp
-		{ get => Progression.Leveling.GetTotalExpToLevel(Level+1); }
+		{ get => Progression.Leveling.GetTotalExpToLevel(Level + 1); }
 		public bool CanLevelUp
 		{ get => TotalExp >= NextLevelTotalExp; }
 		#endregion
@@ -144,12 +144,12 @@ namespace Game.Combat
 			ResetAllTempStats();
 		}
 
-		public Unit(string name, int level, Stats stats, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor) : this(name, level, stats, weapon, shield, bodyArmor, Assets.EntitiesVisualInfo.UNIT_ENEMY)
+		public Unit(string name, int level, Stats stats, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor) : this(name, level, stats, weapon, shield, bodyArmor, EntitiesVisualInfo.UNIT_ENEMY)
 		{
 
 		}
 
-		public Unit(string name, int level, int vitality, int strength, int speed, int intelligence, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor) : this(name, level, new Stats(vitality, strength, speed, intelligence), weapon, shield, bodyArmor, Assets.EntitiesVisualInfo.UNIT_ENEMY)
+		public Unit(string name, int level, int vitality, int strength, int speed, int intelligence, Weapon? weapon, Shield? shield, BodyArmor? bodyArmor) : this(name, level, new Stats(vitality, strength, speed, intelligence), weapon, shield, bodyArmor, EntitiesVisualInfo.UNIT_ENEMY)
 		{
 
 		}

@@ -1,17 +1,17 @@
-﻿using IO;
+﻿using System.Diagnostics;
+using Game.World;
+using Game.Items;
+using Game.Combat;
+using Game.Progression;
+using IO;
 using IO.UI;
 using IO.UI.Menus;
-using Game.Items;
-using Game.World;
-using Game.Combat;
-using Assets;
 using Assets.Generators;
-using System.Diagnostics;
-using Game.Progression;
+using Assets.Templates;
 
 namespace Game
 {
-    class LevelManager
+	class LevelManager
 	{
 		public const int PLAYER_INVENTORY_SIZE = 10;
 
@@ -52,7 +52,7 @@ namespace Game
 			DifficultyProfile = difficultyProfile;
 			BossEntity = new Unit(UnitTemplates.finalBoss);
 			PlayerEntity = new LevelEntity(new Unit(UnitTemplates.hero));
-            PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
+			PlayerInventory = new Container("Inventory", PLAYER_INVENTORY_SIZE);
 		}
 
 		public void Start()
@@ -62,7 +62,7 @@ namespace Game
 			Level = LevelGenerator.MakeLevel((Unit)PlayerEntity.Entity, BossEntity, out LevelEntity playerEntity, DifficultyProfile);
 			PlayerEntity = playerEntity;
 			DataLog.WriteLine($"{PlayerEntity} has arrived at {Level.Metadata.name}");
-        }
+		}
 
 		public void Update(ulong currentTick)
 		{
@@ -159,14 +159,14 @@ namespace Game
 			}
 
 			if (entity.Dir.Mag == 0)
-                entity.Dir = Direction.GetRandomDirection(); // Start moving in random direction
+				entity.Dir = Direction.GetRandomDirection(); // Start moving in random direction
 
 			if (!Level.MoveEntity(entity, out List<LevelEntity> encounteredEntities))
 				entity.Dir = Direction.GetRandomDirection(); // Move or change direction
 
-            if (encounteredEntities.Contains(PlayerEntity))
-                StartEncounter(entity); // Encounter player
-        }
+			if (encounteredEntities.Contains(PlayerEntity))
+				StartEncounter(entity); // Encounter player
+		}
 
 		private bool EntityDetectsPlayer(LevelEntity entity)
 		{
@@ -178,7 +178,7 @@ namespace Game
 		private void UpdateEncounter()
 		{
 			Debug.Assert(State == LevelState.Encounter);
-			EncounterManager.Update();
+			EncounterManager!.Update();
 			PurgeDeadEntities();
 
 			if (EncounterManager.Exit)

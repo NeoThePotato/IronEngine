@@ -4,7 +4,7 @@ namespace IO
 {
 	class PlayerInputManager
 	{
-		private static readonly Dictionary<Key, PlayerInputs> INPUT_BINDING = new Dictionary<Key, PlayerInputs>()
+		private static readonly Dictionary<Key, PlayerInputs> INPUT_BINDING = new()
 		{
 			{Key.Right,		PlayerInputs.Right},
 			{Key.Up,		PlayerInputs.Up},
@@ -18,7 +18,7 @@ namespace IO
 			{Key.C,			PlayerInputs.Start},
 			{Key.Escape,	PlayerInputs.Start},
 		};
-		private static readonly Dictionary<PlayerInputs, (int, int)> INPUT_TO_VECTOR = new Dictionary<PlayerInputs, (int, int)>()
+		private static readonly Dictionary<PlayerInputs, (int, int)> INPUT_TO_VECTOR = new()
 		{
 			{ PlayerInputs.Right,       (0, 1)},
 			{ PlayerInputs.Up,          (-1, 0)},
@@ -79,7 +79,7 @@ namespace IO
 			Utility.Swap(ref _previousKeyboardState, ref _currentKeyboardState);
 		}
 
-		private Dictionary<PlayerInputs, bool> GetEmptyKeyboardState()
+		private static Dictionary<PlayerInputs, bool> GetEmptyKeyboardState()
 		{
 			var emptyState = new Dictionary<PlayerInputs, bool>();
 

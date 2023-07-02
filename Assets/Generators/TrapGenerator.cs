@@ -1,11 +1,12 @@
-﻿using Game.Progression;
-using Game.World;
+﻿using Game.World;
+using Game.Progression;
+using Assets.Templates;
 
 namespace Assets.Generators
 {
 	class TrapGenerator
 	{
-		private static readonly Dictionary<Trap, SpawnProfile> SPAWNABLE_TRAPS = new Dictionary<Trap, SpawnProfile>()
+		private static readonly Dictionary<Trap, SpawnProfile> SPAWNABLE_TRAPS = new()
 		{
 			{TrapsTemplates.dartTrap,       new SpawnProfile(2, 4)},
 			{TrapsTemplates.woodenSpike,    new SpawnProfile(3, 4)},

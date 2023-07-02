@@ -1,6 +1,4 @@
-﻿using Game.Combat;
-
-namespace Game.Items.Equipment
+﻿namespace Game.Items.Equipment
 {
 	class Shield : Armor
 	{

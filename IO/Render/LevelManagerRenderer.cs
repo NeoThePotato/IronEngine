@@ -38,8 +38,8 @@ namespace IO.Render
 
 		private void RenderEncounter(FrameBuffer buffer)
 		{
-            // TODO I probably need a dedicated EncounterRenderer
-        }
+			// TODO I probably need a dedicated EncounterRenderer
+		}
 
 		private bool ValidateCurrentLevel()
 		{

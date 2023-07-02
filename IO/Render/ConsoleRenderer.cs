@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
@@ -7,7 +6,6 @@ using static System.Console;
 
 namespace IO.Render
 {
-
 	/// <summary>
 	/// Handles rendering of elements into the console
 	/// </summary>
@@ -77,10 +75,10 @@ namespace IO.Render
 		{
 			bool valid = true;
 
-			valid = valid & ChildRenderer.Validate();
-			valid = valid & ValidateFrameBufferSize();
+			valid &= ChildRenderer.Validate();
+			valid &= ValidateFrameBufferSize();
 			ValidateStringBufferCapacity();
-			valid = valid & ValidateConsoleWindow();
+			valid &= ValidateConsoleWindow();
 			Debug.WriteLineIf(!valid, "ConsoleRenderer was validated");
 
 			return valid;
@@ -194,7 +192,7 @@ namespace IO.Render
 			return ValidateConsoleWindowSize() & ValidateConsoleBufferSize();
 		}
 
-		private void PrepareConsoleWindow()
+		private static void PrepareConsoleWindow()
 		{
 			try
 			{
@@ -246,7 +244,7 @@ namespace IO.Render
 		}
 
 		[SupportedOSPlatform("windows")]
-		private bool ValidateConsoleBufferSize()
+		private static bool ValidateConsoleBufferSize()
 		{
 			bool invalid = BufferWidth != WindowWidth || BufferHeight != WindowHeight;
 
@@ -257,7 +255,7 @@ namespace IO.Render
 		}
 
 		[SupportedOSPlatform("windows")]
-		private void UpdateConsoleBufferSize()
+		private static void UpdateConsoleBufferSize()
 		{
 			UpdateConsoleBufferSize(WindowWidth, WindowHeight);
 		}

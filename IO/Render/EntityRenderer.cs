@@ -1,5 +1,4 @@
 ﻿using Game.World;
-using System;
 
 namespace IO.Render
 {
@@ -30,7 +29,7 @@ namespace IO.Render
 				RenderEntity(buffer, entity);
 		}
 
-		private void RenderEntity(FrameBuffer buffer, LevelEntity entity)
+		private static void RenderEntity(FrameBuffer buffer, LevelEntity entity)
 		{
 			if (entity.Moveable)
 				RenderEntityMoving(buffer, entity);
@@ -38,14 +37,14 @@ namespace IO.Render
 				RenderEntityStatic(buffer, entity);
 		}
 
-		private void RenderEntityMoving(FrameBuffer buffer, LevelEntity entity)
+		private static void RenderEntityMoving(FrameBuffer buffer, LevelEntity entity)
 		{
 			VisualEntityInfo visualInfo = entity.Entity.VisualInfo;
 			(int posJ, int posI) = MapRenderer.PointToCharPos(entity.Pos);
 			RenderEntityAtTile(buffer, posJ, posI, visualInfo);
 		}
 
-		private void RenderEntityStatic(FrameBuffer buffer, LevelEntity entity)
+		private static void RenderEntityStatic(FrameBuffer buffer, LevelEntity entity)
 		{
 			VisualEntityInfo visualInfo = entity.Entity.VisualInfo;
 			(int posJ, int posI) = MapRenderer.PointToCharPos(entity.Pos);
@@ -53,7 +52,7 @@ namespace IO.Render
 			RenderEntityAtTile(buffer, posJ, posI + 1, visualInfo);
 		}
 
-		private void RenderEntityAtTile(FrameBuffer buffer, int posJ, int posI, VisualEntityInfo visualInfo)
+		private static void RenderEntityAtTile(FrameBuffer buffer, int posJ, int posI, VisualEntityInfo visualInfo)
 		{
 			buffer.Char[posJ, posI] = visualInfo.character ?? buffer.Char[posJ, posI];
 			buffer.Foreground[posJ, posI] = visualInfo.foregroundColor ?? buffer.Foreground[posJ, posI];

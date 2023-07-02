@@ -1,9 +1,10 @@
 ﻿using IO;
 using IO.UI;
+using Assets.Templates;
 
 namespace Game
 {
-    class GameManager
+	class GameManager
 	{
 		public const int PLAYER_INVENTORY_SIZE = 10;
 
@@ -24,11 +25,11 @@ namespace Game
 		{
 			InputManager = new PlayerInputManager();
 			UIManager = new GameUIManager(this);
+			LevelManager = new LevelManager(this, DifficultyProfileTemplates.normalDifficulty);
 		}
 
 		public void Start()
 		{
-			LevelManager = new LevelManager(this, Assets.DifficultyProfileTemplates.normalDifficulty);
 			LevelManager.Start();
 		}
 

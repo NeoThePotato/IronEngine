@@ -6,6 +6,7 @@ namespace IO.Render
 	{
 		private const byte HIGHLIGHTED_BG_COLOR = 240;
 		private const int SPACE_BETWEEN_COLS = 1;
+
 		private ContainerMenu ContainerMenu
 		{ get; set; }
 		private SelectionMenu Menu
@@ -36,7 +37,7 @@ namespace IO.Render
 		
 		private void HighlightSelection(FrameBuffer buffer)
 		{
-			RenderTextSingleLine(new FrameBuffer(buffer, ContainerMenu.SelectedItemIndex, LengthPerString * ContainerMenu.SelectedContainerIndex), ContainerMenu.GetItemAtSelection().ToString(), LengthPerString, COLOR_WHITE, HIGHLIGHTED_BG_COLOR);
+			RenderTextSingleLine(new FrameBuffer(buffer, ContainerMenu.SelectedItemIndex, LengthPerString * ContainerMenu.SelectedContainerIndex), ContainerMenu.GetItemAtSelection()!.ToString(), LengthPerString, COLOR_WHITE, HIGHLIGHTED_BG_COLOR);
 		}
 	}
 }

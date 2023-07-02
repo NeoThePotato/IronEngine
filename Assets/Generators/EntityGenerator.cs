@@ -4,22 +4,22 @@ namespace Assets.Generators
 {
 	static class EntityGenerator<Entity>
 	{
-		public static Entity? MakeEntity(Dictionary<Entity, SpawnProfile> spawnableEntities, int level)
+		public static Entity? MakeEntity(Dictionary<Entity, SpawnProfile> entities, int level)
 		{
-			if (spawnableEntities is null)
-				throw new ArgumentNullException(nameof(spawnableEntities));
+			if (entities is null)
+				throw new ArgumentNullException(nameof(entities));
 
-			var entity = PickRandomSpawnableEntity(spawnableEntities, level);
+			var entity = PickRandomSpawnAbleEntity(entities, level);
 
 			return entity;
 		}
 
-		private static Entity PickRandomSpawnableEntity(Dictionary<Entity, SpawnProfile> entities, int level)
+		private static Entity? PickRandomSpawnAbleEntity(Dictionary<Entity, SpawnProfile> entities, int level)
 		{
 			return PickRandomEntityFromDict(FilterByLevel(entities, level));
 		}
 
-		private static Entity PickRandomEntityFromDict(Dictionary<Entity, SpawnProfile> entities)
+		private static Entity? PickRandomEntityFromDict(Dictionary<Entity, SpawnProfile> entities)
 		{
 			var rand = Random.Shared.Next(0, GetCumulativeSpawnChance(entities));
 
@@ -28,11 +28,11 @@ namespace Assets.Generators
 				if (rand < kvp.Value.relativeSpawnChance)
 					return kvp.Key;
 				else
-					rand = rand - kvp.Value.relativeSpawnChance;
+					rand -= kvp.Value.relativeSpawnChance;
 			}
-			Debug.Assert(true, "This function should return a value inside of the foreach loop.");
+			Debug.Assert(true, "This function should return a value inside of the for-each loop.");
 
-			return default(Entity);
+			return default;
 		}
 
 		private static Dictionary<Entity, SpawnProfile> FilterByLevel(Dictionary<Entity, SpawnProfile> entities, int level)

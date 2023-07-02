@@ -1,7 +1,6 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using static Game.World.Direction;
+using System.Diagnostics;
 
 static class Utility
 {
@@ -12,9 +11,7 @@ static class Utility
 
 	public static void Swap<T>(ref T obj1, ref T obj2)
 	{
-		var temp = obj1;
-		obj1 = obj2;
-		obj2 = temp;
+		(obj2, obj1) = (obj1, obj2);
 	}
 
 	public static float ClampMin(float val, float min)
@@ -83,39 +80,6 @@ static class Utility
 	public static void BlockUntilKeyDown()
 	{
 		Console.ReadKey();
-	}
-
-	public static T[] RemoveDuplicates<T>(T[] objArr)
-	{
-		return objArr.Distinct().ToArray();
-	}
-
-	public static void PrintAll<T>(T[] objArr, Separator separator)
-	{
-		string separatorStr;
-
-		switch (separator)
-		{
-			case Separator.Comma:
-				separatorStr = ", ";
-				break;
-			case Separator.Space:
-				separatorStr = " ";
-				break;
-			case Separator.NewLine:
-				separatorStr = "\n";
-				break;
-			default:
-				separatorStr = ", ";
-				break;
-		}
-
-		for (int i = 0; i < objArr.Length - 1; i++)
-		{
-			Console.Write(objArr[i] + separatorStr);
-		}
-
-		Console.WriteLine(objArr[objArr.Length - 1]);
 	}
 
 	[SupportedOSPlatform("windows")]

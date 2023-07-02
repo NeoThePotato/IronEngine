@@ -1,7 +1,7 @@
-﻿using Game;
+﻿using System.Diagnostics;
+using Game;
 using Game.Items;
 using IO.UI.Menus;
-using System.Diagnostics;
 
 namespace IO.UI
 {

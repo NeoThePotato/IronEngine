@@ -1,7 +1,7 @@
 ﻿using Game.Combat;
 using IO.UI;
 using static IO.Render.EntityRenderer;
-using static Assets.EntitiesVisualInfo;
+using static Assets.Templates.EntitiesVisualInfo;
 
 namespace Game.World
 {
@@ -15,15 +15,15 @@ namespace Game.World
 		{ get; private set; }
 		public bool Armed
 		{ get; private set; }
-        public override bool Passable
-        { get => true; }
-        public override bool Moveable
-        { get => false; }
+		public override bool Passable
+		{ get => true; }
+		public override bool Moveable
+		{ get => false; }
 		public override bool RequiresInteraction
 		{ get => false; }
 		public override bool MarkForDelete
 		{ get => false; }
-        public override EncounterManager.EncounterType EncounterType
+		public override EncounterManager.EncounterType EncounterType
 		{ get => EncounterManager.EncounterType.Trap; }
 		public override VisualEntityInfo VisualInfo
 		{ get => Armed ? TRAP_ARMED : TRAP_UNARMED; }

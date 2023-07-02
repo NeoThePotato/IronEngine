@@ -24,13 +24,11 @@ namespace IO.Render
 
 		public override void Render(FrameBuffer buffer)
 		{
-			// Render entities
 			EntityRenderer.Render(buffer);
 		}
 
 		public override void RenderToCache(FrameBuffer buffer)
 		{
-			// Render map
 			MapRenderer.RenderToCache(buffer);
 		}
 	}

@@ -1,5 +1,5 @@
 ﻿using static IO.Render.EntityRenderer;
-using static Assets.EntitiesVisualInfo;
+using static Assets.Templates.EntitiesVisualInfo;
 
 namespace Game.World
 {

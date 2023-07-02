@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Game.World;
-using Assets;
 using static Game.World.Map;
+using Assets;
 
 namespace IO.Render
 {
@@ -120,7 +120,7 @@ namespace IO.Render
 				this.backgroundColor = backgroundColor;
 			}
 
-			public (char, byte, byte) GetFrameBufferTuple()
+			public readonly (char, byte, byte) GetFrameBufferTuple()
 			{
 				return GetFrameBufferTuple(this);
 			}

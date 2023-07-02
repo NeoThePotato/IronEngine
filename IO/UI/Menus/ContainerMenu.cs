@@ -7,7 +7,7 @@ using IO.Render;
 
 namespace IO.UI.Menus
 {
-    class ContainerMenu : Menu
+	class ContainerMenu : Menu
 	{
 		public SelectionMenu Menu
 		{ get; private set; }
@@ -19,7 +19,7 @@ namespace IO.UI.Menus
 		{ get; private set; }
 		public int SelectedContainerIndex
 		{ get; private set; }
-		public Item SelectedItem
+		public Item? SelectedItem
 		{ get; private set; }
 		public bool ItemSelected
 		{ get => SelectedItem != null; }
@@ -69,7 +69,7 @@ namespace IO.UI.Menus
 			else if (ItemSelected && itemSelected) // Select item #2
 			{
 				if (GetItemAtCursor() == SelectedItem) // Item #1 is #2
-					ParentUIManager.StackNewMenu(MenuFactory.GetEquipmentMenu(InputManager, ParentUIManager, this, (Equipment)SelectedItem, PlayerUnit));
+					ParentUIManager.StackNewMenu(MenuFactory.GetEquipmentMenu(InputManager, ParentUIManager, this, (Equipment)SelectedItem!, PlayerUnit));
 				else // Item #1 is not #2
 					SwapSelectedWithCursor();
 				SelectedItem = null;
@@ -101,10 +101,12 @@ namespace IO.UI.Menus
 			Debug.Assert(GetItemAtSelection() is Equipment);
 			var equipment = (Equipment?)Containers[SelectedContainerIndex].RemoveItem(SelectedItemIndex);
 
-			if (equipment != null)
+			if (equipment is not null)
+			{
 				ParentUIManager.DataLog.WriteLine($"{unit} equipped the {equipment}");
-			unit.Equip(ref equipment);
-			Containers[SelectedContainerIndex].TryAddItem(equipment, SelectedItemIndex);
+				unit.Equip(ref equipment);
+				Containers[SelectedContainerIndex].TryAddItem(equipment, SelectedItemIndex);
+			}
 		}
 
 		public override Renderer GetRenderer()

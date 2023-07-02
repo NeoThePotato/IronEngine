@@ -8,13 +8,13 @@ class ProgramManager
 	public const int GLOBAL_UPDATE_RATE = 60;
 	public const double FRAMETIME_MILISEC = 1000.0 / GLOBAL_UPDATE_RATE;
 	public const long FRAMETIME_TICKS = (long)(TimeSpan.TicksPerMillisecond * FRAMETIME_MILISEC);
-	public readonly TimeSpan FRAMETIME = new TimeSpan(FRAMETIME_TICKS);
+	public readonly TimeSpan FRAMETIME = new(FRAMETIME_TICKS);
 	private DateTime _startTime;
 	private DateTime _logicFinishTime;
 	private DateTime _renderFinishTime;
 	#endregion
 	#region CORE_COMPONENTS
-	private GameManager _gameManager;
+	private readonly GameManager _gameManager;
 	private ConsoleRenderer _consoleRenderer;
 	private ulong _currentTick;
 	#endregion

@@ -10,8 +10,8 @@ namespace IO.UI.Menus
 		public static SelectionMenu GetConfirmPortalMenu(LevelManager levelManager)
 		{
 			var parentUIManager = levelManager.UIManager;
-			Action onTrue = () => levelManager.MoveToNextLevel();
-			Action onFalse = () => levelManager.UIManager.ForceExitCurrentMenu();
+			void onTrue() => levelManager.MoveToNextLevel();
+			void onFalse() => levelManager.UIManager.ForceExitCurrentMenu();
 
 			return GetConfirmMenu(levelManager.InputManager, parentUIManager, "Are you sure you want to proceed?", onTrue, onFalse);
 		}
@@ -20,10 +20,10 @@ namespace IO.UI.Menus
 		{
 			var parentUIManager = levelManager.UIManager;
 			var playerUnit = (Unit)levelManager.PlayerEntity.Entity;
-			Action returnToGame = () => parentUIManager.ForceExitCurrentMenu();
-			Action openStatsMenu = () => levelManager.UIManager.StackNewMenu(GetPlayerStatsMenu(levelManager.InputManager, parentUIManager, playerUnit));
-			Action openInventoryMenu = () => levelManager.UIManager.StackNewMenu(GetContainerMenu(levelManager.InputManager, parentUIManager, playerUnit, levelManager.PlayerInventory));
-			Action quitGame = () => levelManager.Exit();
+			void returnToGame() =>		parentUIManager.ForceExitCurrentMenu();
+			void openStatsMenu() =>		levelManager.UIManager.StackNewMenu(GetPlayerStatsMenu(levelManager.InputManager, parentUIManager, playerUnit));
+			void openInventoryMenu() =>	levelManager.UIManager.StackNewMenu(GetContainerMenu(levelManager.InputManager, parentUIManager, playerUnit, levelManager.PlayerInventory));
+			void quitGame() =>			levelManager.Exit();
 
 			var actions = new Dictionary<string, Action?>()
 			{
@@ -43,8 +43,8 @@ namespace IO.UI.Menus
 
 		public static SelectionMenu GetEquipmentMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, ContainerMenu parent, Equipment equipment, Unit playerUnit)
 		{
-			Action equip = () => { parent.EquipSelectedOnUnit(playerUnit); parentUIManager.ForceExitCurrentMenu(); };
-			Action discard = () => { parent.RemoveItemAtSelection()!.DiscardThis(playerUnit, parentUIManager.DataLog); parentUIManager.ForceExitCurrentMenu(); };
+			void equip() { parent.EquipSelectedOnUnit(playerUnit); parentUIManager.ForceExitCurrentMenu(); }
+			void discard() { parent.RemoveItemAtSelection()!.DiscardThis(playerUnit, parentUIManager.DataLog); parentUIManager.ForceExitCurrentMenu(); }
 
 			var actions = new Dictionary<string, Action?>()
 			{
@@ -58,14 +58,19 @@ namespace IO.UI.Menus
 		public static SelectionMenu GetPlayerStatsMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Unit playerUnit)
 		{
 			var statsMenuText = playerUnit.GetStats();
-			Action restartStatsMenu = () => {
+			void restartStatsMenu()
+			{
 				parentUIManager.ForceExitCurrentMenu();
 				parentUIManager.ForceExitCurrentMenu();
 				parentUIManager.StackNewMenu(GetPlayerStatsMenu(inputManager, parentUIManager, playerUnit));
-			};
-			Action back = () => parentUIManager.ForceExitCurrentMenu();
-			Action heal = () => { playerUnit.HealSelf(parentUIManager.DataLog); restartStatsMenu(); };
-			Action levelUp = () => parentUIManager.StackNewMenu(GetPlayerLevelUpMenu(inputManager, parentUIManager, playerUnit));
+			}
+			void back() => parentUIManager.ForceExitCurrentMenu();
+			void heal()
+			{
+				playerUnit.HealSelf(parentUIManager.DataLog);
+				restartStatsMenu();
+			}
+			void levelUp() => parentUIManager.StackNewMenu(GetPlayerLevelUpMenu(inputManager, parentUIManager, playerUnit));
 
 			var actions = new Dictionary<string, Action?>()
 			{
@@ -83,17 +88,18 @@ namespace IO.UI.Menus
 		{
 			var unitStats = playerUnit.Stats;
 			var level = playerUnit.Level;
-			Action restartStatsMenu = () => {
+			void restartStatsMenu()
+			{
 				parentUIManager.ForceExitCurrentMenu();
 				parentUIManager.ForceExitCurrentMenu();
 				parentUIManager.StackNewMenu(GetPlayerStatsMenu(inputManager, parentUIManager, playerUnit));
-			};
-			Action<Stats.Stat> levelUpAndGoBackToStatsMenu = (stat) => { playerUnit.LevelUp(stat); restartStatsMenu(); };
-			Action vitUp = () => levelUpAndGoBackToStatsMenu(Stats.Stat.VIT);
-			Action strUp = () => levelUpAndGoBackToStatsMenu(Stats.Stat.STR);
-			Action spdUp = () => levelUpAndGoBackToStatsMenu(Stats.Stat.SPD);
-			Action intUp = () => levelUpAndGoBackToStatsMenu(Stats.Stat.INT);
-			Action back = () => parentUIManager.ForceExitCurrentMenu();
+			}
+			void levelUpAndGoBackToStatsMenu(Stats.Stat stat) { playerUnit.LevelUp(stat); restartStatsMenu(); }
+			void vitUp() => levelUpAndGoBackToStatsMenu(Stats.Stat.VIT);
+			void strUp() => levelUpAndGoBackToStatsMenu(Stats.Stat.STR);
+			void spdUp() => levelUpAndGoBackToStatsMenu(Stats.Stat.SPD);
+			void intUp() => levelUpAndGoBackToStatsMenu(Stats.Stat.INT);
+			void back() => parentUIManager.ForceExitCurrentMenu();
 
 			var actions = new Dictionary<string, Action?>()
 			{

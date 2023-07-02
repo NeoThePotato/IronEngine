@@ -5,7 +5,7 @@ namespace IO.UI
 	class DataLog : IEnumerable<string>
 	{
 		public readonly int MAX_SIZE;
-		private Queue<string> _queue;
+		private readonly Queue<string> _queue;
 
 		public DataLog(int maxSize)
 		{

@@ -21,7 +21,7 @@ namespace Game.World
 
 		public Point2D Dir
 		{ get; set; }
-		public int Mag
+		public readonly int Mag
 		{ get => Utility.Magnitude((Dir.PointJ, Dir.PointI)); }
 
 		public Direction(Point2D p)
@@ -56,10 +56,10 @@ namespace Game.World
 			=> p - dir.Dir;
 
 		public static Direction operator *(Direction dir, int mag)
-			=> new Direction(dir.Dir * mag);
+			=> new(dir.Dir * mag);
 
 		public static Direction operator /(Direction dir, int mag)
-			=> new Direction(dir.Dir / mag);
+			=> new(dir.Dir / mag);
 
 		public void ClampMagnitude()
 		{
@@ -73,7 +73,7 @@ namespace Game.World
 
 		public static Direction ClampMagnitude(Direction dir, int mag)
 		{
-			return new Direction(Utility.ClampVectorMagnitude((dir.Dir.PointJ, dir.Dir.PointI), mag));
+			return new(Utility.ClampVectorMagnitude((dir.Dir.PointJ, dir.Dir.PointI), mag));
 		}
 
 		public static Direction TranslateDirection(Directions dir)
@@ -86,7 +86,7 @@ namespace Game.World
 			return TranslateDirection((Directions)Random.Shared.Next(0, Enum.GetNames(typeof(Directions)).Length));
 		}
 
-		public override string ToString()
+		public override readonly string ToString()
 		{
 			return Dir.ToString();
 		}

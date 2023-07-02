@@ -1,4 +1,5 @@
-﻿using static Game.World.Direction;
+﻿using System.Diagnostics.CodeAnalysis;
+using static Game.World.Direction;
 using static Game.World.Point2D;
 using Game.Combat;
 
@@ -87,7 +88,9 @@ namespace Game.World
 		}
 
 		public static bool operator !=(LevelEntity? e1, LevelEntity? e2)
-			=> !(e1 == e2);
+		{
+			return !(e1 == e2);
+		}
 
 		public void Move()
 		{
@@ -118,6 +121,16 @@ namespace Game.World
 		private Direction EffectiveMovement(Direction dir)
 		{
 			return ClampMagnitude(dir, MovementSpeed);
+		}
+
+		public override bool Equals([NotNullWhen(true)] object? obj)
+		{
+			return base.Equals(obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode() << 2;
 		}
 
 		public override string ToString()

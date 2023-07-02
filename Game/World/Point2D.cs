@@ -11,9 +11,9 @@ namespace Game.World
 		public int PointI
 		{ get; set; }
 		public int TileJ
-		{ get => PointToTile(PointJ); set => PointJ = TileToPoint(value) + PointRemainder(PointJ); }
+		{ readonly get => PointToTile(PointJ); set => PointJ = TileToPoint(value) + PointRemainder(PointJ); }
 		public int TileI
-		{ get => PointToTile(PointI); set => PointI = TileToPoint(value) + PointRemainder(PointI); }
+		{ readonly get => PointToTile(PointI); set => PointI = TileToPoint(value) + PointRemainder(PointI); }
 
 		public Point2D(int pointJ, int pointI)
 		{
@@ -35,26 +35,26 @@ namespace Game.World
 
 		public static Point2D Tile(int tileJ, int tileI)
 		{
-			return new Point2D(TileToPoint(tileJ), TileToPoint(tileI));
+			return new(TileToPoint(tileJ), TileToPoint(tileI));
 		}
 
 		public static Point2D operator +(Point2D p)
 			=> p;
 									   
 		public static Point2D operator -(Point2D p)
-			=> new Point2D(-p.PointJ, -p.PointI);
+			=> new(-p.PointJ, -p.PointI);
 									   
 		public static Point2D operator +(Point2D p1, Point2D p2)
-			=> new Point2D(p1.PointJ + p2.PointJ, p1.PointI + p2.PointI);
+			=> new(p1.PointJ + p2.PointJ, p1.PointI + p2.PointI);
 									   
 		public static Point2D operator -(Point2D p1, Point2D p2)
-			=> new Point2D(p1.PointJ - p2.PointJ, p1.PointI - p2.PointI);
+			=> new(p1.PointJ - p2.PointJ, p1.PointI - p2.PointI);
 									   
 		public static Point2D operator *(Point2D p, int num)
-			=> new Point2D(p.PointJ * num, p.PointI * num);
+			=> new(p.PointJ * num, p.PointI * num);
 
 		public static Point2D operator /(Point2D p, int num)
-			=> new Point2D(p.PointJ / num, p.PointI / num);
+			=> new(p.PointJ / num, p.PointI / num);
 
 		public static bool operator ==(Point2D p1, Point2D p2)
 			=> SamePoint(p1, p2);
@@ -84,17 +84,17 @@ namespace Game.World
 		public static int PointRemainder(int point)
 			=> point % POINTS_PER_TILE;
 
-		public override bool Equals([NotNullWhen(true)] object? obj)
+		public override readonly bool Equals([NotNullWhen(true)] object? obj)
 		{
 			return base.Equals(obj);
 		}
 
-		public override int GetHashCode()
+		public override readonly int GetHashCode()
 		{
 			return base.GetHashCode() << 2;
 		}
 
-		public override string ToString()
+		public override readonly string ToString()
 		{
 			return $"({TileJ}+{PointRemainder(PointJ)}/{POINTS_PER_TILE}, {TileI}+{PointRemainder(PointI)}/{POINTS_PER_TILE})";
 		}

@@ -1,4 +1,5 @@
 ﻿using IO.Render;
+using Assets.Templates;
 
 namespace Game.World
 {
@@ -19,7 +20,7 @@ namespace Game.World
 		public abstract EncounterManager.EncounterType EncounterType
 		{ get; }
 		public virtual EntityRenderer.VisualEntityInfo VisualInfo
-		{ get => Assets.EntitiesVisualInfo.DEFAULT; }
+		{ get => EntitiesVisualInfo.DEFAULT; }
 
 		public override string ToString()
 		{

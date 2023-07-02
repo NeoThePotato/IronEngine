@@ -1,11 +1,12 @@
 ﻿using Game.Combat;
 using Game.Progression;
+using Assets.Templates;
 
 namespace Assets.Generators
 {
 	class UnitGenerator
 	{
-		private static readonly Dictionary<Unit, SpawnProfile> SPAWNABLE_UNITS = new Dictionary<Unit, SpawnProfile>()
+		private static readonly Dictionary<Unit, SpawnProfile> SPAWNABLE_UNITS = new()
 		{
 			{UnitTemplates.slime,			new SpawnProfile(1, 5)},
 			{UnitTemplates.bandit,			new SpawnProfile(2, 5)},

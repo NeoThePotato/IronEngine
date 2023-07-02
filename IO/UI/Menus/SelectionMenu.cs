@@ -1,46 +1,45 @@
 ﻿using IO.Render;
 using System.Diagnostics;
-using static System.Windows.Forms.Design.AxImporter;
 
 namespace IO.UI.Menus
 {
-    class SelectionMenu : Menu
-    {
-        private int _cursorJ = 0;
-        private int _cursorI = 0;
+	class SelectionMenu : Menu
+	{
+		private int _cursorJ = 0;
+		private int _cursorI = 0;
 
 		public string Title
 		{ get; private set; }
 		public string Body
 		{ get; private set; }
-        public string?[,] Strings
-        { get; private set; }
+		public string?[,] Strings
+		{ get; private set; }
 		public Dictionary<string, Action?>? Actions
 		{ get; private set; }
 		public int DimJ
-        { get => Strings.GetLength(0); }
-        public int DimI
-        { get => Strings.GetLength(1); }
-        public int LongestString
-        { get; private set; }
-        public int ColumnLength
-        { get => LongestString + 1; }
-        public int CursorJ
-        {
-            get => _cursorJ;
-            private set => _cursorJ = Utility.Modulo(value, DimJ);
-        }
-        public int CursorI
-        {
-            get => _cursorI;
-            private set => _cursorI = Utility.Modulo(value, DimI);
+		{ get => Strings.GetLength(0); }
+		public int DimI
+		{ get => Strings.GetLength(1); }
+		public int LongestString
+		{ get; private set; }
+		public int ColumnLength
+		{ get => LongestString + 1; }
+		public int CursorJ
+		{
+			get => _cursorJ;
+			private set => _cursorJ = Utility.Modulo(value, DimJ);
+		}
+		public int CursorI
+		{
+			get => _cursorI;
+			private set => _cursorI = Utility.Modulo(value, DimI);
 		}
 		public bool CursorJValidPosition
 		{ get => 0 <= CursorJ && CursorJ < DimJ; }
 		public bool CursorIValidPosition
 		{ get => 0 <= CursorI && CursorI < DimI; }
 		public bool CursorValidPosition
-        { get => CursorIValidPosition && CursorJValidPosition; }
+		{ get => CursorIValidPosition && CursorJValidPosition; }
 		public override int LengthJ
 		{ get => DimJ; }
 		public override int LengthI
@@ -50,27 +49,27 @@ namespace IO.UI.Menus
 		public bool HasBody
 		{ get => Body != string.Empty; }
 		public override bool Exit
-        { get; set; }
+		{ get; set; }
 
-        public SelectionMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Dictionary<string, Action?> actions, int dimJ, int dimI, string? title = null, string? body = null) : base(inputManager, parentUIManager)
-        {
+		public SelectionMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Dictionary<string, Action?> actions, int dimJ, int dimI, string? title = null, string? body = null) : base(inputManager, parentUIManager)
+		{
 			Title = title ?? string.Empty;
 			Body = body ?? string.Empty;
 
 			if (dimJ * dimI >= actions.Count)
-            {
+			{
 				Actions = actions;
 				Strings = GetStringMatrix(actions.Keys.ToArray(), dimJ, dimI);
 				UpdateLongestString();
 				Start();
-            }
-            else
-            {
-                throw new ArgumentException($"2D array of size {dimJ}*{dimI} cannot contain all strings in options.");
-            }
-        }
+			}
+			else
+			{
+				throw new ArgumentException($"2D array of size {dimJ}*{dimI} cannot contain all strings in options.");
+			}
+		}
 
-		public SelectionMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Dictionary<string, Action?> actions, string?[,] strings, string? title = null, string? body = null) : base(inputManager, parentUIManager)
+		public SelectionMenu(PlayerInputManager inputManager, GameUIManager parentUIManager, Dictionary<string, Action?>? actions, string?[,] strings, string? title = null, string? body = null) : base(inputManager, parentUIManager)
 		{
 			Title = title ?? string.Empty;
 			Body = body ?? string.Empty;
@@ -82,28 +81,28 @@ namespace IO.UI.Menus
 
 		public override void Start()
 		{
-            ResetCursor();
-            Continue();
+			ResetCursor();
+			Continue();
 		}
 
-        public override string? Update()
-        {
+		public override string? Update()
+		{
 			if (InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Start) || InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Back))
 			{
 				Exit = true;
-                return null;
+				return null;
 			}
-            MoveCursor(InputManager.GetMenuVector());
+			MoveCursor(InputManager.GetMenuVector());
 
-            if (InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Confirm))
+			if (InputManager.IsInputDown(PlayerInputManager.PlayerInputs.Confirm))
 			{
 				var option = GetOptionAtCursor();
 
-                if (option != null && Actions != null)
+				if (option != null && Actions != null)
 				{
 					try
 					{
-						Actions[option](); // Call "Action" delegate
+						Actions[option]!(); // Call "Action" delegate
 					}
 					catch (KeyNotFoundException)
 					{
@@ -117,13 +116,13 @@ namespace IO.UI.Menus
 
 				return option;
 			}
-            else
-                return null;
-        }
+			else
+				return null;
+		}
 
-        public string? GetOptionAtCursor()
-        {
-            return Strings[CursorJ, CursorI];
+		public string? GetOptionAtCursor()
+		{
+			return Strings[CursorJ, CursorI];
 		}
 
 		public void ResetCursor()
@@ -132,14 +131,14 @@ namespace IO.UI.Menus
 			CursorI = 0;
 		}
 
-        public void Continue()
-        {
-            Exit = false;
+		public void Continue()
+		{
+			Exit = false;
 		}
 
-        public void SetOptions(string?[,] options)
-        {
-            Strings = options;
+		public void SetOptions(string?[,] options)
+		{
+			Strings = options;
 		}
 
 		public override Renderer GetRenderer()
@@ -148,7 +147,7 @@ namespace IO.UI.Menus
 		}
 
 		private void UpdateLongestString()
-        {
+		{
 			var longestString = GetLongestString(Strings);
 			LongestString = longestString != null? longestString.Length : 0;
 		}
@@ -195,7 +194,7 @@ namespace IO.UI.Menus
 				}
 			}
 
-            return ret;
+			return ret;
 		}
 	}
 }

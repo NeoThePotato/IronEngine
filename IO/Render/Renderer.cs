@@ -51,7 +51,7 @@
 			foreach (var line in str)
 			{
 				var fb = new FrameBuffer(buffer, j, 0);
-				RenderTextSingleLine(fb, line, length);
+				RenderTextSingleLine(fb, line, length, textColor, fgColor);
 				j++;
 			}
 		}
@@ -60,25 +60,25 @@
 	struct FrameBuffer
 	{
 		private readonly int _sizeJ;
-        private readonly int _sizeI;
+		private readonly int _sizeI;
 		private readonly int _offsetJ;
-        private readonly int _offsetI;
+		private readonly int _offsetI;
 		public OffsetBuffer<char> Char;
 		public OffsetBuffer<byte> Foreground;
 		public OffsetBuffer<byte> Background;
 
-		public int SizeJ
+		public readonly int SizeJ
 		{ get => _sizeJ - OffsetJ; }
-		public int SizeI
+		public readonly int SizeI
 		{ get => _sizeI - OffsetI; }
-		public int OffsetJ
+		public readonly int OffsetJ
 		{ get => _offsetJ; }
-		public int OffsetI
+		public readonly int OffsetI
 		{ get => _offsetI; }
 
 		public (char, byte, byte) this[int j, int i]
 		{
-			get
+			readonly get
 			{
 				return (Char[j, i], Foreground[j, i], Background[j, i]);
 			}
@@ -103,10 +103,10 @@
 
 		public FrameBuffer(FrameBuffer other, int offsetJ = 0, int offsetI = 0)
 		{
-            _sizeJ = other._sizeJ;
-            _sizeI = other._sizeI;
-            _offsetJ = other._offsetJ + offsetJ;
-            _offsetI = other._offsetI + offsetI;
+			_sizeJ = other._sizeJ;
+			_sizeI = other._sizeI;
+			_offsetJ = other._offsetJ + offsetJ;
+			_offsetI = other._offsetI + offsetI;
 			Char = new OffsetBuffer<char>(other.Char, offsetJ, offsetI);
 			Foreground = new OffsetBuffer<byte>(other.Foreground, offsetJ, offsetI);
 			Background = new OffsetBuffer<byte>(other.Background, offsetJ, offsetI);
@@ -126,20 +126,20 @@
 			}
 		}
 
-		public override string ToString()
+		public override readonly string ToString()
 		{
 			return $"J: {_offsetJ}:{_sizeJ}, I: {_offsetI}:{_sizeI}";
 		}
 
 		public struct OffsetBuffer<T>
 		{
-			private T[,] _buffer;
+			private readonly T[,] _buffer;
 
-            public int SizeJ
-            { get => _buffer.GetLength(0); }
-            public int SizeI
-            { get => _buffer.GetLength(1); }
-            public int OffsetJ
+			public readonly int SizeJ
+			{ get => _buffer.GetLength(0); }
+			public readonly int SizeI
+			{ get => _buffer.GetLength(1); }
+			public int OffsetJ
 			{ get; private set; }
 			public int OffsetI
 			{ get; private set; }
@@ -159,7 +159,7 @@
 				OffsetI = other.OffsetI + offsetI;
 			}
 
-			public T this[int j, int i]
+			public readonly T this[int j, int i]
 			{
 				get { return _buffer[OffsetJ + j, OffsetI + i]; }
 				set { _buffer[OffsetJ + j, OffsetI + i] = value; }

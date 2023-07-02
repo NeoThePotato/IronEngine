@@ -1,5 +1,4 @@
 ﻿using Game;
-using Game.World;
 using Game.Combat;
 using Game.Progression;
 using IO.UI;
@@ -28,7 +27,7 @@ namespace IO.Render
 		{ get => GameManagerRenderer.SizeI; }
 		public int SideBarSizeJ
 		{ get => GameManagerRenderer.LevelManagerRenderer.SizeJ; }
-		public int SideBarSizeI
+		public static int SideBarSizeI
 		{ get => SIDEBAR_WIDTH; }
 		public GameManager GameManager
 		{ get => UIManager.GameManager; }
@@ -46,7 +45,7 @@ namespace IO.Render
 
 			if (UIManager.InMenu)
 			{
-				CurrentMenuRenderer = UIManager.GetCurrentMenu().GetRenderer();
+				CurrentMenuRenderer = UIManager.GetCurrentMenu()!.GetRenderer();
 				CurrentMenuRenderer.Render(new FrameBuffer(buffer, 1, 1));
 			}
 		}

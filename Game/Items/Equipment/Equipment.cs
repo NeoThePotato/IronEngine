@@ -1,7 +1,7 @@
 ﻿namespace Game.Items.Equipment
 {
-    abstract class Equipment : Item
-    {
+	abstract class Equipment : Item
+	{
 
-    }
+	}
 }

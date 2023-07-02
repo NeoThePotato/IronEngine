@@ -1,19 +1,20 @@
 ﻿using System.Diagnostics;
-using Assets;
 using static Game.World.Point2D;
+using Assets;
+using Assets.Templates;
 
 namespace Game.World
 {
-    class Map
-    {
-        private char[,] _tileMap;
-        public int TileSizeJ
-        {
-            get => _tileMap.GetLength(0);
-        }
-        public int TileSizeI
-        {
-            get => _tileMap.GetLength(1);
+	class Map
+	{
+		private char[,] _tileMap;
+		public int TileSizeJ
+		{
+			get => _tileMap.GetLength(0);
+		}
+		public int TileSizeI
+		{
+			get => _tileMap.GetLength(1);
 		}
 		public int TileSize
 		{
@@ -28,16 +29,16 @@ namespace Game.World
 			get => TileToPoint(TileSizeI);
 		}
 		public char[,] TileMap
-        { get => _tileMap; private set => _tileMap = value; }
+		{ get => _tileMap; private set => _tileMap = value; }
 
-        public Map(char[,] tileMap)
-        {
-            _tileMap = tileMap;
-        }
+		public Map(char[,] tileMap)
+		{
+			_tileMap = tileMap;
+		}
 
-        public Map(int sizeJ, int sizeI)
-        {
-            _tileMap = new char[sizeJ, sizeI];
+		public Map(int sizeJ, int sizeI)
+		{
+			_tileMap = new char[sizeJ, sizeI];
 		}
 
 		public TileInfo GetTileInfo(Point2D tile)
@@ -46,8 +47,8 @@ namespace Game.World
 		}
 
 		public TileInfo GetTileInfo(int tileJ, int tileI)
-        {
-            return TileInfo.GetTileInfo(TileMap[tileJ, tileI]);
+		{
+			return TileInfo.GetTileInfo(TileMap[tileJ, tileI]);
 		}
 
 		public Point2D GetRandomPoint()
@@ -56,34 +57,34 @@ namespace Game.World
 		}
 
 		public Point2D GetRandomTile()
-        {
-            return Tile(Random.Shared.Next(0, TileSizeJ), Random.Shared.Next(0, TileSizeI));
+		{
+			return Tile(Random.Shared.Next(0, TileSizeJ), Random.Shared.Next(0, TileSizeI));
 		}
 
 		public struct TileInfo
-        {
-            public string name;
-            public bool passable;
+		{
+			public string name;
+			public bool passable;
 
-            public TileInfo(string name, bool passable)
-            {
-                this.name = name;
-                this.passable = passable;
-            }
+			public TileInfo(string name, bool passable)
+			{
+				this.name = name;
+				this.passable = passable;
+			}
 
-            public static TileInfo GetTileInfo(char c)
+			public static TileInfo GetTileInfo(char c)
 			{
 				if (Tiles.TILE_INFO.TryGetValue(c, out var info))
 				{
 					return info;
 				}
-                else
+				else
 				{
 					Debug.WriteLine($"No TILE_INFO found for character '{c}'.");
 					return Tiles.TILE_INFO['?'];
 				}
-            }
-        }
+			}
+		}
 	}
 
 	struct MapMetadata
@@ -103,10 +104,10 @@ namespace Game.World
 
 		public static MapMetadata GetMetadata(string levelName)
 		{
-			return Assets.MapTemplates.MAPS_DICTIONARY[levelName];
+			return MapTemplates.MAPS_DICTIONARY[levelName];
 		}
 
-		public override string ToString()
+		public override readonly string ToString()
 		{
 			return name;
 		}
