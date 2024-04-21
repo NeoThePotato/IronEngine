@@ -4,7 +4,10 @@ namespace IronEngine
 {
 	public class Tile
 	{
-		public Position Position { get; private set; }
+		[NotNull]
+		public TileMap TileMap { get; private init; }
+
+		public Position Position { get; private init; }
 
 		public TileObject? Object { get; private set; }
 
@@ -14,5 +17,7 @@ namespace IronEngine
 		public event Action<Tile, TileObject> OnObjectEnter;
 		public event Action<Tile, TileObject> OnObjectExit;
 		#endregion
+
+		public bool SameTileMap(Tile other) => TileMap == other.TileMap;
 	}
 }
