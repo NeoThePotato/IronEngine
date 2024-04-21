@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using static Game.World.Point2D;
+using static Game.World.Position;
 using Assets;
 using Assets.Templates;
 
@@ -41,7 +41,7 @@ namespace Game.World
 			_tileMap = new char[sizeJ, sizeI];
 		}
 
-		public TileInfo GetTileInfo(Point2D tile)
+		public TileInfo GetTileInfo(Position tile)
 		{
 			return TileInfo.GetTileInfo(TileMap[tile.TileJ, tile.TileI]);
 		}
@@ -51,12 +51,12 @@ namespace Game.World
 			return TileInfo.GetTileInfo(TileMap[tileJ, tileI]);
 		}
 
-		public Point2D GetRandomPoint()
+		public Position GetRandomPoint()
 		{
-			return new Point2D(Random.Shared.Next(0, PointSizeJ), Random.Shared.Next(0, PointSizeI));
+			return new Position(Random.Shared.Next(0, PointSizeJ), Random.Shared.Next(0, PointSizeI));
 		}
 
-		public Point2D GetRandomTile()
+		public Position GetRandomTile()
 		{
 			return Tile(Random.Shared.Next(0, TileSizeJ), Random.Shared.Next(0, TileSizeI));
 		}
@@ -91,10 +91,10 @@ namespace Game.World
 	{
 		public string name;
 		public string filePath;
-		public Point2D entryTile;
-		public Point2D exitTile;
+		public Position entryTile;
+		public Position exitTile;
 
-		public MapMetadata(string name, string filePath, Point2D entryTile, Point2D exitTile)
+		public MapMetadata(string name, string filePath, Position entryTile, Position exitTile)
 		{
 			this.name = name;
 			this.filePath = filePath;

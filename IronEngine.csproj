@@ -1,18 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <UseWindowsForms>True</UseWindowsForms>
-    <UseWPF>True</UseWPF>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Render\**" />
-    <EmbeddedResource Remove="Render\**" />
-    <None Remove="Render\**" />
-  </ItemGroup>
 
 </Project>

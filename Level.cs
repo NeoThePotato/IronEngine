@@ -1,5 +1,6 @@
-﻿using System.Diagnostics;
-using static Game.World.Point2D;
+﻿using IronEngine;
+using System.Diagnostics;
+using static Game.World.Position;
 
 namespace Game.World
 {
@@ -26,7 +27,7 @@ namespace Game.World
 		}
 
 		#region ENTITY_SPAWNING
-		public LevelEntity AddEntity(Entity entity, Point2D pos)
+		public LevelEntity AddEntity(Entity entity, Position pos)
 		{
 			var mapEntity = new LevelEntity(entity, pos);
 			AddEntity(mapEntity);
@@ -51,7 +52,7 @@ namespace Game.World
 
 		public LevelEntity AddEntityAtRandomValidPoint(Entity entity)
 		{
-			Point2D randP;
+			Position randP;
 
 			do
 				randP = Map.GetRandomPoint();
@@ -86,9 +87,9 @@ namespace Game.World
 		private static void MoveEntityToEdgeOfTile(LevelEntity entity, Direction direction)
 		{
 			var projectedPoint = entity.ProjectedNewLocation(direction);
-			var actualJ = Utility.ClampRange(projectedPoint.PointJ, TileToPoint(entity.Pos.TileJ), TileToPoint(entity.Pos.TileJ + 1) - 1);
-			var actualI = Utility.ClampRange(projectedPoint.PointI, TileToPoint(entity.Pos.TileI), TileToPoint(entity.Pos.TileI + 1) - 1);
-			entity.Pos = new Point2D(actualJ, actualI);
+			var actualJ = Math.ClampRange(projectedPoint.X, TileToPoint(entity.Pos.TileJ), TileToPoint(entity.Pos.TileJ + 1) - 1);
+			var actualI = Math.ClampRange(projectedPoint.Y, TileToPoint(entity.Pos.TileI), TileToPoint(entity.Pos.TileI + 1) - 1);
+			entity.Pos = new Position(actualJ, actualI);
 		}
 		#endregion
 
@@ -98,7 +99,7 @@ namespace Game.World
 			return CanEntityMoveTo(entity, entity.Pos, targetDir, out occupiedBy);
 		}
 		
-		public bool CanEntityMoveTo(LevelEntity entity, Point2D startingPoint, Direction targetDir, out List<LevelEntity> occupiedBy)
+		public bool CanEntityMoveTo(LevelEntity entity, Position startingPoint, Direction targetDir, out List<LevelEntity> occupiedBy)
 		{
 			_entitiesList.Clear();
 			occupiedBy = _entitiesList;
@@ -128,7 +129,7 @@ namespace Game.World
 		/// <param name="targetPos">Target point to check if entity can move to.</param>
 		/// <param name="occupiedBy">Returns entity standing in the way, null if there isn't any.</param>
 		/// <returns>true</returns>
-		public bool CanEntityMoveTo(LevelEntity entity, Point2D targetPos, out List<LevelEntity> occupiedBy)
+		public bool CanEntityMoveTo(LevelEntity entity, Position targetPos, out List<LevelEntity> occupiedBy)
 		{
 			Debug.Assert(entity.Moveable);
 			var stepsCounter = 0;
@@ -156,36 +157,36 @@ namespace Game.World
 			return true;
 		}
 
-		private bool TileTraversable(Point2D pos)
+		private bool TileTraversable(Position pos)
 		{
 			return !(PointOutOfBounds(pos) || TileImpassable(pos));
 		}
 
-		private bool PointOutOfBounds(Point2D pos)
+		private bool PointOutOfBounds(Position pos)
 		{
-			return pos.PointJ >= TileToPoint(Map.TileSizeJ) || pos.PointJ < 0 || pos.PointI >= TileToPoint(Map.TileSizeI) || pos.PointI < 0;
+			return pos.X >= TileToPoint(Map.TileSizeJ) || pos.X < 0 || pos.Y >= TileToPoint(Map.TileSizeI) || pos.Y < 0;
 		}
 
-		private bool TileImpassable(Point2D pos)
+		private bool TileImpassable(Position pos)
 		{
 			return !Map.GetTileInfo(pos).passable;
 		}
 
-		private bool TileOccupied(Point2D pos)
+		private bool TileOccupied(Position pos)
 		{
 			var occupiedBy = GetEntitiesAt(pos);
 
 			return occupiedBy.Any();
 		}
 
-		private bool TileOccupied(Point2D pos, LevelEntity exceptFor)
+		private bool TileOccupied(Position pos, LevelEntity exceptFor)
 		{
 			var occupiedBy = GetEntitiesAt(pos, exceptFor);
 
 			return occupiedBy.Any();
 		}
 
-		public List<LevelEntity> GetEntitiesAt(Point2D pos)
+		public List<LevelEntity> GetEntitiesAt(Position pos)
 		{
 			_entitiesList.Clear();
 
@@ -198,7 +199,7 @@ namespace Game.World
 			return _entitiesList;
 		}
 
-		private List<LevelEntity> GetEntitiesAt(Point2D pos, LevelEntity exceptFor)
+		private List<LevelEntity> GetEntitiesAt(Position pos, LevelEntity exceptFor)
 		{
 			_entitiesList = GetEntitiesAt(pos);
 			_entitiesList.Remove(exceptFor);

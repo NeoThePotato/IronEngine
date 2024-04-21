@@ -1,6 +1,4 @@
-﻿using static Game.World.Point2D;
-
-namespace Game.World
+﻿namespace IronEngine
 {
 	struct Direction
 	{
@@ -19,12 +17,12 @@ namespace Game.World
 			new Direction(0, 0)
 		};
 
-		public Point2D Dir
+		public Position Dir
 		{ get; set; }
 		public readonly int Mag
-		{ get => Utility.Magnitude((Dir.PointJ, Dir.PointI)); }
+		{ get => Math.Magnitude((Dir.X, Dir.Y)); }
 
-		public Direction(Point2D p)
+		public Direction(Position p)
 		{
 			Dir = p;
 		}
@@ -34,25 +32,25 @@ namespace Game.World
 			Dir = dir.Dir;
 		}
 
-		public Direction(Point2D source, Point2D target)
+		public Direction(Position source, Position target)
 		{
 			Dir = target - source;
 		}
 
 		public Direction((int, int) vector)
 		{
-			Dir = new Point2D(vector);
+			Dir = new Position(vector);
 		}
 
 		public Direction(int vecJ, int vecI)
 		{
-			Dir = new Point2D((vecJ, vecI));
+			Dir = new Position((vecJ, vecI));
 		}
 
-		public static Point2D operator +(Point2D p, Direction dir)
+		public static Position operator +(Position p, Direction dir)
 			=> p + dir.Dir;
 
-		public static Point2D operator -(Point2D p, Direction dir)
+		public static Position operator -(Position p, Direction dir)
 			=> p - dir.Dir;
 
 		public static Direction operator *(Direction dir, int mag)
@@ -73,7 +71,7 @@ namespace Game.World
 
 		public static Direction ClampMagnitude(Direction dir, int mag)
 		{
-			return new(Utility.ClampVectorMagnitude((dir.Dir.PointJ, dir.Dir.PointI), mag));
+			return new(Math.ClampVectorMagnitude((dir.Dir.X, dir.Dir.Y), mag));
 		}
 
 		public static Direction TranslateDirection(Directions dir)

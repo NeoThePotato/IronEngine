@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using static Game.World.Direction;
-using static Game.World.Point2D;
+using static Game.World.Position;
 using Game.Combat;
 
 namespace Game.World
@@ -9,11 +9,11 @@ namespace Game.World
 	{
 		private Direction _direction;
 		private LevelEntity? _target;
-		private Point2D _targetPos;
+		private Position _targetPos;
 
 		public Entity Entity
 		{ get; set; }
-		public Point2D Pos
+		public Position Pos
 		{ get; set; }
 		public Direction Dir
 		{
@@ -24,7 +24,7 @@ namespace Game.World
 		{ get => EncounterType == EncounterManager.EncounterType.Combat ? ((Unit)Entity).Stats.MovementSpeed : 0; }
 		public int DetectionRange
 		{ get => EncounterType == EncounterManager.EncounterType.Combat ? ((Unit)Entity).Stats.DetectionRange : 0; }
-		public Point2D TargetPos
+		public Position TargetPos
 		{ get => IsTargeting ? _targetPos : Pos; set => _targetPos = value; }
 		public LevelEntity? Target
 		{
@@ -46,14 +46,14 @@ namespace Game.World
 		public EncounterManager.EncounterType EncounterType
 		{ get => Entity.EncounterType; }
 
-		public LevelEntity(Entity entity, Point2D pos)
+		public LevelEntity(Entity entity, Position pos)
 		{
 			Entity = entity;
 			Pos = pos;
 			Dir = TranslateDirection(Directions.None);
 		}
 
-		public LevelEntity(Entity entity, Point2D pos, Direction dir)
+		public LevelEntity(Entity entity, Position pos, Direction dir)
 		{
 			Entity = entity;
 			Pos = pos;
@@ -63,7 +63,7 @@ namespace Game.World
 		public LevelEntity(Entity entity)
 		{
 			Entity = entity;
-			Pos = new Point2D();
+			Pos = new Position();
 			Dir = TranslateDirection(Directions.None);
 		}
 
@@ -103,12 +103,12 @@ namespace Game.World
 			Pos = ProjectedNewLocation(dir);
 		}
 
-		public Point2D ProjectedNewLocation(Direction dir)
+		public Position ProjectedNewLocation(Direction dir)
 		{
 			return ProjectedNewLocation(Pos, dir);
 		}
 
-		public Point2D ProjectedNewLocation(Point2D pos, Direction dir)
+		public Position ProjectedNewLocation(Position pos, Direction dir)
 		{
 			return pos + EffectiveMovement(dir);
 		}
