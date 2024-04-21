@@ -5,11 +5,11 @@ namespace IronEngine
 	public class Tile : IPositionable
 	{
 		[NotNull]
-		public TileMap TileMap { get; private init; }
+		public TileMap TileMap { get; internal init; }
 
-		public Position Position { get; private init; }
+		public Position Position { get; internal init; }
 
-		public TileObject? Object { get; private set; }
+		public TileObject? Object { get; internal set; }
 
 		public bool HasObject => Object != null;
 
