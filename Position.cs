@@ -17,6 +17,12 @@
 			y = other.y;
 		}
 
+		public readonly void Deconstruct(out int x, out int y)
+		{
+			x = this.x;
+			y = this.y;
+		}
+
 		#region OPERATORS
 		public static Position operator +(Position p) => p;
 									   
