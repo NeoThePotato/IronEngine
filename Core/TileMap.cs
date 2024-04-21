@@ -17,6 +17,17 @@ namespace IronEngine
 			_tileMap = new Tile[sizeJ, sizeI];
 		}
 
+		public Tile this[int posX, int posY]
+		{
+			get => this[new(posX, posY)];
+		}
+
+		public Tile this[Position position]
+		{
+			get => _tileMap[position.y, position.x];
+			internal set => _tileMap[position.y, position.x] = value;
+		}
+
 		public IEnumerator<Tile> GetEnumerator() => (IEnumerator<Tile>)_tileMap.GetEnumerator();
 
 		IEnumerator IEnumerable.GetEnumerator() => _tileMap.GetEnumerator();
