@@ -1,9 +1,11 @@
 ﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace IronEngine
 {
 	public sealed class TileMap : IEnumerable<Tile>
 	{
+		[NotNull]
 		private Tile[,] _tileMap;
 
 		public int SizeX => _tileMap.GetLength(0);
@@ -15,13 +17,12 @@ namespace IronEngine
 			_tileMap = new Tile[sizeJ, sizeI];
 		}
 
-		public bool WithinBounds(Position position)
-		{
-			return position.x >= 0 && position.x < SizeX && position.y >= 0 && position.y < SizeY;
-		}
-
 		public IEnumerator<Tile> GetEnumerator() => (IEnumerator<Tile>)_tileMap.GetEnumerator();
 
 		IEnumerator IEnumerable.GetEnumerator() => _tileMap.GetEnumerator();
+
+		public IEnumerable<TileObject> GetTileObjects() => this.Where(t => t.HasObject).Select(t => t.Object);
+
+		public bool WithinBounds(Position position) => position.x >= 0 && position.x < SizeX && position.y >= 0 && position.y < SizeY;
 	}
 }
