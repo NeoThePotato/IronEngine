@@ -39,6 +39,11 @@ namespace IronEngine
 
 		public void Move(Tile to)
 		{
+			if (!CurrentTile.SameTileMap(to))
+			{
+				Debug.WriteLine($"{to} is not on the same TileMap as {this}.");
+				return;
+			}
 			throw new NotImplementedException(); // TODO Think hard about how to implement it
 			OnObjectMoved?.Invoke(this, to.Position);
 		}
