@@ -1,9 +1,9 @@
 ﻿namespace IronEngine
 {
-	public struct Position : IEquatable<Position>
+	public readonly struct Position : IEquatable<Position>
 	{
-		public int x;
-		public int y;
+		public readonly int x;
+		public readonly int y;
 
 		public Position(int x, int y)
 		{

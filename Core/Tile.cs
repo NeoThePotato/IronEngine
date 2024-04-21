@@ -2,7 +2,7 @@
 
 namespace IronEngine
 {
-	public class Tile
+	public class Tile : IPositionable
 	{
 		[NotNull]
 		public TileMap TileMap { get; private init; }

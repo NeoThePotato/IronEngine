@@ -1,6 +1,6 @@
 ﻿namespace IronEngine
 {
-	public abstract class TileObject
+	public class TileObject : IPositionable
 	{
 		public Tile CurrentTile { get; private set; }
 
