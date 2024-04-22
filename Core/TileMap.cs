@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace IronEngine
 {
-	public sealed class TileMap : IEnumerable<Tile>
+	public class TileMap : IEnumerable<Tile>
 	{
 		[NotNull]
 		private Tile[,] _tileMap;
@@ -12,14 +12,14 @@ namespace IronEngine
 
 		public int SizeY => _tileMap.GetLength(1);
 
-		public TileMap(int sizeJ, int sizeI)
+		public TileMap(int sizeX, int sizeY)
 		{
-			_tileMap = new Tile[sizeJ, sizeI];
+			_tileMap = new Tile[sizeY, sizeX];
 		}
 
 		public Tile this[int posX, int posY]
 		{
-			get => this[new(posX, posY)];
+			get => this[new(posY, posX)];
 		}
 
 		public Tile this[Position position]
