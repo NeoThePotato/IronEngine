@@ -21,14 +21,13 @@ namespace IronEngine
 		public event Action<TileObject, Position>? OnObjectMoved;
 		#endregion
 
-		public object Clone() => Clone<TileObject>();
+		public object Clone() => CloneDeep();
 
-		public virtual T Clone<T>()
+		public virtual TileObject CloneDeep()
 		{
-			T newObject = (T)Activator.CreateInstance(GetType());
-			foreach (var originalProp in GetType().GetProperties())
-				originalProp.SetValue(newObject, originalProp.GetValue(this));
-			return newObject;
+			var clone = Utilities.CloneShallow(this);
+			clone._currentTile = null;
+			return clone;
 		}
 
 		public void Move(Tile to)
