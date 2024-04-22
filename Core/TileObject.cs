@@ -1,40 +1,34 @@
 ﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace IronEngine
 {
-	public class TileObject : ICloneable, IMoveable<TileObject>, IPositionable
+	public abstract class TileObject : ICloneable, IMoveable<TileObject>, IPositionable
 	{
-		[DisallowNull]
-		public Tile CurrentTile { get; private set; }
+		private Tile _currentTile;
 
-		public TileMap TileMap => CurrentTile.TileMap;
+		public Tile CurrentTile { get => _currentTile; protected set => Move(value); }
+
+		public TileMap? TileMap => CurrentTile?.TileMap;
 
 		public Position Position => CurrentTile.Position;
+
+		protected TileObject(Tile tile)
+		{
+			CurrentTile = tile;
+		}
 
 		#region EVENTS
 		public event Action<TileObject, Position>? OnObjectMoved;
 		#endregion
 
-		private TileObject([DisallowNull] Tile tile)
-		{
-			CurrentTile = tile;
-			tile.Object = this;
-		}
+		public object Clone() => Clone<TileObject>();
 
-		public static TileObject Create([DisallowNull] Tile tile, bool overrideTile)
+		public virtual T Clone<T>()
 		{
-			if (!overrideTile && tile.HasObject)
-			{
-				Debug.WriteLine($"{tile} already contains object {tile.Object}.");
-				return null;
-			}
-			return new TileObject(tile);
-		}
-
-		public object Clone()
-		{
-			return Create(CurrentTile, true);
+			T newObject = (T)Activator.CreateInstance(GetType());
+			foreach (var originalProp in GetType().GetProperties())
+				originalProp.SetValue(newObject, originalProp.GetValue(this));
+			return newObject;
 		}
 
 		public void Move(Tile to)
@@ -48,6 +42,19 @@ namespace IronEngine
 			OnObjectMoved?.Invoke(this, to.Position);
 		}
 
-		public void Move(Position to) => Move(TileMap[to]);
+		public void Move(Position to)
+		{
+			if (TileMap == null)
+			{
+				Debug.WriteLine($"{this} is not on a TileMap.");
+				return;
+			}
+			if (!TileMap.WithinBounds(to))
+			{
+				Debug.WriteLine($"{to} is not within the bounds of TileMap.");
+				return;
+			}
+			Move(TileMap[to]);
+		}
 	}
 }
