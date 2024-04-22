@@ -18,6 +18,6 @@ namespace IronEngine
 		public event Action<Tile, TileObject> OnObjectExit;
 		#endregion
 
-		public bool SameTileMap(Tile other) => TileMap == other.TileMap;
+		public bool SameTileMap(Tile other) => TileMap != null && TileMap == other.TileMap;
 	}
 }
