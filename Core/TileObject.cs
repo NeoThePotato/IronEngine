@@ -2,11 +2,13 @@
 
 namespace IronEngine
 {
-	public abstract class TileObject : ICloneable, IMoveable<TileObject>, IPositionable
+	public abstract class TileObject : ICloneable, IMoveable<TileObject>, IHasActor, IPositionable
 	{
 		private Tile _currentTile;
 
 		public Tile CurrentTile { get => _currentTile; protected set => Move(value); }
+
+		public Actor? Actor { get; protected set; }
 
 		public TileMap? TileMap => CurrentTile?.TileMap;
 

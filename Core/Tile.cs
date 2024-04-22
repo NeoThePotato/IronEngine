@@ -2,7 +2,7 @@
 
 namespace IronEngine
 {
-	public class Tile : IPositionable
+	public class Tile : IPositionable, IHasActor
 	{
 		[NotNull]
 		public TileMap TileMap { get; internal init; }
@@ -12,6 +12,8 @@ namespace IronEngine
 		public TileObject? Object { get; internal set; }
 
 		public bool HasObject => Object != null;
+
+		public Actor? Actor { get; internal set; }
 
 		#region EVENTS
 		public event Action<Tile, TileObject> OnObjectEnter;
