@@ -73,4 +73,9 @@
 		public override readonly string ToString() => $"(X: {x}, Y: {y})";
 		#endregion
 	}
+	
+	internal interface IPositionable
+	{
+		Position Position { get; }
+	}
 }
