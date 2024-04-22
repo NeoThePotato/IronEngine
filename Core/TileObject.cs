@@ -10,7 +10,7 @@ namespace IronEngine
 
 		public TileMap? TileMap => CurrentTile?.TileMap;
 
-		public Position Position => CurrentTile.Position;
+		public Position Position => TileMap != null ? CurrentTile.Position : Position.OutOfBounds;
 
 		protected TileObject(Tile tile)
 		{

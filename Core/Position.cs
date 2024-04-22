@@ -23,6 +23,10 @@
 			y = this.y;
 		}
 
+		public static Position Origin => new(0, 0);
+
+		public static Position OutOfBounds => new(-1, -1);
+
 		#region OPERATORS
 		public static Position operator +(Position p) => p;
 									   
