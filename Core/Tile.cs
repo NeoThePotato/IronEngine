@@ -4,12 +4,23 @@ namespace IronEngine
 {
 	public class Tile : ICloneable, IPositionable, IActionable, IDestroyable
 	{
+		private TileObject? _tileObject;
+
 		[NotNull]
 		public TileMap TileMap { get; internal set; }
 
 		public Position Position { get; internal set; }
 
-		public TileObject? Object { get; internal set; }
+		public TileObject? Object
+		{
+			get => _tileObject;
+			internal set
+			{
+				if (HasObject)
+					Object!.Destroy();
+				_tileObject = value;
+			}
+		}
 
 		public bool HasObject => Object != null;
 
