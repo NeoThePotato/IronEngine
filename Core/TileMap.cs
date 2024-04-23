@@ -20,6 +20,7 @@ namespace IronEngine
 		public Tile this[int posX, int posY]
 		{
 			get => this[new(posX, posY)];
+			set => this[new(posX, posY)] = value;
 		}
 
 		public Tile this[Position position]
