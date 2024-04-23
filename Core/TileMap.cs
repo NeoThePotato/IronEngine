@@ -12,9 +12,15 @@ namespace IronEngine
 
 		public int SizeY => _tileMap.GetLength(1);
 
-		public TileMap(int sizeX, int sizeY)
+		public TileMap(int sizeX, int sizeY, Tile? fillWith = null)
 		{
 			_tileMap = new Tile[sizeY, sizeX];
+			fillWith ??= new Tile();
+			for (int y = 0; y < SizeY; y++)
+			{
+				for (int x = 0; x < SizeX; x++)
+					this[x, y] = fillWith!;
+			}
 		}
 
 		public Tile this[int posX, int posY]
@@ -39,8 +45,8 @@ namespace IronEngine
 					if (_tileMap[position.y, position.x] != null)
 						_tileMap[position.y, position.x].Destroy();
 					_tileMap[position.y, position.x] = value;
+				}
 			}
-		}
 		}
 
 		public IEnumerator<Tile> GetEnumerator() => (IEnumerator<Tile>)_tileMap.GetEnumerator();
