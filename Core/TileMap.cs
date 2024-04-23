@@ -35,8 +35,12 @@ namespace IronEngine
 			internal set
 			{
 				if (WithinBounds(position))
+				{
+					if (_tileMap[position.y, position.x] != null)
+						_tileMap[position.y, position.x].Destroy();
 					_tileMap[position.y, position.x] = value;
 			}
+		}
 		}
 
 		public IEnumerator<Tile> GetEnumerator() => (IEnumerator<Tile>)_tileMap.GetEnumerator();
