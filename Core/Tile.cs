@@ -2,7 +2,7 @@
 
 namespace IronEngine
 {
-	public class Tile : ICloneable, IPositionable, IHasActor
+	public class Tile : ICloneable, IPositionable, IActionable, IDestroyable
 	{
 		[NotNull]
 		public TileMap TileMap { get; internal set; }
@@ -31,6 +31,15 @@ namespace IronEngine
 			return clone;
 		}
 
+		public void Destroy()
+		{
+			Object?.Destroy();
+			if (TileMap != null)
+				TileMap[Position] = null;
+		}
+
 		public bool SameTileMap(Tile other) => TileMap != null && TileMap == other.TileMap;
+
+		public virtual IEnumerable<Func<bool>>? GetAvailableActions() => null;
 	}
 }

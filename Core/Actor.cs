@@ -5,10 +5,12 @@
 
 	}
 
-	public interface IHasActor
+	public interface IActionable
 	{
 		Actor? Actor { get; }
 
 		bool HasActor => Actor != null;
+
+		IEnumerable<Func<bool>>? GetAvailableActions();
 	}
 }
