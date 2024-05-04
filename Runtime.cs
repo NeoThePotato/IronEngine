@@ -36,6 +36,7 @@ namespace IronEngine
 			_instance = this;
 			_actors = CreateActors().ToList();
 			TileMap = CreateTileMap();
+			_turnCounter = new(_actors);
 		}
 
 		public void Run()
@@ -46,8 +47,7 @@ namespace IronEngine
 
 		private void PlayerLoop()
 		{
-			TurnEnumerator turnEnumerator = new(_actors);
-			while (turnEnumerator.MoveNext() && !ExitCondition)
+			while (_turnCounter.MoveNext() && !ExitCondition)
 			{
 				// TODO Turn loop
 			}
