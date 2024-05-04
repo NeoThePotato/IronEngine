@@ -2,9 +2,10 @@
 
 namespace IronEngine
 {
-	public class Tile : ICloneable, IPositionable, IActionable, IDestroyable
+	public class Tile : ICloneable, IPositionable, IHasActor, IDestroyable
 	{
 		private TileObject? _tileObject;
+		private Actor? _actor;
 
 		[NotNull]
 		public TileMap TileMap { get; internal set; }
@@ -24,7 +25,17 @@ namespace IronEngine
 
 		public bool HasObject => Object != null;
 
-		public Actor? Actor { get; internal set; }
+		public Actor? Actor
+		{
+			get => _actor;
+
+			set
+			{
+				Actor?.RemoveChild(this);
+				_actor = value;
+				Actor?.AddChild(this);
+			}
+		}
 
 		#region EVENTS
 		public event Action<Tile, TileObject> OnObjectEnter;
@@ -45,12 +56,11 @@ namespace IronEngine
 		public void Destroy()
 		{
 			Object?.Destroy();
+			Actor?.RemoveChild(this);
 			if (TileMap != null)
 				TileMap[Position] = null;
 		}
 
 		public bool SameTileMap(Tile other) => TileMap != null && TileMap == other.TileMap;
-
-		public virtual IEnumerable<Func<bool>>? GetAvailableActions() => null;
 	}
 }

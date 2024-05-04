@@ -2,13 +2,24 @@
 
 namespace IronEngine
 {
-	public abstract class TileObject : ICloneable, IMoveable<TileObject>, IActionable, IPositionable, IDestroyable
+	public abstract class TileObject : ICloneable, IMoveable<TileObject>, IHasActor, IPositionable, IDestroyable
 	{
 		private Tile _currentTile;
+		private Actor? _actor;
 
 		public Tile Tile { get => _currentTile; protected set => Move(value); }
 
-		public Actor? Actor { get; protected set; }
+		public Actor? Actor
+		{
+			get => _actor;
+
+			set
+			{
+				Actor?.RemoveChild(this);
+				_actor = value;
+				Actor?.AddChild(this);
+			}
+		}
 
 		public TileMap? TileMap => Tile?.TileMap;
 
@@ -35,6 +46,7 @@ namespace IronEngine
 
 		public void Destroy()
 		{
+			Actor?.RemoveChild(this);
 			if (Tile != null)
 				Tile.Object = null;
 		}
@@ -64,7 +76,5 @@ namespace IronEngine
 			}
 			Move(TileMap[to]);
 		}
-
-		public abstract IEnumerable<Func<bool>>? GetAvailableActions();
 	}
 }
