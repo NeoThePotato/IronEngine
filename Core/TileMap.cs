@@ -56,5 +56,11 @@ namespace IronEngine
 		public IEnumerable<TileObject> GetTileObjects() => this.Where(t => t.HasObject).Select(t => t.Object);
 
 		public bool WithinBounds(Position position) => position.x >= 0 && position.x < SizeX && position.y >= 0 && position.y < SizeY;
+
+		internal void Destroy()
+		{
+			foreach (var tile in this.Where(t => t != null))
+				tile.Destroy();
+		}
 	}
 }

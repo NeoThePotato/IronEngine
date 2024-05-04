@@ -2,7 +2,7 @@
 
 namespace IronEngine
 {
-	public class Actor : IEnumerable<IHasActor>
+	public class Actor : IEnumerable<IHasActor>, IDestroyable
 	{
 		internal HashSet<IHasActor> _myObjects;
 		internal HashSet<IActionable> _myActionables;
@@ -24,6 +24,23 @@ namespace IronEngine
 		public IEnumerator<IHasActor> GetEnumerator() => (_myObjects as IEnumerable<IHasActor>).GetEnumerator();
 
 		IEnumerator IEnumerable.GetEnumerator() => (_myObjects as IEnumerable).GetEnumerator();
+
+		public void Destroy()
+		{
+			_myObjects = null;
+			_myActionables = null;
+			Runtime.Instance?.RemoveActor(this);
+		}
+
+		public void DestroyWithChildren()
+		{
+			foreach (IHasActor child in _myObjects)
+			{
+				if (child is IDestroyable destroyable)
+					destroyable.Destroy();
+			}
+			Destroy();
+		}
 	}
 
 	public interface IHasActor
