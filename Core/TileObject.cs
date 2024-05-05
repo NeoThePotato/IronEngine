@@ -15,9 +15,12 @@ namespace IronEngine
 
 			set
 			{
-				Actor?.RemoveChild(this);
-				_actor = value;
-				Actor?.AddChild(this);
+				if (_actor != value)
+				{
+					Actor?.RemoveChild(this);
+					_actor = value;
+					Actor?.AddChild(this);
+				}
 			}
 		}
 
