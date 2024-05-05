@@ -10,6 +10,8 @@ namespace IronEngine
 		[NotNull]
 		public TileMap TileMap { get; internal set; }
 
+		public Tile CurrentTile => this;
+
 		public Position Position { get; internal set; }
 
 		public TileObject? Object

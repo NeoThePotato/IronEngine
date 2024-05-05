@@ -1,13 +1,13 @@
-﻿using System.Diagnostics;
+﻿using MovementStrategy = System.Func<IronEngine.IMoveable, IronEngine.Tile, System.Collections.Generic.IEnumerable<IronEngine.Tile>>;
 
 namespace IronEngine
 {
-	public abstract class TileObject : ICloneable, IMoveable<TileObject>, IHasActor, IPositionable, IDestroyable
+	public abstract class TileObject : ICloneable, IHasActor, IMoveable, IDestroyable
 	{
 		private Tile _currentTile;
 		private Actor? _actor;
 
-		public Tile Tile { get => _currentTile; protected set => Move(value); }
+		public Tile CurrentTile { get => _currentTile; set => this.Move(value); }
 
 		public Actor? Actor
 		{
@@ -24,18 +24,30 @@ namespace IronEngine
 			}
 		}
 
-		public TileMap? TileMap => Tile?.TileMap;
+		public TileMap? TileMap => CurrentTile?.TileMap;
 
-		public Position Position => TileMap != null ? Tile.Position : Position.OutOfBounds;
+		public Position Position { get => TileMap != null ? CurrentTile.Position : Position.OutOfBounds; set => Move(value); }
 
 		protected TileObject(Tile tile, Actor? actor = null)
 		{
-			Tile = tile;
+			CurrentTile = tile;
 			Actor = actor;
 		}
 
 		#region EVENTS
-		public event Action<TileObject, Position>? OnObjectMoved;
+		public event Action<IMoveable, Position>? OnObjectMoved;
+		#endregion
+
+		#region MOVEMENT
+		public virtual MovementStrategy DefaultMovementStrategy => (this as IMoveable).DefaultMovementStrategy;
+
+		public void Move(Tile to, MovementStrategy strategy) => (this as IMoveable).Move(to, strategy);
+
+		public void Move(Tile to) => (this as IMoveable).Move(to);
+
+		public void Move(Position to, MovementStrategy strategy) => (this as IMoveable).Move(to, strategy);
+
+		public void Move(Position to) => (this as IMoveable).Move(to);
 		#endregion
 
 		public object Clone() => CloneDeep();
@@ -50,34 +62,8 @@ namespace IronEngine
 		public void Destroy()
 		{
 			Actor?.RemoveChild(this);
-			if (Tile != null)
-				Tile.Object = null;
-		}
-
-		public void Move(Tile to)
-		{
-			if (!Tile.SameTileMap(to))
-			{
-				Debug.WriteLine($"{to} is not on the same TileMap as {this}.");
-				return;
-			}
-			throw new NotImplementedException(); // TODO Think hard about how to implement it
-			OnObjectMoved?.Invoke(this, to.Position);
-		}
-
-		public void Move(Position to)
-		{
-			if (TileMap == null)
-			{
-				Debug.WriteLine($"{this} is not on a TileMap.");
-				return;
-			}
-			if (!TileMap.WithinBounds(to))
-			{
-				Debug.WriteLine($"{to} is not within the bounds of TileMap.");
-				return;
-			}
-			Move(TileMap[to]);
+			if (CurrentTile != null)
+				CurrentTile.Object = null;
 		}
 	}
 }

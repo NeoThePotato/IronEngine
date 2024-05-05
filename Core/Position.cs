@@ -1,4 +1,6 @@
-﻿namespace IronEngine
+﻿using System.Diagnostics;
+
+namespace IronEngine
 {
 	public readonly struct Position : IEquatable<Position>
 	{
@@ -74,8 +76,35 @@
 		#endregion
 	}
 	
-	internal interface IPositionable
+	public interface IPositionable
 	{
+		TileMap TileMap { get; }
+
+		Tile CurrentTile { get; }
+
 		Position Position { get; }
+
+		#region VALIDTY_CHECKS
+		public bool CheckHasTileMap()
+		{
+			bool hasTileMap = TileMap != null;
+			Debug.WriteLineIf(!hasTileMap, $"{this} is not on a TileMap.");
+			return hasTileMap;
+		}
+
+		public bool CheckWithinTileMap(Position position)
+		{
+			bool withinTileMap = TileMap.WithinBounds(position);
+			Debug.WriteLineIf(!withinTileMap, $"{position} is not within the bounds of TileMap.");
+			return withinTileMap;
+		}
+
+		public bool CheckSameTileMap(Tile tile)
+		{
+			bool sameTileMap = CurrentTile.SameTileMap(tile);
+			Debug.WriteLineIf(!sameTileMap, $"{tile} is not on the same TileMap as {this}.");
+			return sameTileMap;
+		}
+		#endregion
 	}
 }
