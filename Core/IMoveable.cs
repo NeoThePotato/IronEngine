@@ -14,8 +14,6 @@ namespace IronEngine
 		sealed void Move(Position to, MovementStrategy strategy) => MoveInternal(this, to, strategy);
 
 		sealed void Move(Position to) => Move(to, DefaultMovementStrategy);
-
-		event Action<IMoveable, Position> OnObjectMoved;
 		#endregion
 
 		#region MOVEMENT_STRATEGIES
