@@ -52,6 +52,20 @@ namespace IronEngine
 
 	public interface IActionable : IHasActor
 	{
-		IEnumerable<Func<bool>>? GetAvailableActions();
+		IEnumerable<Action> GetAvailableActions();
+
+		public struct Action
+		{
+			public string description;
+			public Func<bool> action;
+
+			public Action(string description, Func<bool> action)
+			{
+				this.description = description;
+				this.action = action;
+			}
+
+			internal bool Invoke() => action();
+		}
 	}
 }
