@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using MovementStrategy = System.Func<IronEngine.IMoveable, IronEngine.Tile, System.Collections.Generic.IEnumerable<IronEngine.Tile>>;
+﻿using MovementStrategy = System.Func<IronEngine.IMoveable, IronEngine.Tile, System.Collections.Generic.IEnumerable<IronEngine.Tile>>;
 
 namespace IronEngine
 {
@@ -20,9 +19,31 @@ namespace IronEngine
 		#endregion
 
 		#region MOVEMENT_STRATEGIES
+		/// <summary>
+		/// Teleports the moveable to the target tile.
+		/// </summary>
 		public static IEnumerable<Tile> Teleport(IMoveable moveable, Tile to)
 		{
 			yield return to;
+		}
+
+		/// <summary>
+		/// Moves the moveable to the target tile across the tilemap, taking the shortest direct path.
+		/// </summary>
+		public static IEnumerable<Tile> ShortestDirect(IMoveable moveable, Tile to)
+		{
+			if (!moveable.CheckSameTileMap(to)) yield break;
+			Position current = moveable.Position;
+			Position destination = to.Position;
+			if (current == destination) yield break;
+			do
+			{
+				current += new Position(
+					x: Math.ClampRange(destination.x - current.x, -1, 1),
+					y: Math.ClampRange(destination.y - current.y, -1, 1)
+				);
+			}
+			while (current != destination);
 		}
 		#endregion
 
