@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using static System.Math;
 
 namespace IronEngine
 {
@@ -48,11 +49,11 @@ namespace IronEngine
 		#endregion
 
 		#region MAGNITUDE
-		private readonly double MagnitudeEuclidean => Math.Sqrt(x * x + y * y);
+		private readonly double MagnitudeEuclidean => Sqrt(x * x + y * y);
 
-		private readonly int MagnitudeChebyshev => Math.Abs(Math.Max(x, y));
+		private readonly int MagnitudeChebyshev => Abs(Max(x, y));
 
-		private readonly int MagnitudeTaxicab => Math.Abs(x) + Math.Abs(y);
+		private readonly int MagnitudeTaxicab => Abs(x) + Abs(y);
 		#endregion
 
 		#region DISTANCE
