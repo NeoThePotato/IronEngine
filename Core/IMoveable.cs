@@ -56,7 +56,27 @@ namespace IronEngine
 
 		internal void MoveInternal(IMoveable moveable, Tile to, MovementStrategy movementStrategy)
 		{
-			// TODO Implement
+			IEnumerable<Tile> path = movementStrategy.Invoke(moveable, to);
+			if (!path.Any()) return;
+			Tile previous = moveable.CurrentTile;
+			foreach (Tile current in path)
+			{
+				TeleportInternal(moveable, to);
+				previous.OnObjectExitInternal(moveable);
+				current.OnObjectEnterInternal(moveable);
+				if (current != to)
+					current.OnObjectPassInternal(moveable);
+				previous = current;
+			}
+		}
+
+		internal void TeleportInternal(IMoveable moveable, Tile to)
+		{
+			if (moveable is TileObject tileObject && !to.HasObject)
+			{
+				moveable.CurrentTile.Object = null;
+				to.Object = tileObject;
+			}
 		}
 		#endregion
 	}

@@ -1,4 +1,5 @@
-﻿using MovementStrategy = System.Func<IronEngine.IMoveable, IronEngine.Tile, System.Collections.Generic.IEnumerable<IronEngine.Tile>>;
+﻿using System.Runtime.InteropServices.JavaScript;
+using MovementStrategy = System.Func<IronEngine.IMoveable, IronEngine.Tile, System.Collections.Generic.IEnumerable<IronEngine.Tile>>;
 
 namespace IronEngine
 {
@@ -34,8 +35,12 @@ namespace IronEngine
 			Actor = actor;
 		}
 
-		#region EVENTS
-		public event Action<IMoveable, Position>? OnObjectMoved;
+		#region CALLBACKS
+		public virtual void OnObjectEnter(TileObject other) { }
+
+		public virtual void OnObjectPass(TileObject other) { }
+
+		public virtual void OnObjectExit(TileObject other) { }
 		#endregion
 
 		#region MOVEMENT

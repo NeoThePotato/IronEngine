@@ -39,9 +39,42 @@ namespace IronEngine
 			}
 		}
 
-		#region EVENTS
-		public event Action<Tile, TileObject> OnObjectEnter;
-		public event Action<Tile, TileObject> OnObjectExit;
+		#region CALLBACKS
+		internal void OnObjectEnterInternal(IMoveable other)
+		{
+			if (other is TileObject tileObject)
+			{
+				OnObjectEnter(tileObject);
+				if (HasObject)
+					Object!.OnObjectEnter(tileObject);
+			}
+		}
+
+		internal void OnObjectPassInternal(IMoveable other)
+		{
+			if (other is TileObject tileObject)
+			{
+				OnObjectPass(tileObject);
+				if (HasObject)
+					Object!.OnObjectPass(tileObject);
+			}
+		}
+
+		internal void OnObjectExitInternal(IMoveable other)
+		{
+			if (other is TileObject tileObject)
+			{
+				OnObjectExit(tileObject);
+				if (HasObject)
+					Object!.OnObjectExit(tileObject);
+			}
+		}
+
+		public virtual void OnObjectEnter(TileObject other) { }
+
+		public virtual void OnObjectPass(TileObject other) { }
+
+		public virtual void OnObjectExit(TileObject other) { }
 		#endregion
 
 		public object Clone() => CloneDeep();
