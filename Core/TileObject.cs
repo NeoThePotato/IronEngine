@@ -1,14 +1,13 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using MovementStrategy = System.Func<IronEngine.IMoveable, IronEngine.Tile, System.Collections.Generic.IEnumerable<IronEngine.Tile>>;
-
-namespace IronEngine
+﻿namespace IronEngine
 {
+	using MovementStrategy = Func<IMoveable, Tile, IEnumerable<Tile>>;
+
 	public abstract class TileObject : ICloneable, IHasActor, IMoveable, IDestroyable
 	{
 		private Tile _currentTile;
 		private Actor? _actor;
 
-		public Tile CurrentTile { get => _currentTile; set => this.Move(value); }
+		public Tile CurrentTile { get => _currentTile; set => (this as IMoveable).TeleportInternal(value); }
 
 		public Actor? Actor
 		{
@@ -29,9 +28,8 @@ namespace IronEngine
 
 		public Position Position { get => TileMap != null ? CurrentTile.Position : Position.OutOfBounds; set => Move(value); }
 
-		protected TileObject(Tile tile, Actor? actor = null)
+		protected TileObject(Actor? actor = null)
 		{
-			CurrentTile = tile;
 			Actor = actor;
 		}
 
@@ -68,7 +66,7 @@ namespace IronEngine
 		{
 			Actor?.RemoveChild(this);
 			if (CurrentTile != null)
-				CurrentTile.Object = null;
+				CurrentTile.SetObjectInternal(null);
 		}
 	}
 }

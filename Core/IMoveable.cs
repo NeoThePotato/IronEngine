@@ -7,11 +7,11 @@ namespace IronEngine
 		#region MEMBERS
 		MovementStrategy DefaultMovementStrategy => Teleport;
 
-		sealed void Move(Tile to, MovementStrategy strategy) => MoveInternal(this, to, strategy);
+		sealed void Move(Tile to, MovementStrategy strategy) => MoveInternal(to, strategy);
 
 		sealed void Move(Tile to) => Move(to, DefaultMovementStrategy);
 
-		sealed void Move(Position to, MovementStrategy strategy) => MoveInternal(this, to, strategy);
+		sealed void Move(Position to, MovementStrategy strategy) => MoveInternal(to, strategy);
 
 		sealed void Move(Position to) => Move(to, DefaultMovementStrategy);
 		#endregion
@@ -46,34 +46,34 @@ namespace IronEngine
 		#endregion
 
 		#region INTERNAL_MOVEMENT_LOGIC
-		internal void MoveInternal(IMoveable moveable, Position to, MovementStrategy movementStrategy)
+		internal sealed void MoveInternal(Position to, MovementStrategy movementStrategy)
 		{
-            if (!moveable.CheckHasTileMap() || !moveable.CheckWithinTileMap(to)) return;
-            MoveInternal(moveable, moveable.TileMap[to], movementStrategy);
+            if (!this.CheckHasTileMap() || !this.CheckWithinTileMap(to)) return;
+            MoveInternal(TileMap[to], movementStrategy);
 		}
 
-		internal void MoveInternal(IMoveable moveable, Tile to, MovementStrategy movementStrategy)
+		internal sealed void MoveInternal(Tile to, MovementStrategy movementStrategy)
 		{
-			IEnumerable<Tile> path = movementStrategy.Invoke(moveable, to);
+			IEnumerable<Tile> path = movementStrategy.Invoke(this, to);
 			if (!path.Any()) return;
-			Tile previous = moveable.CurrentTile;
+			Tile previous = CurrentTile;
 			foreach (Tile current in path)
 			{
-				TeleportInternal(moveable, to);
-				previous.OnObjectExitInternal(moveable);
-				current.OnObjectEnterInternal(moveable);
+				TeleportInternal(to);
+				previous.OnObjectExitInternal(this);
+				current.OnObjectEnterInternal(this);
 				if (current != to)
-					current.OnObjectPassInternal(moveable);
+					current.OnObjectPassInternal(this);
 				previous = current;
 			}
 		}
 
-		internal void TeleportInternal(IMoveable moveable, Tile to)
+		internal sealed void TeleportInternal(Tile to)
 		{
-			if (moveable is TileObject tileObject && !to.HasObject)
+			if (this is TileObject tileObject && !to.HasObject)
 			{
-				moveable.CurrentTile.Object = null;
-				to.Object = tileObject;
+				CurrentTile.SetObjectInternal(null);
+				to.SetObjectInternal(tileObject);
 			}
 		}
 		#endregion

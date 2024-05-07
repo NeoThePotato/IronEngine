@@ -7,6 +7,8 @@ namespace IronEngine
 		internal HashSet<IHasActor> _myObjects;
 		internal HashSet<IActionable> _myActionables;
 
+		public IEnumerable<IHasActor> MyObjects => _myObjects;
+
 		internal void AddChild(IHasActor child)
 		{
 			_myObjects.Add(child);
@@ -21,9 +23,9 @@ namespace IronEngine
 				_myActionables.Remove(actionable);
 		}
 
-		public IEnumerator<IHasActor> GetEnumerator() => (_myObjects as IEnumerable<IHasActor>).GetEnumerator();
+		public IEnumerator<IHasActor> GetEnumerator() => _myObjects.GetEnumerator();
 
-		IEnumerator IEnumerable.GetEnumerator() => (_myObjects as IEnumerable).GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => _myObjects.GetEnumerator();
 
 		public void Destroy()
 		{

@@ -17,11 +17,12 @@ namespace IronEngine
 		public TileObject? Object
 		{
 			get => _tileObject;
-			internal set
+			set
 			{
-				if (HasObject)
-					Object!.Destroy();
-				_tileObject = value;
+				if (value != null)
+					value.CurrentTile = this;
+				else
+					SetObjectInternal(null);
 			}
 		}
 
@@ -30,7 +31,6 @@ namespace IronEngine
 		public Actor? Actor
 		{
 			get => _actor;
-
 			set
 			{
 				Actor?.RemoveChild(this);
@@ -84,7 +84,7 @@ namespace IronEngine
 			var clone = Utilities.CloneShallow(this);
 			clone.Position = Position.OutOfBounds;
 			clone.TileMap = null;
-			clone.Object = Object?.CloneDeep();
+			clone.SetObjectInternal(Object?.CloneDeep());
 			return clone;
 		}
 
@@ -94,6 +94,13 @@ namespace IronEngine
 			Actor?.RemoveChild(this);
 			if (TileMap != null)
 				TileMap[Position] = null;
+		}
+
+		internal void SetObjectInternal(TileObject? obj)
+		{
+			if (HasObject)
+				Object!.Destroy();
+			_tileObject = obj;
 		}
 
 		public bool SameTileMap(Tile other) => TileMap != null && TileMap == other.TileMap;
