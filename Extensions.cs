@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace IronEngine
+﻿namespace IronEngine
 {
 	public static class Extensions
 	{
@@ -90,5 +88,12 @@ namespace IronEngine
 		/// <param name="str">Source <see langword="string"/>.</param>
 		/// <returns>Simplified <see langword="string"/>.</returns>
 		public static string Simplify(this string str) => str.Trim().ToLower();
+
+		/// <summary>
+		/// Indicates whether the specified <see cref="Array"/> is <see langword="null"/> or is empty (Has Length of 0).
+		/// </summary>
+		/// <param name="array">Source <see cref="Array"/>.</param>
+		/// <returns>Whether <paramref name="array"/> is <see langword="null"/> or empty.</returns>
+		public static bool IsNullOrEmpty(this Array? array) => array == null || array.Length <= 0;
 	}
 }
