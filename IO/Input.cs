@@ -4,6 +4,6 @@
 	{
 		public IActionable PickActionable(IEnumerable<IActionable> actionables);
 
-		public Action PickAction(IEnumerable<Action> actions);
+		public IActionable.Action PickAction(IEnumerable<IActionable.Action> actions);
 	}
 }
