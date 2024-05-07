@@ -14,7 +14,7 @@
 	internal class ConsoleInput : IInput
 	{
 		private Dictionary<string, ICommandAble.Command> _commandsCache = new(5);
-		private Dictionary<string, ICommandAble> _commanablesCache = new(5);
+		private Dictionary<string, ICommandAble> _commandablesCache = new(5);
 
 		public string GetString(string prompt)
 		{
@@ -35,9 +35,9 @@
 
 		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandables)
 		{
-			StoreGeneric(_commanablesCache, commandables);
-			PrintGeneric(_commanablesCache);
-			return SelectFromDictionary(_commanablesCache);
+			StoreGeneric(_commandablesCache, commandables);
+			PrintGeneric(_commandablesCache);
+			return SelectFromDictionary(_commandablesCache);
 		}
 
 		#region UTILITY
