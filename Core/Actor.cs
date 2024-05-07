@@ -5,21 +5,21 @@ namespace IronEngine
 	public class Actor : IEnumerable<IHasActor>, IDestroyable
 	{
 		internal HashSet<IHasActor> _myObjects = new(1);
-		internal HashSet<IActionable> _myActionable = new(1);
+		internal HashSet<ICommandAble> _myActionable = new(1);
 
 		public IEnumerable<IHasActor> MyObjects => _myObjects;
 
 		internal void AddChild(IHasActor child)
 		{
 			_myObjects.Add(child);
-			if (child is IActionable actionable)
+			if (child is ICommandAble actionable)
 				_myActionable.Add(actionable);
 		}
 
 		internal void RemoveChild(IHasActor child)
 		{
 			_myObjects.Remove(child);
-			if (child is IActionable actionable)
+			if (child is ICommandAble actionable)
 				_myActionable.Remove(actionable);
 		}
 
@@ -44,7 +44,7 @@ namespace IronEngine
 			Destroy();
 		}
 
-		internal IEnumerable<IActionable> GetActionableWithAvailableActions() => _myActionable.Where(a => a.GetAvailableActions().Any());
+		internal IEnumerable<ICommandAble> GetActionableWithAvailableActions() => _myActionable.Where(a => a.GetAvailableActions().Any());
 	}
 
 	public interface IHasActor
@@ -54,15 +54,15 @@ namespace IronEngine
 		bool HasActor => Actor != null;
 	}
 
-	public interface IActionable : IHasActor
+	public interface ICommandAble : IHasActor
 	{
-		IEnumerable<Action> GetAvailableActions();
+		IEnumerable<Command> GetAvailableActions();
 
-		public readonly struct Action(System.Action action, string description, string? key = null, bool endsTurn = true)
+		public readonly struct Command(Action action, string description, string? key = null, bool endsTurn = true)
 		{
 			public readonly string? key = key;
 			public readonly string description = description;
-			public readonly System.Action action = action;
+			public readonly Action action = action;
 			public readonly bool endsTurn = endsTurn;
 
 			internal readonly void Invoke() => action.Invoke();

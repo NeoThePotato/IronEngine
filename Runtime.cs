@@ -53,11 +53,11 @@ namespace IronEngine
 				bool advanceTurn;
 				do
 				{
-					IActionable actionable;
-					actionable = Input.PickActionable(CurrentActor.GetActionableWithAvailableActions());
-					var action = Input.PickAction(actionable.GetAvailableActions());
-					action.Invoke();
-					advanceTurn = action.endsTurn;
+					ICommandAble commandAble;
+					commandAble = Input.PickCommandAble(CurrentActor.GetActionableWithAvailableActions());
+					var commaand = Input.PickCommand(commandAble.GetAvailableActions());
+					commaand.Invoke();
+					advanceTurn = commaand.endsTurn;
 				}
 				while (!advanceTurn);
 			}

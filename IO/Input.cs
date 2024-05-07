@@ -4,17 +4,17 @@
 	{
 		public string GetString(string prompt);
 
-		public IActionable PickActionable(IEnumerable<IActionable> actionables);
+		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandAbles);
 
-		public IActionable.Action PickAction(IEnumerable<IActionable.Action> actions);
+		public ICommandAble.Command PickCommand(IEnumerable<ICommandAble.Command> commands);
 
 		public static readonly IInput ConsoleInput = new ConsoleInput();
 	}
 
 	internal class ConsoleInput : IInput
 	{
-		private Dictionary<string, IActionable.Action> _actionsCache = new(5);
-		private List<IActionable> _actionablesCache = new(5);
+		private Dictionary<string, ICommandAble.Command> _commandsCache = new(5);
+		private List<ICommandAble> _commanablesCache = new(5);
 
 		public string GetString(string prompt)
 		{
@@ -26,57 +26,57 @@
 			return ret;
 		}
 
-		#region ACTIONS
-		public IActionable.Action PickAction(IEnumerable<IActionable.Action> actions)
+		#region COMMANDS
+		public ICommandAble.Command PickCommand(IEnumerable<ICommandAble.Command> actions)
 		{
 			StoreAndPrintAvailableAction(actions);
-			return GetActionToPerform();
+			return GetCommandToPerform();
 		}
 
-		private void StoreAndPrintAvailableAction(IEnumerable<IActionable.Action> actions)
+		private void StoreAndPrintAvailableAction(IEnumerable<ICommandAble.Command> commands)
 		{
-			_actionsCache.Clear();
+			_commandsCache.Clear();
 			int index = 1;
-			Console.WriteLine("Select action:");
-			foreach (var action in actions)
+			Console.WriteLine("Select command:");
+			foreach (var command in commands)
 			{
 				string key;
-				if (action.key != null)
-					key = action.key.ToLower();
+				if (command.key != null)
+					key = command.key.ToLower();
 				else
 				{
 					key = index.ToString();
 					index++;
 				}
-				_actionsCache.Add(key, action);
-				Console.WriteLine($"{key}: {action.description}");
+				_commandsCache.Add(key, command);
+				Console.WriteLine($"{command.key}: {command.description}");
 			}
 		}
 
-		private IActionable.Action GetActionToPerform()
+		private ICommandAble.Command GetCommandToPerform()
 		{
-			IActionable.Action selectedAction;
-			while (!_actionsCache.TryGetValue(Console.ReadLine().ToLower(), out selectedAction))
+			ICommandAble.Command selectedCommand;
+			while (!_commandsCache.TryGetValue(Console.ReadLine().ToLower(), out selectedCommand))
 				Console.WriteLine("Invalid input.");
-			return selectedAction;
+			return selectedCommand;
 		}
 		#endregion
 
-		#region ACTIONABLES
-		public IActionable PickActionable(IEnumerable<IActionable> actionables)
+		#region COMMANDABLES
+		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandables)
 		{
-			_actionablesCache.Clear();
+			_commanablesCache.Clear();
 			int index = 1;
-			Console.WriteLine("Select actionable:");
-			foreach (var actionable in actionables)
+			Console.WriteLine("Select commandable:");
+			foreach (var commandable in commandables)
 			{
-				_actionablesCache.Add(actionable);
-				Console.WriteLine($"{index}: {actionable}");
+				_commanablesCache.Add(commandable);
+				Console.WriteLine($"{index}: {commandable}");
 				index++;
 			}
-			while (!int.TryParse(Console.ReadLine(), out index) || index > _actionablesCache.Count)
+			while (!int.TryParse(Console.ReadLine(), out index) || index > _commanablesCache.Count)
 				Console.WriteLine("Invalid input.");
-			return _actionablesCache[index - 1];
+			return _commanablesCache[index - 1];
 		}
 		#endregion
 	}
