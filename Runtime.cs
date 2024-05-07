@@ -54,9 +54,12 @@ namespace IronEngine
 				bool advanceTurn;
 				do
 				{
-					ICommandAble commandAble;
-					commandAble = Input.PickCommandAble(CurrentActor.GetFilteredCommandAbleWithAvailableActions());
-					var command = Input.PickCommand(commandAble.GetAvailableActions());
+					ICommandAble selectedCommandAble;
+					var commandAbles = CurrentActor.GetFilteredCommandAbleWithAvailableActions();
+					if (!commandAbles.Any())
+						break;
+					selectedCommandAble = Input.PickCommandAble(commandAbles);
+					var command = Input.PickCommand(selectedCommandAble.GetAvailableActions());
 					command.Invoke();
 					advanceTurn = command.endsTurn;
 				}
