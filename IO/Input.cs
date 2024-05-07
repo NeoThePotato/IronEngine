@@ -14,7 +14,7 @@
 	internal class ConsoleInput : IInput
 	{
 		private Dictionary<string, ICommandAble.Command> _commandsCache = new(5);
-		private List<ICommandAble> _commanablesCache = new(5);
+		private Dictionary<string, ICommandAble> _commanablesCache = new(5);
 
 		public string GetString(string prompt)
 		{
@@ -26,57 +26,77 @@
 			return ret;
 		}
 
-		#region COMMANDS
-		public ICommandAble.Command PickCommand(IEnumerable<ICommandAble.Command> actions)
+		public ICommandAble.Command PickCommand(IEnumerable<ICommandAble.Command> commands)
 		{
-			StoreAndPrintAvailableAction(actions);
-			return GetCommandToPerform();
+			StoreHasKey(_commandsCache, commands);
+			PrintHasKey(_commandsCache, c => c.description);
+			return SelectFromDictionary(_commandsCache);
 		}
 
-		private void StoreAndPrintAvailableAction(IEnumerable<ICommandAble.Command> commands)
+		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandables)
 		{
-			_commandsCache.Clear();
+			StoreGeneric(_commanablesCache, commandables);
+			PrintGeneric(_commanablesCache);
+			return SelectFromDictionary(_commanablesCache);
+		}
+
+		#region UTILITY
+		private static void StoreHasKey<T>(Dictionary<string, T> dictionary, IEnumerable<T> keyAbles) where T : ICommandAble.IHasKey
+		{
+			dictionary.Clear();
 			int index = 1;
 			Console.WriteLine("Select command:");
-			foreach (var command in commands)
+			foreach (var keyAble in keyAbles)
 			{
 				string key;
-				if (command.HasKey)
-					key = command.Key!.Simplify();
+				if (keyAble.HasKey)
+					key = keyAble.Key!.Simplify();
 				else
 				{
 					key = index.ToString();
 					index++;
 				}
-				_commandsCache.Add(key, command);
-				Console.WriteLine($"{command.Key}: {command.description}");
+				dictionary.Add(key, keyAble);
 			}
 		}
 
-		private ICommandAble.Command GetCommandToPerform()
+		private static void StoreGeneric<T>(Dictionary<string, T> dictionary, IEnumerable<T> objects)
 		{
-			ICommandAble.Command selectedCommand;
-			while (!_commandsCache.TryGetValue(Console.ReadLine().Simplify(), out selectedCommand))
-				Console.WriteLine("Invalid input.");
-			return selectedCommand;
-		}
-		#endregion
-
-		#region COMMANDABLES
-		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandables)
-		{
-			_commanablesCache.Clear();
+			dictionary.Clear();
 			int index = 1;
-			Console.WriteLine("Select commandable:");
-			foreach (var commandable in commandables)
+			Console.WriteLine("Select command:");
+			foreach (var obj in objects)
 			{
-				_commanablesCache.Add(commandable);
-				Console.WriteLine($"{index}: {commandable}");
-				index++;
+				string key;
+				if (obj is ICommandAble.IHasKey keyable && keyable.HasKey)
+					key = keyable.Key!.Simplify();
+				else
+				{
+					key = index.ToString();
+					index++;
+				}
+				dictionary.Add(key, obj);
 			}
-			while (!int.TryParse(Console.ReadLine(), out index) || index > _commanablesCache.Count)
+		}
+
+		private static void PrintHasKey<T>(Dictionary<string, T> dictionary, Func<T, string> valuePrint) where T : ICommandAble.IHasKey
+		{
+			foreach (var kvp in dictionary)
+				Console.WriteLine($"{kvp.Key}: {valuePrint(kvp.Value)}");
+		}
+
+		private static void PrintGeneric<T>(Dictionary<string, T> dictionary)
+		{
+			foreach (var kvp in dictionary)
+				Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+		}
+
+		private static T SelectFromDictionary<T>(Dictionary<string, T> dictionary)
+		{
+			T selected;
+			while (!dictionary.TryGetValue(Console.ReadLine().Simplify(), out selected))
 				Console.WriteLine("Invalid input.");
-			return _commanablesCache[index - 1];
+			return selected;
 		}
 		#endregion
 	}
