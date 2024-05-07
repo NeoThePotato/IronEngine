@@ -44,7 +44,13 @@ namespace IronEngine
 			Destroy();
 		}
 
-		internal IEnumerable<ICommandAble> GetActionableWithAvailableActions() => _myActionable.Where(a => a.GetAvailableActions().Any());
+		protected virtual IEnumerable<ICommandAble> FilterCommandAble(IEnumerable<ICommandAble> source) => source;
+
+		protected internal virtual void OnTurnOver() { }
+
+		protected internal virtual void OnTurnStart() { }
+
+		internal IEnumerable<ICommandAble> GetFilteredCommandAbleWithAvailableActions() => FilterCommandAble(_myActionable.Where(a => a.GetAvailableActions().Any()));
 	}
 
 	public interface IHasActor
