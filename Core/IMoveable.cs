@@ -18,7 +18,7 @@ namespace IronEngine
 
 		#region MOVEMENT_STRATEGIES
 		/// <summary>
-		/// Teleports the moveable to the target tile.
+		/// Teleports the <paramref name="moveable"/> to the target <see cref="Tile"/>.
 		/// </summary>
 		public static IEnumerable<Tile> Teleport(IMoveable moveable, Tile to)
 		{
@@ -26,7 +26,7 @@ namespace IronEngine
 		}
 
 		/// <summary>
-		/// Moves the moveable to the target tile across the tilemap, taking the shortest direct path.
+		/// Moves the <paramref name="moveable"/> to the target tile across the <see cref="TileMap"/>, taking the shortest direct path.
 		/// </summary>
 		public static IEnumerable<Tile> ShortestDirect(IMoveable moveable, Tile to)
 		{
@@ -48,7 +48,7 @@ namespace IronEngine
 		#region INTERNAL_MOVEMENT_LOGIC
 		internal void MoveInternal(IMoveable moveable, Position to, MovementStrategy movementStrategy)
 		{
-            if (!CheckHasTileMap() || !CheckWithinTileMap(to)) return;
+            if (!moveable.CheckHasTileMap() || !moveable.CheckWithinTileMap(to)) return;
             MoveInternal(moveable, moveable.TileMap[to], movementStrategy);
 		}
 

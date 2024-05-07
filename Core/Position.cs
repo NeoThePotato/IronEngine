@@ -84,28 +84,5 @@ namespace IronEngine
 		Tile CurrentTile { get; }
 
 		Position Position { get; }
-
-		#region VALIDTY_CHECKS
-		internal bool CheckHasTileMap()
-		{
-			bool hasTileMap = TileMap != null;
-			Debug.WriteLineIf(!hasTileMap, $"{this} is not on a TileMap.");
-			return hasTileMap;
-		}
-
-		internal bool CheckWithinTileMap(Position position)
-		{
-			bool withinTileMap = TileMap.WithinBounds(position);
-			Debug.WriteLineIf(!withinTileMap, $"{position} is not within the bounds of TileMap.");
-			return withinTileMap;
-		}
-
-		internal bool CheckSameTileMap(Tile tile)
-		{
-			bool sameTileMap = CurrentTile.SameTileMap(tile);
-			Debug.WriteLineIf(!sameTileMap, $"{tile} is not on the same TileMap as {this}.");
-			return sameTileMap;
-		}
-		#endregion
 	}
 }
