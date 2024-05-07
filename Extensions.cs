@@ -83,5 +83,12 @@ namespace IronEngine
 		public static IEnumerable<IPositionable> Checkerboard(this IEnumerable<IPositionable> source, uint offset = 0) => source.TakeOneEvery(2, offset);
 
 		private static bool FilterEvery(IPositionable source, uint every, uint offset = 0) => (source.Position.x + source.Position.y + offset) % every == 0;
+
+		/// <summary>
+		/// Trims all whitespace and makes all characters lowercase.
+		/// </summary>
+		/// <param name="str">Source <see langword="string"/>.</param>
+		/// <returns>Simplified <see langword="string"/>.</returns>
+		public static string Simplify(this string str) => str.Trim().ToLower();
 	}
 }

@@ -42,7 +42,7 @@
 			{
 				string key;
 				if (command.HasKey)
-					key = command.Key!.ToLower();
+					key = command.Key!.Simplify();
 				else
 				{
 					key = index.ToString();
@@ -56,7 +56,7 @@
 		private ICommandAble.Command GetCommandToPerform()
 		{
 			ICommandAble.Command selectedCommand;
-			while (!_commandsCache.TryGetValue(Console.ReadLine().ToLower(), out selectedCommand))
+			while (!_commandsCache.TryGetValue(Console.ReadLine().Simplify(), out selectedCommand))
 				Console.WriteLine("Invalid input.");
 			return selectedCommand;
 		}
