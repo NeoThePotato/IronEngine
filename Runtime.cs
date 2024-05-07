@@ -55,9 +55,9 @@ namespace IronEngine
 				{
 					ICommandAble commandAble;
 					commandAble = Input.PickCommandAble(CurrentActor.GetActionableWithAvailableActions());
-					var commaand = Input.PickCommand(commandAble.GetAvailableActions());
-					commaand.Invoke();
-					advanceTurn = commaand.endsTurn;
+					var command = Input.PickCommand(commandAble.GetAvailableActions());
+					command.Invoke();
+					advanceTurn = command.endsTurn;
 				}
 				while (!advanceTurn);
 			}
