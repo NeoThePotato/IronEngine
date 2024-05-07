@@ -11,7 +11,13 @@ namespace IronEngine
 			T newObject = (T)Activator.CreateInstance(original.GetType());
 			var properties = original.GetType().GetProperties();
 			foreach (var originalProp in properties)
-				originalProp.SetValue(newObject, originalProp.GetValue(original));
+			{
+				try
+				{
+					originalProp.SetValue(newObject, originalProp.GetValue(original));
+				}
+				catch (ArgumentException) { }
+			}
 			return newObject;
 		}
 

@@ -4,8 +4,8 @@ namespace IronEngine
 {
 	public class Actor : IEnumerable<IHasActor>, IDestroyable
 	{
-		internal HashSet<IHasActor> _myObjects;
-		internal HashSet<IActionable> _myActionables;
+		internal HashSet<IHasActor> _myObjects = new(1);
+		internal HashSet<IActionable> _myActionables = new(1);
 
 		public IEnumerable<IHasActor> MyObjects => _myObjects;
 

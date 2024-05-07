@@ -15,11 +15,13 @@ namespace IronEngine
 		public TileMap(int sizeX, int sizeY, Tile? fillWith = null)
 		{
 			_tileMap = new Tile[sizeY, sizeX];
-			fillWith ??= new Tile();
-			for (int y = 0; y < SizeY; y++)
+			if (fillWith != null)
 			{
-				for (int x = 0; x < SizeX; x++)
-					this[x, y] = fillWith!;
+				for (int y = 0; y < SizeY; y++)
+				{
+					for (int x = 0; x < SizeX; x++)
+						fillWith.CloneDeep().BindToTileMapInternal(this, new(x, y));
+				}
 			}
 		}
 
@@ -33,11 +35,8 @@ namespace IronEngine
 		{
 			get
 			{
-				if (this.WithinBounds(position))
-					return _tileMap[position.y, position.x];
-				return null;
+				return this.WithinBounds(position) ? _tileMap[position.y, position.x] : null;
 			}
-
 			internal set
 			{
 				if (this.WithinBounds(position))

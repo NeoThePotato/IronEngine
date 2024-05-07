@@ -83,7 +83,6 @@ namespace IronEngine
 		{
 			var clone = Utilities.CloneShallow(this);
 			clone.Position = Position.OutOfBounds;
-			clone.TileMap = null;
 			clone.SetObjectInternal(Object?.CloneDeep());
 			return clone;
 		}
@@ -101,6 +100,13 @@ namespace IronEngine
 			if (HasObject)
 				Object!.Destroy();
 			_tileObject = obj;
+		}
+
+		internal void BindToTileMapInternal(TileMap tilemap, Position position)
+		{
+			TileMap = tilemap;
+			Position = position;
+			tilemap[position] = this;
 		}
 
 		public bool SameTileMap(Tile other) => TileMap != null && TileMap == other.TileMap;

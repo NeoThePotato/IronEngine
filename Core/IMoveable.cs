@@ -72,7 +72,7 @@ namespace IronEngine
 		{
 			if (this is TileObject tileObject && !to.HasObject)
 			{
-				CurrentTile.SetObjectInternal(null);
+				CurrentTile?.SetObjectInternal(null);
 				to.SetObjectInternal(tileObject);
 			}
 		}
