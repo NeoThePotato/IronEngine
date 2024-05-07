@@ -13,7 +13,7 @@
 
 	internal class ConsoleInput : IInput
 	{
-		private List<IActionable.Action> _actionsCache = new(5);
+		private Dictionary<string, IActionable.Action> _actionsCache = new(5);
 		private List<IActionable> _actionablesCache = new(5);
 
 		public string GetString(string prompt)
@@ -26,25 +26,48 @@
 			return ret;
 		}
 
+		#region ACTIONS
 		public IActionable.Action PickAction(IEnumerable<IActionable.Action> actions)
+		{
+			StoreAndPrintAvailableAction(actions);
+			return GetActionToPerform();
+		}
+
+		private void StoreAndPrintAvailableAction(IEnumerable<IActionable.Action> actions)
 		{
 			_actionsCache.Clear();
 			int index = 1;
+			Console.WriteLine("Select action:");
 			foreach (var action in actions)
 			{
-				_actionsCache.Add(action);
-				Console.WriteLine($"{index}: {action.description}");
-				index++;
+				string key;
+				if (action.key != null)
+					key = action.key.ToLower();
+				else
+				{
+					key = index.ToString();
+					index++;
+				}
+				_actionsCache.Add(key, action);
+				Console.WriteLine($"{key}: {action.description}");
 			}
-			while (!int.TryParse(Console.ReadLine(), out index) || index > _actionsCache.Count)
-				Console.WriteLine("Invalid input.");
-			return _actionsCache[index-1];
 		}
 
+		private IActionable.Action GetActionToPerform()
+		{
+			IActionable.Action selectedAction;
+			while (!_actionsCache.TryGetValue(Console.ReadLine().ToLower(), out selectedAction))
+				Console.WriteLine("Invalid input.");
+			return selectedAction;
+		}
+		#endregion
+
+		#region ACTIONABLES
 		public IActionable PickActionable(IEnumerable<IActionable> actionables)
 		{
 			_actionablesCache.Clear();
 			int index = 1;
+			Console.WriteLine("Select actionable:");
 			foreach (var actionable in actionables)
 			{
 				_actionablesCache.Add(actionable);
@@ -55,5 +78,6 @@
 				Console.WriteLine("Invalid input.");
 			return _actionablesCache[index - 1];
 		}
+		#endregion
 	}
 }

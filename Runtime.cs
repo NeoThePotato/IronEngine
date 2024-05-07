@@ -56,7 +56,8 @@ namespace IronEngine
 					IActionable actionable;
 					actionable = Input.PickActionable(CurrentActor.GetActionableWithAvailableActions());
 					var action = Input.PickAction(actionable.GetAvailableActions());
-					advanceTurn = action.Invoke();
+					action.Invoke();
+					advanceTurn = action.endsTurn;
 				}
 				while (!advanceTurn);
 			}

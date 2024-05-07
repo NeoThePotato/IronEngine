@@ -58,18 +58,14 @@ namespace IronEngine
 	{
 		IEnumerable<Action> GetAvailableActions();
 
-		public struct Action
+		public readonly struct Action(System.Action action, string description, string? key = null, bool endsTurn = true)
 		{
-			public string description;
-			public Func<bool> action;
+			public readonly string? key = key;
+			public readonly string description = description;
+			public readonly System.Action action = action;
+			public readonly bool endsTurn = endsTurn;
 
-			public Action(string description, Func<bool> action)
-			{
-				this.description = description;
-				this.action = action;
-			}
-
-			internal bool Invoke() => action();
+			internal readonly void Invoke() => action.Invoke();
 		}
 	}
 }
