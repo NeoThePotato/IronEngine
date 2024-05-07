@@ -1,7 +1,15 @@
-﻿namespace IronEngine
+﻿using System.Diagnostics;
+
+namespace IronEngine
 {
 	public static class Extensions
 	{
+		/// <summary>
+		/// Returns whether <paramref name="position"/> is within the bounds of <paramref name="tileMap"/>.
+		/// </summary>
+		/// <param name="tileMap"><see cref="TileMap"/> to check.</param>
+		/// <param name="position"><see cref="Position"/> to check.</param>
+		/// <returns>Whether <paramref name="position"/> is within the bounds of <paramref name="tileMap"/>.</returns>
 		public static bool WithinBounds(this TileMap tileMap, Position position) => position.x >= 0 && position.x < tileMap.SizeX && position.y >= 0 && position.y < tileMap.SizeY;
 
 		/// <summary>
@@ -55,5 +63,25 @@
 			obj = null;
 			return false;
 		}
+
+		/// <summary>
+		/// Filters an <see cref="IPositionable"/> enumerable to only include 1 instance every <paramref name="offset"/> iterations.
+		/// </summary>
+		/// <param name="source">Source enumerable.</param>
+		/// <param name="every">Iteration count.</param>
+		/// <param name="offset">Start at this index.</param>
+		/// <returns>A filtered enumerable.</returns>
+		public static IEnumerable<IPositionable> TakeOneEvery(this IEnumerable<IPositionable> source, uint every, uint offset = 0) => source.Where(s => FilterEvery(s, every, offset));
+
+		/// <summary>
+		/// Filters an <see cref="IPositionable"/> enumerable to only include 1 instance every other iteration.
+		/// So that it matches a checkerboard pattern.
+		/// </summary>
+		/// <param name="source">Source enumerable.</param>
+		/// <param name="offset">Start at this index.</param>
+		/// <returns>A checkerboard-filtered enumerable.</returns>
+		public static IEnumerable<IPositionable> Checkerboard(this IEnumerable<IPositionable> source, uint offset = 0) => source.TakeOneEvery(2, offset);
+
+		private static bool FilterEvery(IPositionable source, uint every, uint offset = 0) => (source.Position.x + source.Position.y + offset) % every == 0;
 	}
 }

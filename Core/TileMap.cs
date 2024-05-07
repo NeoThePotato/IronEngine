@@ -48,7 +48,11 @@ namespace IronEngine
 			}
 		}
 
-		public IEnumerator<Tile> GetEnumerator() => (IEnumerator<Tile>)_tileMap.GetEnumerator();
+		public IEnumerator<Tile> GetEnumerator()
+		{
+			foreach (var tile in _tileMap)
+				yield return tile;
+		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _tileMap.GetEnumerator();
 
