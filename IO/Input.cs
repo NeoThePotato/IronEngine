@@ -28,7 +28,7 @@
 
 		public ICommandAble.Command PickCommand(IEnumerable<ICommandAble.Command> commands)
 		{
-			StoreHasKey(_commandsCache, commands);
+			StoreHasKey(_commandsCache, commands.Append(ICommandAble.Command.Return));
 			PrintHasKey(_commandsCache, c => c.description);
 			return SelectFromDictionary(_commandsCache);
 		}

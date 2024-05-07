@@ -76,6 +76,8 @@ namespace IronEngine
 			public bool HasKey => !string.IsNullOrEmpty(Key);
 
 			internal readonly void Invoke() => action.Invoke();
+
+			public static readonly ICommandAble.Command Return = new(() => { }, "Back", "Back", false);
 		}
 
 		public interface IHasKey
