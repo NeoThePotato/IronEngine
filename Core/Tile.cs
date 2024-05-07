@@ -100,6 +100,8 @@ namespace IronEngine
 			if (HasObject)
 				Object!.Destroy();
 			_tileObject = obj;
+			if (obj != null)
+				obj._currentTile = this;
 		}
 
 		internal void BindToTileMapInternal(TileMap tilemap, Position position)

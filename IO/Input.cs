@@ -32,11 +32,11 @@
 			int index = 1;
 			foreach (var action in actions)
 			{
-				_actionsCache[index-1] = action;
+				_actionsCache.Add(action);
 				Console.WriteLine($"{index}: {action.description}");
 				index++;
 			}
-			while (!int.TryParse(Console.ReadLine(), out index) && index > _actionsCache.Count)
+			while (!int.TryParse(Console.ReadLine(), out index) || index > _actionsCache.Count)
 				Console.WriteLine("Invalid input.");
 			return _actionsCache[index-1];
 		}
@@ -47,11 +47,11 @@
 			int index = 1;
 			foreach (var actionable in actionables)
 			{
-				_actionablesCache[index - 1] = actionable;
+				_actionablesCache.Add(actionable);
 				Console.WriteLine($"{index}: {actionable}");
 				index++;
 			}
-			while (!int.TryParse(Console.ReadLine(), out index) && index > _actionablesCache.Count)
+			while (!int.TryParse(Console.ReadLine(), out index) || index > _actionablesCache.Count)
 				Console.WriteLine("Invalid input.");
 			return _actionablesCache[index - 1];
 		}

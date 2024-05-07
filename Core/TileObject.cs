@@ -4,7 +4,7 @@
 
 	public abstract class TileObject : ICloneable, IHasActor, IMoveable, IDestroyable
 	{
-		private Tile _currentTile;
+		internal Tile _currentTile;
 		private Actor? _actor;
 
 		public Tile CurrentTile { get => _currentTile; set => (this as IMoveable).TeleportInternal(value); }
