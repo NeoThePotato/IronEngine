@@ -58,14 +58,25 @@ namespace IronEngine
 	{
 		IEnumerable<Command> GetAvailableActions();
 
-		public readonly struct Command(Action action, string description, string? key = null, bool endsTurn = true)
+		public readonly struct Command(Action action, string description, string? key = null, bool endsTurn = true) : IHasKey
 		{
-			public readonly string? key = key;
+			private readonly string? key = key;
 			public readonly string description = description;
 			public readonly Action action = action;
 			public readonly bool endsTurn = endsTurn;
 
+			public readonly string? Key => key;
+
+			public bool HasKey => !string.IsNullOrEmpty(Key);
+
 			internal readonly void Invoke() => action.Invoke();
+		}
+
+		public interface IHasKey
+		{
+			public string? Key { get; }
+
+			public bool HasKey => !string.IsNullOrEmpty(Key);
 		}
 	}
 }

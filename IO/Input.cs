@@ -41,15 +41,15 @@
 			foreach (var command in commands)
 			{
 				string key;
-				if (command.key != null)
-					key = command.key.ToLower();
+				if (command.HasKey)
+					key = command.Key!.ToLower();
 				else
 				{
 					key = index.ToString();
 					index++;
 				}
 				_commandsCache.Add(key, command);
-				Console.WriteLine($"{command.key}: {command.description}");
+				Console.WriteLine($"{command.Key}: {command.description}");
 			}
 		}
 
