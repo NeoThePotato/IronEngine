@@ -5,7 +5,7 @@ namespace IronEngine
 	public class Actor : IEnumerable<IHasActor>, IDestroyable
 	{
 		internal HashSet<IHasActor> _myObjects = new(1);
-		internal HashSet<IActionable> _myActionables = new(1);
+		internal HashSet<IActionable> _myActionable = new(1);
 
 		public IEnumerable<IHasActor> MyObjects => _myObjects;
 
@@ -13,14 +13,14 @@ namespace IronEngine
 		{
 			_myObjects.Add(child);
 			if (child is IActionable actionable)
-				_myActionables.Add(actionable);
+				_myActionable.Add(actionable);
 		}
 
 		internal void RemoveChild(IHasActor child)
 		{
 			_myObjects.Remove(child);
 			if (child is IActionable actionable)
-				_myActionables.Remove(actionable);
+				_myActionable.Remove(actionable);
 		}
 
 		public IEnumerator<IHasActor> GetEnumerator() => _myObjects.GetEnumerator();
@@ -30,7 +30,7 @@ namespace IronEngine
 		public void Destroy()
 		{
 			_myObjects = null;
-			_myActionables = null;
+			_myActionable = null;
 			Runtime.Instance?.RemoveActor(this);
 		}
 
@@ -43,6 +43,8 @@ namespace IronEngine
 			}
 			Destroy();
 		}
+
+		internal IEnumerable<IActionable> GetActionableWithAvailableActions() => _myActionable.Where(a => a.GetAvailableActions().Any());
 	}
 
 	public interface IHasActor
