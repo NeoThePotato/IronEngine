@@ -64,9 +64,14 @@
 
 		public void Destroy()
 		{
+			CurrentTile?.OverrideObjectInternal(null);
+			DestroyInternal();
+		}
+
+		internal void DestroyInternal()
+		{
+			_currentTile = null;
 			Actor?.RemoveChild(this);
-			if (CurrentTile != null)
-				CurrentTile.SetObjectInternal(null);
 		}
 	}
 }

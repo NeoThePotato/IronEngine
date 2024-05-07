@@ -22,7 +22,7 @@ namespace IronEngine
 				if (value != null)
 					value.CurrentTile = this;
 				else
-					SetObjectInternal(null);
+					OverrideObjectInternal(null);
 			}
 		}
 
@@ -83,32 +83,41 @@ namespace IronEngine
 		{
 			var clone = Utilities.CloneShallow(this);
 			clone.Position = Position.OutOfBounds;
-			clone.SetObjectInternal(Object?.CloneDeep());
+			clone.OverrideObjectInternal(Object?.CloneDeep());
 			return clone;
 		}
 
 		public void Destroy()
 		{
-			Object?.Destroy();
+			var tileObject = UnbindObjectInternal();
+			tileObject?.Destroy();
 			Actor?.RemoveChild(this);
 			if (TileMap != null)
 				TileMap[Position] = null;
 		}
 
-		internal void SetObjectInternal(TileObject? obj)
+		internal void OverrideObjectInternal(TileObject? obj)
 		{
-			if (HasObject)
-				Object!.Destroy();
+			UnbindObjectInternal()?.DestroyInternal();
 			_tileObject = obj;
-			if (obj != null)
-				obj._currentTile = this;
+			if (_tileObject != null)
+				_tileObject._currentTile = this;
 		}
 
-		internal void BindToTileMapInternal(TileMap tilemap, Position position)
+		internal TileObject? UnbindObjectInternal()
 		{
-			TileMap = tilemap;
+			if (!HasObject)
+				return null;
+			_tileObject!._currentTile = null;
+			_tileObject = null;
+			return _tileObject;
+		}
+
+		internal void BindToTileMapInternal(TileMap tileMap, Position position)
+		{
+			TileMap = tileMap;
 			Position = position;
-			tilemap[position] = this;
+			tileMap[position] = this;
 		}
 
 		public bool SameTileMap(Tile other) => TileMap != null && TileMap == other.TileMap;
