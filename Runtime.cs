@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using IronEngine.IO;
+using System.Collections;
 
 namespace IronEngine
 {
@@ -49,7 +50,14 @@ namespace IronEngine
 		{
 			while (_turnCounter.MoveNext() && !ExitCondition)
 			{
-				// TODO Turn loop
+				bool advanceTurn;
+				do
+				{
+					var actionable = Input.PickActionable(CurrentActor._myActionables);
+					var action = Input.PickAction(actionable.GetAvailableActions());
+					advanceTurn = action.Invoke();
+				}
+				while (!advanceTurn);
 			}
 		}
 
@@ -64,6 +72,8 @@ namespace IronEngine
 
 		#region ABSTRACT
 		protected abstract bool ExitCondition { get; }
+
+		protected abstract IInput Input { get; }
 
 		protected abstract IEnumerable<Actor> CreateActors();
 
