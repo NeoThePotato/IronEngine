@@ -86,21 +86,21 @@ namespace IronEngine
 		Position Position { get; }
 
 		#region VALIDTY_CHECKS
-		public bool CheckHasTileMap()
+		internal bool CheckHasTileMap()
 		{
 			bool hasTileMap = TileMap != null;
 			Debug.WriteLineIf(!hasTileMap, $"{this} is not on a TileMap.");
 			return hasTileMap;
 		}
 
-		public bool CheckWithinTileMap(Position position)
+		internal bool CheckWithinTileMap(Position position)
 		{
 			bool withinTileMap = TileMap.WithinBounds(position);
 			Debug.WriteLineIf(!withinTileMap, $"{position} is not within the bounds of TileMap.");
 			return withinTileMap;
 		}
 
-		public bool CheckSameTileMap(Tile tile)
+		internal bool CheckSameTileMap(Tile tile)
 		{
 			bool sameTileMap = CurrentTile.SameTileMap(tile);
 			Debug.WriteLineIf(!sameTileMap, $"{tile} is not on the same TileMap as {this}.");

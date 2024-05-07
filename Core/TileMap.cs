@@ -33,14 +33,14 @@ namespace IronEngine
 		{
 			get
 			{
-				if (WithinBounds(position))
+				if (this.WithinBounds(position))
 					return _tileMap[position.y, position.x];
 				return null;
 			}
 
 			internal set
 			{
-				if (WithinBounds(position))
+				if (this.WithinBounds(position))
 				{
 					if (_tileMap[position.y, position.x] != null)
 						_tileMap[position.y, position.x].Destroy();
@@ -54,8 +54,6 @@ namespace IronEngine
 		IEnumerator IEnumerable.GetEnumerator() => _tileMap.GetEnumerator();
 
 		public IEnumerable<TileObject> GetTileObjects() => this.Where(t => t.HasObject).Select(t => t.Object);
-
-		public bool WithinBounds(Position position) => position.x >= 0 && position.x < SizeX && position.y >= 0 && position.y < SizeY;
 
 		internal void Destroy()
 		{
