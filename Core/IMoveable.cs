@@ -31,6 +31,7 @@ namespace IronEngine
 		public static IEnumerable<Tile> ShortestDirect(IMoveable moveable, Tile to)
 		{
 			if (!moveable.CheckSameTileMap(to)) yield break;
+			TileMap tileMap = moveable.TileMap;
 			Position current = moveable.Position;
 			Position destination = to.Position;
 			if (current == destination) yield break;
@@ -40,6 +41,7 @@ namespace IronEngine
 					x: Math.ClampRange(destination.x - current.x, -1, 1),
 					y: Math.ClampRange(destination.y - current.y, -1, 1)
 				);
+				yield return tileMap[current];
 			}
 			while (current != destination);
 		}
