@@ -45,7 +45,7 @@
 		/// <param name="tile">Tile to check.</param>
 		/// <param name="obj">Child object as <typeparamref name="T"/>.</param>
 		/// <returns>If the cast was successful.</returns>
-		public static bool TryGetObject<T>(this Tile tile, out T? obj) where T : TileObject
+		public static bool TryGetObject<T>(this Tile? tile, out T? obj) where T : TileObject
 		{
 			if (tile != null && tile.HasObject && tile.Object is T child)
 			{
