@@ -16,6 +16,8 @@
 		private Dictionary<string, ICommandAble.Command> _commandsCache = new(5);
 		private Dictionary<string, ICommandAble> _commandablesCache = new(5);
 
+		public bool AutoPrintCommands { get; set; } = true;
+
 		public string GetString(string prompt)
 		{
 			Console.WriteLine(prompt);
@@ -29,14 +31,16 @@
 		public ICommandAble.Command PickCommand(IEnumerable<ICommandAble.Command> commands)
 		{
 			StoreHasKey(_commandsCache, commands.Append(ICommandAble.Command.Return));
-			PrintHasKey(_commandsCache, c => c.description);
+			if (AutoPrintCommands)
+				PrintHasKey(_commandsCache, c => c.description);
 			return SelectFromDictionary(_commandsCache);
 		}
 
 		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandables)
 		{
 			StoreGeneric(_commandablesCache, commandables);
-			PrintGeneric(_commandablesCache);
+			if (AutoPrintCommands)
+				PrintGeneric(_commandablesCache);
 			return SelectFromDictionary(_commandablesCache);
 		}
 
