@@ -99,7 +99,7 @@
 		{
 			T selected;
 			while (!dictionary.TryGetValue(Console.ReadLine().Simplify(), out selected))
-				Console.WriteLine("Invalid input.");
+				Console.WriteLine("Invalid input. Use \"Help\" to show help.");
 			return selected;
 		}
 		#endregion
