@@ -1,4 +1,6 @@
-﻿namespace IronEngine.IO
+﻿using static IronEngine.ICommandAble;
+
+namespace IronEngine.IO
 {
 	public interface IInput
 	{
@@ -6,15 +8,19 @@
 
 		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandAbles);
 
-		public ICommandAble.Command PickCommand(IEnumerable<ICommandAble.Command> commands);
+		public Command PickCommand(IEnumerable<Command> commands);
+
+		public string GetHelp(IHasKey hasKey);
 
 		public static readonly IInput ConsoleInput = new ConsoleInput();
 	}
 
 	internal class ConsoleInput : IInput
 	{
-		private Dictionary<string, ICommandAble.Command> _commandsCache = new(5);
-		private Dictionary<string, ICommandAble> _commandablesCache = new(5);
+		private const string HELP_STR = "help";
+
+		private Dictionary<string, Command> _commandsCache = new(5);
+		private ICommandAble _selected;
 
 		public bool AutoPrintCommands { get; set; } = true;
 
@@ -28,24 +34,32 @@
 			return ret;
 		}
 
-		public ICommandAble.Command PickCommand(IEnumerable<ICommandAble.Command> commands)
+		public Command PickCommand(IEnumerable<Command> commands)
 		{
-			StoreHasKey(_commandsCache, commands.Append(ICommandAble.Command.Return));
+			Store(_commandsCache, commands.Append(Command.Return));
 			if (AutoPrintCommands)
-				PrintHasKey(_commandsCache, c => c.description);
+				PrintAll(_commandsCache);
 			return SelectFromDictionary(_commandsCache);
 		}
 
 		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandables)
 		{
-			StoreGeneric(_commandablesCache, commandables);
+			Store(_commandsCache, commandables.Select(Select));
 			if (AutoPrintCommands)
-				PrintGeneric(_commandablesCache);
-			return SelectFromDictionary(_commandablesCache);
+				PrintAll(_commandsCache);
+			SelectFromDictionary(_commandsCache).Invoke();
+			return _selected;
+		}
+
+		public string GetHelp(IHasKey hasKey)
+		{
+			return PrintFull(hasKey);
 		}
 
 		#region UTILITY
-		private static void StoreHasKey<T>(Dictionary<string, T> dictionary, IEnumerable<T> keyAbles) where T : ICommandAble.IHasKey
+		private static string PrintFull(IHasKey hasKey) => $"{hasKey.Key}: {hasKey.Description}";
+
+		private static void Store<T>(Dictionary<string, T> dictionary, IEnumerable<T> keyAbles) where T : IHasKey
 		{
 			dictionary.Clear();
 			int index = 1;
@@ -64,43 +78,42 @@
 			}
 		}
 
-		private static void StoreGeneric<T>(Dictionary<string, T> dictionary, IEnumerable<T> objects)
-		{
-			dictionary.Clear();
-			int index = 1;
-			Console.WriteLine("Select command:");
-			foreach (var obj in objects)
-			{
-				string key;
-				if (obj is ICommandAble.IHasKey keyable && keyable.HasKey)
-					key = keyable.Key!.Simplify();
-				else
-				{
-					key = index.ToString();
-					index++;
-				}
-				dictionary.Add(key, obj);
-			}
-		}
-
-		private static void PrintHasKey<T>(Dictionary<string, T> dictionary, Func<T, string> valuePrint) where T : ICommandAble.IHasKey
+		private static void PrintAll<T>(Dictionary<string, T> dictionary) where T : IHasKey
 		{
 			foreach (var kvp in dictionary)
-				Console.WriteLine($"{kvp.Key}: {valuePrint(kvp.Value)}");
+				Console.WriteLine(PrintFull(kvp.Value));
 		}
 
-		private static void PrintGeneric<T>(Dictionary<string, T> dictionary)
-		{
-			foreach (var kvp in dictionary)
-				Console.WriteLine($"{kvp.Key}: {kvp.Value}");
-		}
-
-		private static T SelectFromDictionary<T>(Dictionary<string, T> dictionary)
+		private T SelectFromDictionary<T>(Dictionary<string, T> dictionary) where T : IHasKey
 		{
 			T selected;
-			while (!dictionary.TryGetValue(Console.ReadLine().Simplify(), out selected))
-				Console.WriteLine("Invalid input. Use \"Help\" to show help.");
+			string key;
+			do
+			{
+				key = Console.ReadLine().Simplify();
+				if (dictionary.TryGetValue(key, out selected))
+					break;
+				else if (key.StartsWith(HELP_STR))
+				{
+					key = key.Remove(0, HELP_STR.Length).RemoveSpaces();
+					if (dictionary.TryGetValue(key, out selected))
+						Console.WriteLine(GetHelp(selected));
+					else
+						PrintAll(_commandsCache);
+				}
+				else
+					Console.WriteLine("Invalid input. Use \"Help\" to show help.");
+			}
+			while (true);
 			return selected;
+		}
+
+		private Command Select(ICommandAble commandAble)
+		{
+			if (commandAble is IHasKey hasKey && hasKey.HasKey)
+				return new Command(() => _selected = commandAble, hasKey.Description, hasKey!.Key, false);
+			else
+				return new Command(() => _selected = commandAble, commandAble.ToString(), commandAble.ToString(), false);
 		}
 		#endregion
 	}

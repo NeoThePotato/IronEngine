@@ -72,17 +72,19 @@ namespace IronEngine
 			public readonly bool endsTurn = endsTurn;
 
 			public readonly string? Key => key;
+			public readonly string Description => description;
 
 			public bool HasKey => !string.IsNullOrEmpty(Key);
 
 			internal readonly void Invoke() => action.Invoke();
 
-			public static readonly ICommandAble.Command Return = new(() => { }, "Back", "Back", false);
+			public static readonly Command Return = new(() => { }, "Back", "Back", false);
 		}
 
 		public interface IHasKey
 		{
 			public string? Key { get; }
+			public string Description { get; }
 
 			public bool HasKey => !string.IsNullOrEmpty(Key);
 		}

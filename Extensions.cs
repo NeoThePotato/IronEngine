@@ -1,4 +1,6 @@
-﻿namespace IronEngine
+﻿using System.Text.RegularExpressions;
+
+namespace IronEngine
 {
 	public static class Extensions
 	{
@@ -88,6 +90,13 @@
 		/// <param name="str">Source <see langword="string"/>.</param>
 		/// <returns>Simplified <see langword="string"/>.</returns>
 		public static string Simplify(this string str) => str.Trim().ToLower();
+
+		/// <summary>
+		/// Removes all spaces from <paramref name="str"/>.
+		/// </summary>
+		/// <param name="str">Source <see langword="string"/>.</param>
+		/// <returns><paramref name="str"/> with no spaces.</returns>
+		public static string RemoveSpaces(this string str) => Regex.Replace(str, @"\s+", "");
 
 		/// <summary>
 		/// Indicates whether the specified <see cref="Array"/> is <see langword="null"/> or is empty (Has Length of 0).
