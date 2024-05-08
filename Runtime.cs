@@ -37,6 +37,7 @@ namespace IronEngine
 			_instance = this;
 			_actors = CreateActors().ToList();
 			TileMap = CreateTileMap();
+			Renderer = CreateRenderer();
 			_turnCounter = new(_actors);
 		}
 
@@ -77,6 +78,10 @@ namespace IronEngine
 		}
 		#endregion
 
+		#region RENDERER
+		protected IRenderer Renderer { get; private set; }
+		#endregion
+
 		#region ABSTRACT
 		protected abstract bool ExitCondition { get; }
 
@@ -85,6 +90,8 @@ namespace IronEngine
 		protected abstract IEnumerable<Actor> CreateActors();
 
 		protected abstract TileMap CreateTileMap();
+
+		protected abstract IRenderer CreateRenderer();
 
 		protected abstract void OnExit();
 		#endregion
