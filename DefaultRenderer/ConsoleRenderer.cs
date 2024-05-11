@@ -12,14 +12,14 @@ namespace IronEngine.DefaultRenderer
 	/// </summary>
 	public class ConsoleRenderer : ConsoleRenderer.IConsoleRenderer
 	{
-		internal const byte COLOR_WHITE = 15;
-		internal const byte COLOR_BLACK = 0;
+		public const byte COLOR_WHITE = 15;
+		public const byte COLOR_BLACK = 0;
 		private static readonly bool IS_WINDOWS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 		internal static readonly (char, byte, byte) EMPTY_CHAR = (' ', COLOR_WHITE, COLOR_BLACK);
 
 		internal static FrameBuffer Buffer { get; private set; }
 		private StringBuilder StringBuffer { get; set; }
-		private TileMapRenderer ChildRenderer { get; set; }
+		private IConsoleRenderer ChildRenderer { get; set; }
 		private static int BufferSizeJ => Buffer.SizeJ;
 		private static int BufferSizeI => Buffer.SizeI;
 		private static (int, int) BufferSize => (BufferSizeJ, BufferSizeI);
@@ -30,7 +30,10 @@ namespace IronEngine.DefaultRenderer
 
 		public ConsoleRenderer(TileMap tileMap)
 		{
-			ChildRenderer = new TileMapRenderer(tileMap);
+			if (tileMap is IRenderAble renderAble && renderAble.GetRenderer() is IConsoleRenderer consoleRenderer)
+				ChildRenderer = consoleRenderer;
+			else
+				ChildRenderer = new TileMapRenderer(tileMap);
 			UpdateFrameBufferSize();
 			UpdateStringBufferCapacity();
 			UpdateFrame();
@@ -39,7 +42,6 @@ namespace IronEngine.DefaultRenderer
 		}
 
 		#region RENDERING_LOGIC
-
 		public void UpdateFrame()
 		{
 			Validate();
@@ -90,9 +92,10 @@ namespace IronEngine.DefaultRenderer
 					previousFGColor = currentFGColor;
 					previousBGColor = currentBGColor;
 				}
-				StringBuffer.Append('\n');
+				StringBuffer.Append($"\x1b[0m\n");
+				previousFGColor = 0;
+				previousBGColor = 0;
 			}
-			StringBuffer.Remove(StringBuffer.Length - 1, 1);
 		}
 
 		#endregion

@@ -4,22 +4,24 @@ namespace IronEngine.DefaultRenderer
 {
 	using static ConsoleRenderer;
 
-	internal class TileRenderer : IConsoleRenderer
+	public class TileRenderer : IConsoleRenderer
 	{
-		public static int sizeX = 12;
-		public static int sizeY = 6;
+		public static int sizeX = 6;
+		public static int sizeY = 3;
 
 		protected Tile _tile;
+		public byte BgColor;
 
 		public static FrameBuffer Buffer => ConsoleRenderer.Buffer;
 
-		public int SizeJ => sizeX;
-		public int SizeI => sizeY;
+		public int SizeJ => sizeY;
+		public int SizeI => sizeX;
 		public (int, int) Size => (SizeJ, SizeI);
 
-		public TileRenderer(Tile tile)
+		public TileRenderer(Tile tile, byte bgColor = COLOR_BLACK)
 		{
 			_tile = tile;
+			BgColor = bgColor;
 		}
 
 		public virtual void UpdateFrame()
@@ -35,7 +37,7 @@ namespace IronEngine.DefaultRenderer
 			{
 				for (int j = 0; j < SizeJ; j++)
 				{
-					buffer[j, i] = EMPTY_CHAR;
+					buffer.Background[j, i] = BgColor;
 				}
 			}
 		}
