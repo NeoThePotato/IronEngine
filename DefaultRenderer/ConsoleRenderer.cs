@@ -38,6 +38,8 @@ namespace IronEngine.DefaultRenderer
 				EnableVirtualTerminalProcessing();
 		}
 
+		#region RENDERING_LOGIC
+
 		public void UpdateFrame()
 		{
 			Validate();
@@ -92,6 +94,8 @@ namespace IronEngine.DefaultRenderer
 			}
 			StringBuffer.Remove(StringBuffer.Length - 1, 1);
 		}
+
+		#endregion
 
 		#region BUFFER_SIZE_MANIPULATION
 		private bool ValidateFrameBufferSize()
@@ -328,8 +332,8 @@ namespace IronEngine.DefaultRenderer
 
 			internal static void Copy(FrameBuffer destination, FrameBuffer source)
 			{
-				var sizeJ = System.Math.Min(source.SizeJ, destination._sizeJ);
-				var sizeI = System.Math.Min(source.SizeI, destination._sizeI);
+				var sizeJ = Math.ClampMax(source.SizeJ, destination._sizeJ);
+				var sizeI = Math.ClampMax(source.SizeI, destination._sizeI);
 
 				for (int j = 0; j < sizeJ; j++)
 				{
@@ -378,6 +382,7 @@ namespace IronEngine.DefaultRenderer
 		}
 		#endregion
 
+		#region CONSOLE_RENDERER_INTERFACE
 		internal interface IConsoleRenderer : IRenderer
 		{
 			internal int SizeJ { get; }
@@ -421,5 +426,6 @@ namespace IronEngine.DefaultRenderer
 				}
 			}
 		}
+		#endregion
 	}
 }
