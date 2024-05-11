@@ -42,13 +42,10 @@ namespace IronEngine.DefaultRenderer
 
 		public bool TryRenderTileObject()
 		{
-			if (_tile.HasObject)
+			if (_tile.HasObject && _tile.Object is IRenderAble renderable)
 			{
-				if (_tile.Object is IRenderAble renderable)
-				{
-					renderable.GetRenderer().UpdateFrame();
-					return true;
-				}
+				renderable.GetRenderer().UpdateFrame();
+				return true;
 			}
 			return false;
 		}
