@@ -56,7 +56,6 @@ namespace IronEngine.DefaultRenderer
 			bool valid = true;
 			valid &= ValidateFrameBufferSize();
 			ValidateStringBufferCapacity();
-			valid &= ValidateConsoleWindow();
 			return valid;
 		}
 
@@ -154,18 +153,12 @@ namespace IronEngine.DefaultRenderer
 
 		#region CONSOLE_WINDOW_MANIPULATION
 		[SupportedOSPlatform("windows")]
-		private bool ValidateConsoleWindow()
-		{
-			return ValidateConsoleWindowSize() & ValidateConsoleBufferSize();
-		}
-
 		private static void PrepareConsoleWindow()
 		{
 			try
 			{
 				CursorVisible = false;
 				SetCursorPosition(0, 0);
-				SetWindowPosition(0, 0);
 			}
 			catch (ArgumentOutOfRangeException)
 			{
