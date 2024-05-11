@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -8,9 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DefaultRenderer\**" />
-    <EmbeddedResource Remove="DefaultRenderer\**" />
-    <None Remove="DefaultRenderer\**" />
+    <ProjectReference Include="..\IronEngine.csproj" />
   </ItemGroup>
 
 </Project>
