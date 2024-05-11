@@ -12,6 +12,7 @@ namespace DefaultRenderer.Defaults
 	public class RenderableTile : Tile, IRenderAble
 	{
 		private TileRenderer _renderer;
+
 		public byte BgColor { get => _renderer.BgColor; set => _renderer.BgColor = value; }
 
 		public RenderableTile()

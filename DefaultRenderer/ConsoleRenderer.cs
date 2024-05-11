@@ -155,6 +155,7 @@ namespace IronEngine.DefaultRenderer
 		[SupportedOSPlatform("windows")]
 		private static void PrepareConsoleWindow()
 		{
+			Clear();
 			try
 			{
 				CursorVisible = false;
