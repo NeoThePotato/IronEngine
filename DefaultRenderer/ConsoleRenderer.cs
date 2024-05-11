@@ -75,11 +75,11 @@ namespace IronEngine.DefaultRenderer
 			byte previousFGColor = 0;
 			byte previousBGColor = 0;
 
-			for (int j = 0; j < BufferSizeX; j++)
+			for (int y = 0; y < BufferSizeY; y++)
 			{
-				for (int i = 0; i < BufferSizeY; i++)
+				for (int x = 0; x < BufferSizeX; x++)
 				{
-					(char currentChar, byte currentFGColor, byte currentBGColor) = Buffer[j, i];
+					(char currentChar, byte currentFGColor, byte currentBGColor) = Buffer[x, y];
 
 					if (currentFGColor != previousFGColor)
 						StringBuffer.Append($"\x1b[38;5;{(int)currentFGColor}m");
