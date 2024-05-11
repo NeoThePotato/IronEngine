@@ -6,7 +6,7 @@ namespace IronEngine
 	public class TileMap : IEnumerable<Tile>
 	{
 		[NotNull]
-		private Tile[,] _tileMap;
+		private Tile?[,] _tileMap;
 
 		public int SizeX => _tileMap.GetLength(0);
 
@@ -25,24 +25,21 @@ namespace IronEngine
 			}
 		}
 
-		public Tile this[int posX, int posY]
+		public Tile? this[int posX, int posY]
 		{
 			get => this[new(posX, posY)];
 			set => this[new(posX, posY)] = value;
 		}
 
-		public Tile this[Position position]
+		public Tile? this[Position position]
 		{
-			get
-			{
-				return this.WithinBounds(position) ? _tileMap[position.y, position.x] : null;
-			}
+			get => this.WithinBounds(position) ? _tileMap[position.y, position.x] : null;
 			internal set
 			{
 				if (this.WithinBounds(position))
 				{
 					if (_tileMap[position.y, position.x] != null)
-						_tileMap[position.y, position.x].Destroy();
+						_tileMap[position.y, position.x]?.Destroy();
 					_tileMap[position.y, position.x] = value;
 				}
 			}
