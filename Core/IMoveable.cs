@@ -61,8 +61,8 @@ namespace IronEngine
 			Tile previous = CurrentTile;
 			foreach (Tile current in path)
 			{
-				TeleportInternal(to);
 				previous.OnObjectExitInternal(this);
+				TeleportInternal(to, false);
 				current.OnObjectEnterInternal(this);
 				if (current != to)
 					current.OnObjectPassInternal(this);
@@ -70,9 +70,9 @@ namespace IronEngine
 			}
 		}
 
-		internal sealed void TeleportInternal(Tile to)
+		internal sealed void TeleportInternal(Tile to, bool overrideExisting = false)
 		{
-			if (this is TileObject tileObject && !to.HasObject)
+			if (this is TileObject tileObject && (!to.HasObject || overrideExisting))
 			{
 				CurrentTile?.OverrideObjectInternal(null);
 				to.OverrideObjectInternal(tileObject);
