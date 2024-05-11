@@ -68,7 +68,7 @@ namespace IronEngine.DefaultRenderer
 
 		private void WriteStringToConsole()
 		{
-			Write(StringBuffer);
+			WriteLine(StringBuffer);
 		}
 
 		private void ParseFrameBufferToStringBuffer()

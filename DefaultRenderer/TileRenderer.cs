@@ -35,6 +35,7 @@ namespace IronEngine.DefaultRenderer
 				for (int x = 0; x < SizeX; x++)
 				{
 					buffer.Background[x, y] = BgColor;
+					buffer.Char[x, y] = ' ';
 				}
 			}
 		}
