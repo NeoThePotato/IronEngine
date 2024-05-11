@@ -15,7 +15,7 @@ namespace IronEngine.IO
 		public static readonly IInput ConsoleInput = new ConsoleInput();
 	}
 
-	internal class ConsoleInput : IInput
+	public class ConsoleInput : IInput
 	{
 		private const string HELP_STR = "help";
 
@@ -23,6 +23,8 @@ namespace IronEngine.IO
 		private ICommandAble _selected;
 
 		public bool AutoPrintCommands { get; set; } = true;
+		public string SelectCommandAblePrompt = "Select Commandable:";
+		public string SelectCommandPrompt = "Select Command:";
 
 		public string GetString(string prompt)
 		{
@@ -37,6 +39,7 @@ namespace IronEngine.IO
 		public Command PickCommand(IEnumerable<Command> commands)
 		{
 			Store(_commandsCache, commands.Append(Command.Return));
+			Console.WriteLine(SelectCommandPrompt);
 			if (AutoPrintCommands)
 				PrintAll(_commandsCache);
 			return SelectFromDictionary(_commandsCache);
@@ -45,6 +48,7 @@ namespace IronEngine.IO
 		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandables)
 		{
 			Store(_commandsCache, commandables.Select(Select));
+			Console.WriteLine(SelectCommandAblePrompt);
 			if (AutoPrintCommands)
 				PrintAll(_commandsCache);
 			SelectFromDictionary(_commandsCache).Invoke();
@@ -63,7 +67,6 @@ namespace IronEngine.IO
 		{
 			dictionary.Clear();
 			int index = 1;
-			Console.WriteLine("Select command:");
 			foreach (var keyAble in keyAbles)
 			{
 				string key;
@@ -87,10 +90,9 @@ namespace IronEngine.IO
 		private T SelectFromDictionary<T>(Dictionary<string, T> dictionary) where T : IHasKey
 		{
 			T selected;
-			string key;
 			do
 			{
-				key = Console.ReadLine().Simplify();
+				string key = Console.ReadLine().Simplify();
 				if (dictionary.TryGetValue(key, out selected))
 					break;
 				else if (key.StartsWith(HELP_STR))

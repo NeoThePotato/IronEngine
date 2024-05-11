@@ -43,6 +43,7 @@ namespace IronEngine
 
 		public void Run()
 		{
+			OnGameStart();
 			PlayerLoop();
 			PlayerExit();
 		}
@@ -93,6 +94,8 @@ namespace IronEngine
 		protected abstract TileMap CreateTileMap();
 
 		protected abstract IRenderer CreateRenderer();
+
+		protected virtual void OnGameStart() { }
 
 		protected abstract void OnExit();
 		#endregion
