@@ -10,8 +10,8 @@
 
 		public FrameBuffer Buffer => ConsoleRenderer.Buffer;
 		
-		public int SizeX => TileRenderer.sizeX;
-		public int SizeY => TileRenderer.sizeY;
+		public int SizeX => TileSizeX;
+		public int SizeY => TileSizeY;
 		public (int, int) Size => (SizeX, SizeY);
 
 		public TileObjectRenderer(TileObject tileObject, char ch = ' ', byte fgColor = COLOR_BLACK)

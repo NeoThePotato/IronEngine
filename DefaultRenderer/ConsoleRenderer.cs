@@ -16,6 +16,8 @@ namespace IronEngine.DefaultRenderer
 		public const byte COLOR_BLACK = 0;
 		private static readonly bool IS_WINDOWS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 		internal static readonly (char, byte, byte) EMPTY_CHAR = (' ', COLOR_WHITE, COLOR_BLACK);
+		public static int TileSizeX = 6;
+		public static int TileSizeY = 3;
 
 		internal static FrameBuffer Buffer { get; private set; }
 		private StringBuilder StringBuffer { get; set; }

@@ -6,16 +6,13 @@ namespace IronEngine.DefaultRenderer
 
 	public class TileRenderer : IConsoleRenderer
 	{
-		public static int sizeX = 6;
-		public static int sizeY = 3;
-
 		protected Tile _tile;
 		public byte BgColor;
 
 		public static FrameBuffer Buffer => ConsoleRenderer.Buffer;
 
-		public int SizeX => sizeX;
-		public int SizeY => sizeY;
+		public int SizeX => TileSizeX;
+		public int SizeY => TileSizeY;
 		public (int, int) Size => (SizeX, SizeY);
 
 		public TileRenderer(Tile tile, byte bgColor = COLOR_BLACK)

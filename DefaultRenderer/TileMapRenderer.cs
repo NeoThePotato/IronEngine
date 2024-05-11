@@ -8,8 +8,8 @@ namespace IronEngine.DefaultRenderer
 	{
 		public static FrameBuffer Buffer => ConsoleRenderer.Buffer;
 		private TileMap TileMap { get; set; }
-		public int SizeX => TileMap.SizeX * TileRenderer.sizeX;
-		public int SizeY => TileMap.SizeY * TileRenderer.sizeY;
+		public int SizeX => TileMap.SizeX * TileSizeX;
+		public int SizeY => TileMap.SizeY * TileSizeY;
 		public (int, int) Size => (SizeX, SizeY);
 
 		public TileMapRenderer(TileMap tileMap)
@@ -32,6 +32,6 @@ namespace IronEngine.DefaultRenderer
 			return new FrameBuffer(buffer, bufferX, bufferY);
 		}
 
-		public static (int, int) TileMapPositionToFrameBufferPosition(Position position) => (position.x * TileRenderer.sizeX, position.y * TileRenderer.sizeY);
+		public static (int, int) TileMapPositionToFrameBufferPosition(Position position) => (position.x * TileSizeX, position.y * TileSizeY);
 	}
 }
