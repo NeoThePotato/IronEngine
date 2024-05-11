@@ -14,9 +14,9 @@ namespace IronEngine.DefaultRenderer
 
 		public static FrameBuffer Buffer => ConsoleRenderer.Buffer;
 
-		public int SizeJ => sizeY;
-		public int SizeI => sizeX;
-		public (int, int) Size => (SizeJ, SizeI);
+		public int SizeX => sizeX;
+		public int SizeY => sizeY;
+		public (int, int) Size => (SizeX, SizeY);
 
 		public TileRenderer(Tile tile, byte bgColor = COLOR_BLACK)
 		{
@@ -33,11 +33,11 @@ namespace IronEngine.DefaultRenderer
 		public virtual void RenderTile()
 		{
 			var buffer = TileMapRenderer.GetFrameBufferAtPosition(Buffer, _tile.Position);
-			for (int i = 0; i < SizeI; i++)
+			for (int y = 0; y < SizeY; y++)
 			{
-				for (int j = 0; j < SizeJ; j++)
+				for (int x = 0; x < SizeX; x++)
 				{
-					buffer.Background[j, i] = BgColor;
+					buffer.Background[x, y] = BgColor;
 				}
 			}
 		}

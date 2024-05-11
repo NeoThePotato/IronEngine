@@ -20,13 +20,13 @@ namespace IronEngine.DefaultRenderer
 		internal static FrameBuffer Buffer { get; private set; }
 		private StringBuilder StringBuffer { get; set; }
 		private IConsoleRenderer ChildRenderer { get; set; }
-		private static int BufferSizeJ => Buffer.SizeJ;
-		private static int BufferSizeI => Buffer.SizeI;
-		private static (int, int) BufferSize => (BufferSizeJ, BufferSizeI);
-		private static int BufferLength => BufferSizeJ * BufferSizeI;
-		public int SizeJ => ChildRenderer.SizeJ;
-		public int SizeI => ChildRenderer.SizeI;
-		internal (int, int) Size => (SizeJ, SizeI);
+		private static int BufferSizeX => Buffer.SizeX;
+		private static int BufferSizeY => Buffer.SizeY;
+		private static (int, int) BufferSize => (BufferSizeX, BufferSizeY);
+		private static int BufferLength => BufferSizeX * BufferSizeY;
+		public int SizeX => ChildRenderer.SizeX;
+		public int SizeY => ChildRenderer.SizeY;
+		internal (int, int) Size => (SizeX, SizeY);
 
 		public ConsoleRenderer(TileMap tileMap)
 		{
@@ -75,9 +75,9 @@ namespace IronEngine.DefaultRenderer
 			byte previousFGColor = 0;
 			byte previousBGColor = 0;
 
-			for (int j = 0; j < BufferSizeJ; j++)
+			for (int j = 0; j < BufferSizeX; j++)
 			{
-				for (int i = 0; i < BufferSizeI; i++)
+				for (int i = 0; i < BufferSizeY; i++)
 				{
 					(char currentChar, byte currentFGColor, byte currentBGColor) = Buffer[j, i];
 
@@ -114,7 +114,7 @@ namespace IronEngine.DefaultRenderer
 		{
 			(int sizeJ, int sizeI) = Size;
 			UpdateFrameBufferSize(sizeJ, sizeI);
-			Debug.WriteLine($"Updated ConsoleRenderer.FrameBuffer.size to {BufferSizeJ}, {BufferSizeI}.");
+			Debug.WriteLine($"Updated ConsoleRenderer.FrameBuffer.size to {BufferSizeX}, {BufferSizeY}.");
 		}
 
 		private void UpdateFrameBufferSize(int sizeJ, int sizeI)
@@ -134,7 +134,7 @@ namespace IronEngine.DefaultRenderer
 
 		private void UpdateStringBufferCapacity()
 		{
-			UpdateStringBufferCapacity(BufferLength + BufferSizeJ);
+			UpdateStringBufferCapacity(BufferLength + BufferSizeX);
 		}
 
 		private void UpdateStringBufferCapacity(int capacity)
@@ -173,7 +173,7 @@ namespace IronEngine.DefaultRenderer
 		[SupportedOSPlatform("windows")]
 		private bool ValidateConsoleWindowSize()
 		{
-			bool invalid = WindowHeight != SizeJ || WindowWidth != SizeI;
+			bool invalid = WindowHeight != SizeX || WindowWidth != SizeY;
 
 			if (invalid)
 				UpdateConsoleWindowSize();
@@ -184,7 +184,7 @@ namespace IronEngine.DefaultRenderer
 		[SupportedOSPlatform("windows")]
 		private void UpdateConsoleWindowSize()
 		{
-			UpdateConsoleWindowSize(SizeI, SizeJ);
+			UpdateConsoleWindowSize(SizeY, SizeX);
 		}
 
 		[SupportedOSPlatform("windows")]
@@ -204,7 +204,7 @@ namespace IronEngine.DefaultRenderer
 		[SupportedOSPlatform("windows")]
 		private bool ConsoleWindowSizeOutOfBounds()
 		{
-			return WindowHeight < SizeJ || WindowHeight > LargestWindowHeight || WindowWidth < SizeI || WindowWidth > LargestWindowWidth;
+			return WindowHeight < SizeX || WindowHeight > LargestWindowHeight || WindowWidth < SizeY || WindowWidth > LargestWindowWidth;
 		}
 
 		[SupportedOSPlatform("windows")]
@@ -280,99 +280,99 @@ namespace IronEngine.DefaultRenderer
 		#region FRAME_BUFFER
 		public struct FrameBuffer
 		{
-			private readonly int _sizeJ;
-			private readonly int _sizeI;
-			private readonly int _offsetJ;
-			private readonly int _offsetI;
+			private readonly int _sizeX;
+			private readonly int _sizeY;
+			private readonly int _offsetX;
+			private readonly int _offsetY;
 			internal OffsetBuffer<char> Char;
 			internal OffsetBuffer<byte> Foreground;
 			internal OffsetBuffer<byte> Background;
 
-			internal readonly int SizeJ => _sizeJ - OffsetJ;
-			internal readonly int SizeI => _sizeI - OffsetI;
-			internal readonly int OffsetJ => _offsetJ;
-			internal readonly int OffsetI => _offsetI;
+			internal readonly int SizeX => _sizeX - OffsetX;
+			internal readonly int SizeY => _sizeY - OffsetY;
+			internal readonly int OffsetX => _offsetX;
+			internal readonly int OffsetY => _offsetY;
 
-			internal (char, byte, byte) this[int j, int i]
+			internal (char, byte, byte) this[int x, int y]
 			{
-				readonly get => (Char[j, i], Foreground[j, i], Background[j, i]);
+				readonly get => (Char[x, y], Foreground[x, y], Background[x, y]);
 				set
 				{
-					Char[j, i] = value.Item1;
-					Foreground[j, i] = value.Item2;
-					Background[j, i] = value.Item3;
+					Char[x, y] = value.Item1;
+					Foreground[x, y] = value.Item2;
+					Background[x, y] = value.Item3;
 				}
 			}
 
-			internal FrameBuffer(int sizeJ, int sizeI, int offsetJ = 0, int offsetI = 0)
+			internal FrameBuffer(int sizeX, int sizeY, int offsetX = 0, int offsetY = 0)
 			{
-				_sizeJ = sizeJ;
-				_sizeI = sizeI;
-				_offsetJ = offsetJ;
-				_offsetI = offsetI;
-				Char = new OffsetBuffer<char>(sizeJ, sizeI, offsetJ, offsetI);
-				Foreground = new OffsetBuffer<byte>(sizeJ, sizeI, offsetJ, offsetI);
-				Background = new OffsetBuffer<byte>(sizeJ, sizeI, offsetJ, offsetI);
+				_sizeX = sizeX;
+				_sizeY = sizeY;
+				_offsetX = offsetX;
+				_offsetY = offsetY;
+				Char = new OffsetBuffer<char>(sizeX, sizeY, offsetX, offsetY);
+				Foreground = new OffsetBuffer<byte>(sizeX, sizeY, offsetX, offsetY);
+				Background = new OffsetBuffer<byte>(sizeX, sizeY, offsetX, offsetY);
 			}
 
-			internal FrameBuffer(FrameBuffer other, int offsetJ = 0, int offsetI = 0)
+			internal FrameBuffer(FrameBuffer other, int offsetX = 0, int offsetY = 0)
 			{
-				_sizeJ = other._sizeJ;
-				_sizeI = other._sizeI;
-				_offsetJ = other._offsetJ + offsetJ;
-				_offsetI = other._offsetI + offsetI;
-				Char = new OffsetBuffer<char>(other.Char, offsetJ, offsetI);
-				Foreground = new OffsetBuffer<byte>(other.Foreground, offsetJ, offsetI);
-				Background = new OffsetBuffer<byte>(other.Background, offsetJ, offsetI);
+				_sizeX = other._sizeX;
+				_sizeY = other._sizeY;
+				_offsetX = other._offsetX + offsetX;
+				_offsetY = other._offsetY + offsetY;
+				Char = new OffsetBuffer<char>(other.Char, offsetX, offsetY);
+				Foreground = new OffsetBuffer<byte>(other.Foreground, offsetX, offsetY);
+				Background = new OffsetBuffer<byte>(other.Background, offsetX, offsetY);
 			}
 
 			internal static void Copy(FrameBuffer destination, FrameBuffer source)
 			{
-				var sizeJ = Math.ClampMax(source.SizeJ, destination._sizeJ);
-				var sizeI = Math.ClampMax(source.SizeI, destination._sizeI);
+				var sizeX = Math.ClampMax(source.SizeX, destination._sizeX);
+				var sizeY = Math.ClampMax(source.SizeY, destination._sizeY);
 
-				for (int j = 0; j < sizeJ; j++)
+				for (int y = 0; y < sizeY; y++)
 				{
-					for (int i = 0; i < sizeI; i++)
+					for (int x = 0; x < sizeX; x++)
 					{
-						destination[j, i] = source[j, i];
+						destination[x, y] = source[x, y];
 					}
 				}
 			}
 
 			public override readonly string ToString()
 			{
-				return $"J: {_offsetJ}:{_sizeJ}, I: {_offsetI}:{_sizeI}";
+				return $"X: {_offsetX}:{_sizeX}, Y: {_offsetY}:{_sizeY}";
 			}
 
 			internal struct OffsetBuffer<T>
 			{
 				private readonly T[,] _buffer;
 
-				internal readonly int SizeJ => _buffer.GetLength(0);
-				internal readonly int SizeI => _buffer.GetLength(1);
-				internal int OffsetJ { get; private set; }
-				internal int OffsetI { get; private set; }
+				internal readonly int SizeX => _buffer.GetLength(1);
+				internal readonly int SizeY => _buffer.GetLength(0);
+				internal int OffsetX { get; private set; }
+				internal int OffsetY { get; private set; }
 
 
-				internal OffsetBuffer(int sizeJ, int sizeI, int offsetJ = 0, int offsetI = 0)
+				internal OffsetBuffer(int sizeX, int sizeY, int offsetX = 0, int offsetY = 0)
 				{
-					_buffer = new T[sizeJ, sizeI];
-					OffsetJ = offsetJ;
-					OffsetI = offsetI;
+					_buffer = new T[sizeY, sizeX];
+					OffsetX = offsetX;
+					OffsetY = offsetY;
 				}
 
-				internal OffsetBuffer(OffsetBuffer<T> other, int offsetJ = 0, int offsetI = 0)
+				internal OffsetBuffer(OffsetBuffer<T> other, int offsetX = 0, int offsetY = 0)
 				{
 					_buffer = other._buffer;
-					OffsetJ = other.OffsetJ + offsetJ;
-					OffsetI = other.OffsetI + offsetI;
+					OffsetX = other.OffsetX + offsetX;
+					OffsetY = other.OffsetY + offsetY;
 				}
 
-				internal readonly T this[int j, int i]
+				internal readonly T this[int x, int y]
 				{
-					get => _buffer[OffsetJ + j, OffsetI + i];
-					set => _buffer[OffsetJ + j, OffsetI + i] = value;
+					get => _buffer[OffsetY + y, OffsetX + x];
+					set => _buffer[OffsetY + y, OffsetX + x] = value;
 				}
 			}
 		}
@@ -381,8 +381,8 @@ namespace IronEngine.DefaultRenderer
 		#region CONSOLE_RENDERER_INTERFACE
 		internal interface IConsoleRenderer : IRenderer
 		{
-			internal int SizeJ { get; }
-			internal int SizeI { get; }
+			internal int SizeX { get; }
+			internal int SizeY { get; }
 
 			public void WriteLine(string str)
 			{

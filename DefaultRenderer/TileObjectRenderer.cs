@@ -8,9 +8,9 @@
 
 		public FrameBuffer Buffer => ConsoleRenderer.Buffer;
 		
-		public int SizeJ => TileRenderer.sizeY;
-		public int SizeI => TileRenderer.sizeX;
-		public (int, int) Size => (SizeJ, SizeI);
+		public int SizeX => TileRenderer.sizeX;
+		public int SizeY => TileRenderer.sizeY;
+		public (int, int) Size => (SizeX, SizeY);
 
 		public TileObjectRenderer(TileObject tileObject)
 		{
@@ -25,11 +25,11 @@
 		public void Render()
 		{
 			var buffer = TileMapRenderer.GetFrameBufferAtPosition(Buffer, _tileObject.Position);
-			for (int i = 0; i < SizeI; i++)
+			for (int y = 0; y < SizeY; y++)
 			{
-				for (int j = 0; j < SizeJ; j++)
+				for (int x = 0; x < SizeX; x++)
 				{
-					buffer[j, i] = EMPTY_CHAR;
+					buffer[x, y] = EMPTY_CHAR;
 				}
 			}
 		}
