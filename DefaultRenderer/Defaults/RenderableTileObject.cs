@@ -14,7 +14,7 @@ namespace DefaultRenderer.Defaults
 		private TileObjectRenderer _renderer;
 
 		public byte FgColor { get => _renderer.FgColor; set => _renderer.FgColor = value; }
-		public char Char { get => _renderer.Char; set => _renderer.Char = value; }
+		public string[]? Chars { get => _renderer.Chars; set => _renderer.Chars = value; }
 
 		public RenderableTileObject(Actor? actor = null) : base(actor)
 		{
