@@ -16,8 +16,8 @@ namespace IronEngine.DefaultRenderer
 		public const byte COLOR_BLACK = 0;
 		private static readonly bool IS_WINDOWS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 		internal static readonly (char, byte, byte) EMPTY_CHAR = (' ', COLOR_WHITE, COLOR_BLACK);
-		public static int TileSizeX = 6;
-		public static int TileSizeY = 3;
+		internal static int TileSizeX;
+		internal static int TileSizeY;
 
 		internal static FrameBuffer Buffer { get; private set; }
 		private StringBuilder StringBuffer { get; set; }
@@ -30,8 +30,10 @@ namespace IronEngine.DefaultRenderer
 		public int SizeY => ChildRenderer.SizeY;
 		internal (int, int) Size => (SizeX, SizeY);
 
-		public ConsoleRenderer(TileMap tileMap)
+		public ConsoleRenderer(TileMap tileMap, int tileSizeX = 6, int tileSizeY = 3)
 		{
+			TileSizeX = tileSizeX;
+			TileSizeY = tileSizeY;
 			if (tileMap is IRenderAble renderAble && renderAble.GetRenderer() is IConsoleRenderer consoleRenderer)
 				ChildRenderer = consoleRenderer;
 			else
