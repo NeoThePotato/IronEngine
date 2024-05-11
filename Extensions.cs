@@ -65,6 +65,123 @@ namespace IronEngine
 		}
 
 		/// <summary>
+		/// Returns an <see cref="IEnumerable"/> with no <see langword="null"/> elements.
+		/// </summary>
+		/// <typeparam name="T">Type of enumerable.</typeparam>
+		/// <param name="source">Source to skip nulls for.</param>
+		/// <returns>An <see cref="IEnumerable"/> with no <see langword="null"/> elements.</returns>
+		public static IEnumerable<T> SkipNull<T>(this IEnumerable<T> source) => source.Where(s => s != null);
+
+		/// <summary>
+		/// Returns an <see cref="IEnumerable"/> of all tiles in <paramref name="tileMap"/> based on <paramref name="positions"/>.
+		/// </summary>
+		/// <param name="positions">Positions to index.</param>
+		/// <param name="tileMap"><see cref="TileMap"/> to query tiles form.</param>
+		/// <returns>An <see cref="IEnumerable"/> of indexed tiles.</returns>
+		public static IEnumerable<Tile?> ToTiles(this IEnumerable<Position> positions, TileMap tileMap) => positions.Select(p => tileMap[p]);
+
+		/// <summary>
+		/// Return a <see cref="Position"/> in the horizontally-flipped position around <paramref name="pivot"/>'s position.
+		/// </summary>
+		/// <param name="source">Source to flip.</param>
+		/// <param name="pivot">Pivot to flip around.</param>
+		/// <returns><see cref="Tile"/> with flipped position.</returns>
+		public static Position FlipX(this Position source, Position pivot) => new(Flip(source.x, pivot.x), source.y);
+
+		/// <summary>
+		/// Return a <see cref="Position"/> in the vertically-flipped position around <paramref name="pivot"/>'s position.
+		/// </summary>
+		/// <param name="source">Source to flip.</param>
+		/// <param name="pivot">Pivot to flip around.</param>
+		/// <returns><see cref="Tile"/> with flipped position.</returns>
+		public static Position FlipY(this Position source, Position pivot) => new(source.x, Flip(source.y, pivot.y));
+
+		/// <summary>
+		/// Return a <see cref="Position"/> in both the horizontally and vertically flipped position around <paramref name="pivot"/>'s position.
+		/// </summary>
+		/// <param name="source">Source to flip.</param>
+		/// <param name="pivot">Pivot to flip around.</param>
+		/// <returns><see cref="Tile"/> with flipped position.</returns>
+		public static Position FlipXY(this Position source, Position pivot) => source.FlipX(pivot).FlipY(pivot);
+
+		private static int Flip(int source, int pivot) => pivot + pivot - source;
+
+		/// <summary>
+		/// Return a <see cref="Position"/> in the horizontally-mirrored position around <paramref name="pivot"/>'s position.
+		/// </summary>
+		/// <param name="source">Source to generate a mirror for.</param>
+		/// <param name="pivot">Pivot to mirror around.</param>
+		/// <returns><see cref="IEnumerable"/> with both original and mirrored positions.</returns>
+		public static IEnumerable<Position> MirrorX(this Position source, Position pivot)
+		{
+			yield return source;
+			var mirrored = source.FlipX(pivot);
+			yield return mirrored;
+		}
+
+		/// <summary>
+		/// Return a <see cref="Position"/> in the vertically-mirrored position around <paramref name="pivot"/>'s position.
+		/// </summary>
+		/// <param name="source">Source to generate a mirror for.</param>
+		/// <param name="pivot">Pivot to mirror around.</param>
+		/// <returns><see cref="IEnumerable"/> with both original and mirrored positions.</returns>
+		public static IEnumerable<Position> MirrorY(this Position source, Position pivot)
+		{
+			yield return source;
+			var mirrored = source.FlipY(pivot);
+			yield return mirrored;
+		}
+
+		/// <summary>
+		/// Return 4 positions in both the vertically and horizontally mirrored position around <paramref name="pivot"/>'s position.
+		/// </summary>
+		/// <param name="source">Source to generate a mirror for.</param>
+		/// <param name="pivot">Pivot to mirror around.</param>
+		/// <returns><see cref="IEnumerable"/> with both original and mirrored positions.</returns>
+		public static IEnumerable<Position> MirrorXY(this Position source, Position pivot)
+		{
+			return source.MirrorX(pivot).MirrorY(pivot);
+		}
+
+		/// <summary>
+		/// For each element in <paramref name="source"/>, also return a <see cref="Position"/> in the horizontally-mirrored position around <paramref name="pivot"/>'s position.
+		/// </summary>
+		/// <param name="source">Source to generate a mirror for.</param>
+		/// <param name="pivot">Pivot to mirror around.</param>
+		/// <returns><see cref="IEnumerable"/> with both original and mirrored positions.</returns>
+		public static IEnumerable<Position> MirrorX(this IEnumerable<Position> source, Position pivot)
+		{
+			foreach (var pos1 in source)
+			{
+				foreach (var pos2 in pos1.MirrorX(pivot))
+					yield return pos2;
+			}
+		}
+
+		/// <summary>
+		/// For each element in <paramref name="source"/>, also return a <see cref="Position"/> in the vertically-mirrored position around <paramref name="pivot"/>'s position.
+		/// </summary>
+		/// <param name="source">Source to generate a mirror for.</param>
+		/// <param name="pivot">Pivot to mirror around.</param>
+		/// <returns><see cref="IEnumerable"/> with both original and mirrored positions.</returns>
+		public static IEnumerable<Position> MirrorY(this IEnumerable<Position> source, Position pivot)
+		{
+			foreach (var pos1 in source)
+			{
+				foreach (var pos2 in pos1.MirrorY(pivot))
+					yield return pos2;
+			}
+		}
+
+		/// <summary>
+		/// For each element in <paramref name="source"/>, also return 3 <see cref="Position"/> in both the vertically and horizontally mirrored position around <paramref name="pivot"/>'s position.
+		/// </summary>
+		/// <param name="source">Source to generate a mirror for.</param>
+		/// <param name="pivot">Pivot to mirror around.</param>
+		/// <returns><see cref="IEnumerable"/> with both original and mirrored positions.</returns>
+		public static IEnumerable<Position> MirrorXY(this IEnumerable<Position> source, Position pivot) => source.MirrorX(pivot).MirrorY(pivot);
+
+		/// <summary>
 		/// Filters an <see cref="IPositionable"/> enumerable to only include 1 instance every <paramref name="offset"/> iterations.
 		/// </summary>
 		/// <param name="source">Source enumerable.</param>
