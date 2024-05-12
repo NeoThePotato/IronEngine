@@ -13,6 +13,7 @@ namespace IronEngine
 		public int SizeY => _tileMap.GetLength(1);
 
 		public TileMap(int sizeX, int sizeY, Tile? fillWith = null)
+		public TileMap(uint sizeX, uint sizeY, Tile? fillWith = null)
 		{
 			_tileMap = new Tile[sizeY, sizeX];
 			if (fillWith != null)

@@ -13,7 +13,7 @@ namespace DefaultRenderer.Defaults
 	{
 		private TileMapRenderer _renderer;
 
-		public RenderableTileMap(int sizeX, int sizeY, Tile? fillWith = null) : base(sizeX, sizeY, fillWith)
+		public RenderableTileMap(uint sizeX, uint sizeY, Tile? fillWith = null) : base(sizeX, sizeY, fillWith)
 		{ }
 
 		public IRenderer GetRenderer() => _renderer;
