@@ -38,9 +38,18 @@ namespace IronEngine
 			{
 				if (this.WithinBounds(position))
 				{
-					if (_tileMap[position.y, position.x] != null)
-						_tileMap[position.y, position.x]?.Destroy();
+					Tile? tile = _tileMap[position.y, position.x];
+					if (tile != null)
+					{
+						tile.UnBindFromTileMapInternal();
+						tile.Destroy();
+					}
 					_tileMap[position.y, position.x] = value;
+					if (value != null)
+					{
+						value.TileMap = this;
+						value.Position = position;
+					}
 				}
 			}
 		}

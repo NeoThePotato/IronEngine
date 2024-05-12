@@ -120,6 +120,16 @@ namespace IronEngine
 			tileMap[position] = this;
 		}
 
+		internal void UnBindFromTileMapInternal()
+		{
+			var tileMap = TileMap;
+			if (tileMap == null)
+				return;
+			var position = Position;
+			TileMap = null;
+			tileMap[position] = null;
+		}
+
 		public bool SameTileMap(Tile other) => TileMap != null && TileMap == other.TileMap;
 	}
 }
