@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 
 namespace IronEngine
 {
@@ -8,7 +7,6 @@ namespace IronEngine
 	/// </summary>
 	public class TileMap : IEnumerable<Tile>
 	{
-		[NotNull]
 		private Tile?[,] _tileMap;
 
 		/// <summary>

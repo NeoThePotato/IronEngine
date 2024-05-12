@@ -1,7 +1,7 @@
-﻿using MovementStrategy = System.Func<IronEngine.IMoveable, IronEngine.Tile, System.Collections.Generic.IEnumerable<IronEngine.Tile>>;
-
-namespace IronEngine
+﻿namespace IronEngine
 {
+	using MovementStrategy = Func<IMoveable, Tile, IEnumerable<Tile>>;
+
 	/// <summary>
 	/// Interface for all instances of <see cref="IPositionable"/> that can also move on the <see cref="TileMap"/>.
 	/// </summary>
@@ -76,8 +76,8 @@ namespace IronEngine
 		#region INTERNAL_MOVEMENT_LOGIC
 		internal sealed void MoveInternal(Position to, MovementStrategy movementStrategy)
 		{
-            if (!this.CheckHasTileMap() || !this.CheckWithinTileMap(to)) return;
-            MoveInternal(TileMap[to], movementStrategy);
+			if (!this.CheckHasTileMap() || !this.CheckWithinTileMap(to)) return;
+			MoveInternal(TileMap[to], movementStrategy);
 		}
 
 		internal sealed void MoveInternal(Tile to, MovementStrategy movementStrategy)

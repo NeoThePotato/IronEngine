@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Text;
+using static System.Console;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Text;
-using static System.Console;
 using IronEngine.IO;
 
 namespace IronEngine.DefaultRenderer

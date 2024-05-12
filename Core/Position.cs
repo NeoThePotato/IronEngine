@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using static System.Math;
+﻿using static System.Math;
 
 namespace IronEngine
 {

@@ -1,7 +1,7 @@
-﻿using static IronEngine.ICommandAble;
-
-namespace IronEngine.IO
+﻿namespace IronEngine.IO
 {
+	using static ICommandAble;
+
 	/// <summary>
 	/// Interface for receiving input from an <see cref="Actor"/>.
 	/// </summary>

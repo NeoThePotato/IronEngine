@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace IronEngine
+﻿namespace IronEngine
 {
 	/// <summary>
 	/// Represents a tile on a <see cref="TileMap"/>.
@@ -13,7 +11,6 @@ namespace IronEngine
 		/// <summary>
 		/// The <see cref="TileMap"/> to which this <see cref="Tile"/> belongs.
 		/// </summary>
-		[NotNull]
 		public TileMap TileMap { get; internal set; }
 
 		/// <summary>
