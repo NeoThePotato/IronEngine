@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace IronEngine
 {
+	/// <summary>
+	/// Contains a position in 2D space.
+	/// </summary>
 	public readonly struct Position : IEquatable<Position>
 	{
 		public readonly int x;
@@ -57,12 +60,17 @@ namespace IronEngine
 		#endregion
 
 		#region DISTANCE
+		/// <seealso cref="DistanceEuclidean"/>
+		/// <returns>Euclidean distance between <paramref name="p1"/> and <paramref name="p2"/> Alias of <see cref="DistanceEuclidean"/>.</returns>
 		public static double Distance(Position p1, Position p2) => DistanceEuclidean(p1, p2);
 
+		/// <returns>Euclidean distance between <paramref name="p1"/> and <paramref name="p2"/>.</returns>
 		public static double DistanceEuclidean(Position p1, Position p2) => (p2 - p1).MagnitudeEuclidean;
 
+		/// <returns>Chebyshev distance between <paramref name="p1"/> and <paramref name="p2"/>.</returns>
 		public static int DistanceChebyshev(Position p1, Position p2) => (p2 - p1).MagnitudeChebyshev;
 
+		/// <returns>Taxicab distance between <paramref name="p1"/> and <paramref name="p2"/>.</returns>
 		public static int DistanceTaxicab(Position p1, Position p2) => (p2 - p1).MagnitudeTaxicab;
 		#endregion
 
@@ -77,12 +85,24 @@ namespace IronEngine
 		#endregion
 	}
 	
+	/// <summary>
+	/// Interface for all instances which have a <see cref="Position"/> on a <see cref="Tile"/> inside a <see cref="TileMap"/>.
+	/// </summary>
 	public interface IPositionable
 	{
+		/// <summary>
+		/// The <see cref="TileMap"/> of this instance.
+		/// </summary>
 		TileMap TileMap { get; }
 
+		/// <summary>
+		/// The <see cref="Tile"/> of this instance.
+		/// </summary>
 		Tile CurrentTile { get; }
 
+		/// <summary>
+		/// The <see cref="Position"/> of this instance on the <see cref="TileMap"/>.
+		/// </summary>
 		Position Position { get; }
 	}
 }
