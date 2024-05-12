@@ -4,7 +4,7 @@ namespace IronEngine.DefaultRenderer
 {
 	using static ConsoleRenderer;
 
-	public class TileRenderer : IConsoleRenderer
+	internal class TileRenderer : IConsoleRenderer
 	{
 		protected Tile _tile;
 		public byte BgColor;

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace DefaultRenderer.Defaults
 {
+	/// <summary>
+	/// A <see cref="TileMap"/> which implements a default <see cref="IRenderAble"/> using the <see cref="Console"/>.
+	/// </summary>
 	public class RenderableTileMap : TileMap, IRenderAble
 	{
 		private TileMapRenderer _renderer;

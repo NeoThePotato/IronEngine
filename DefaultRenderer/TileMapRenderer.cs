@@ -4,7 +4,7 @@ namespace IronEngine.DefaultRenderer
 {
 	using static ConsoleRenderer;
 
-	public class TileMapRenderer : IConsoleRenderer
+	internal class TileMapRenderer : IConsoleRenderer
 	{
 		public static FrameBuffer Buffer => ConsoleRenderer.Buffer;
 		private TileMap TileMap { get; set; }

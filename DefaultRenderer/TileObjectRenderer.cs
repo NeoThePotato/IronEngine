@@ -2,7 +2,7 @@
 {
 	using static ConsoleRenderer;
 
-	public class TileObjectRenderer : IConsoleRenderer
+	internal class TileObjectRenderer : IConsoleRenderer
 	{
 		private static readonly string[] DEFAULT_CHARS = ["TO"];
 		protected TileObject _tileObject;

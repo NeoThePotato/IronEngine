@@ -8,7 +8,7 @@ using IronEngine.IO;
 namespace IronEngine.DefaultRenderer
 {
 	/// <summary>
-	/// Handles rendering of elements into the console
+	/// Handles rendering of elements into the console.
 	/// </summary>
 	public class ConsoleRenderer : ConsoleRenderer.IConsoleRenderer
 	{
@@ -30,6 +30,12 @@ namespace IronEngine.DefaultRenderer
 		public int SizeY => ChildRenderer.SizeY;
 		internal (int, int) Size => (SizeX, SizeY);
 
+		/// <summary>
+		/// Creates an <see cref="IRenderer"/> instance which renders objects to the <see cref="Console"/>.
+		/// </summary>
+		/// <param name="tileMap">TileMap to render.</param>
+		/// <param name="tileSizeX">Horizontal size of each <see cref="Tile"/>.</param>
+		/// <param name="tileSizeY">Vertical size of each <see cref="Tile"/>.</param>
 		public ConsoleRenderer(TileMap tileMap, int tileSizeX = 6, int tileSizeY = 3)
 		{
 			TileSizeX = tileSizeX;
@@ -250,7 +256,7 @@ namespace IronEngine.DefaultRenderer
 		}
 
 		[SupportedOSPlatform("windows")]
-		public static void EnableVirtualTerminalProcessing()
+		private static void EnableVirtualTerminalProcessing()
 		{
 			const int STD_OUTPUT_HANDLE = -11;
 			const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 4;
@@ -271,19 +277,19 @@ namespace IronEngine.DefaultRenderer
 
 		[SupportedOSPlatform("windows")]
 		[DllImport("kernel32.dll")]
-		static private extern nint GetStdHandle(int nStdHandle);
+		private static extern nint GetStdHandle(int nStdHandle);
 
 		[SupportedOSPlatform("windows")]
 		[DllImport("kernel32.dll")]
-		static private extern bool GetConsoleMode(nint hConsoleHandle, out uint lpMode);
+		private static extern bool GetConsoleMode(nint hConsoleHandle, out uint lpMode);
 
 		[SupportedOSPlatform("windows")]
 		[DllImport("kernel32.dll")]
-		static private extern bool SetConsoleMode(nint hConsoleHandle, uint dwMode);
+		private static extern bool SetConsoleMode(nint hConsoleHandle, uint dwMode);
 		#endregion
 
 		#region FRAME_BUFFER
-		public struct FrameBuffer
+		internal struct FrameBuffer
 		{
 			private readonly int _sizeX;
 			private readonly int _sizeY;
