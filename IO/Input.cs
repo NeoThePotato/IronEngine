@@ -2,19 +2,45 @@
 
 namespace IronEngine.IO
 {
+	/// <summary>
+	/// Interface for receiving input from an <see cref="Actor"/>.
+	/// </summary>
 	public interface IInput
 	{
+		/// <summary>
+		/// Prompts the <see cref="Actor"/> to input a string.
+		/// </summary>
+		/// <param name="prompt">Prompt to show the user.</param>
+		/// <returns>The user's returned string.</returns>
 		public string GetString(string prompt);
 
-		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandAbles);
+		/// <summary>
+		/// Prompts the <see cref="Actor"/> to select an object from <paramref name="commandables"/>.
+		/// </summary>
+		/// <param name="commandables"><see cref="IEnumerable"/> of <see cref="ICommandAble"/> to select from.</param>
+		/// <returns>The selected <see cref="ICommandAble"/>.</returns>
+		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandables);
 
+		/// <summary>
+		/// Prompts the <see cref="Actor"/> to select a command from <paramref name="commands"/>.
+		/// </summary>
+		/// <param name="commands"><see cref="IEnumerable"/> of <see cref="Command"/> to select from.</param>
+		/// <returns>The selected <see cref="Command"/>.</returns>
 		public Command PickCommand(IEnumerable<Command> commands);
 
+		/// <param name="hasKey">Object to get help for.</param>
+		/// <returns>A string containing the full description of <paramref name="hasKey"/>.</returns>
 		public string GetHelp(IHasKey hasKey);
 
+		/// <summary>
+		/// Default implementation of <see cref="IInput"/> using the <see cref="Console"/>.
+		/// </summary>
 		public static readonly IInput ConsoleInput = new ConsoleInput();
 	}
 
+	/// <summary>
+	/// Default implementation of <see cref="IInput"/> using the <see cref="Console"/>.
+	/// </summary>
 	public class ConsoleInput : IInput
 	{
 		private const string HELP_STR = "help";
@@ -22,8 +48,19 @@ namespace IronEngine.IO
 		private Dictionary<string, Command> _commandsCache = new(5);
 		private ICommandAble _selected;
 
+		/// <summary>
+		/// Whether all available commands are automatically printed when calling <see cref="PickCommand"/> or <see cref="PickCommandAble"/>.
+		/// </summary>
 		public bool AutoPrintCommands { get; set; } = true;
+
+		/// <summary>
+		/// Prompt to print when calling <see cref="PickCommandAble"/>.
+		/// </summary>
 		public string SelectCommandAblePrompt = "Select Commandable:";
+
+		/// <summary>
+		/// Prompt to print when calling <see cref="PickCommand"/>.
+		/// </summary>
 		public string SelectCommandPrompt = "Select Command:";
 
 		public string GetString(string prompt)
@@ -36,15 +73,6 @@ namespace IronEngine.IO
 			return ret;
 		}
 
-		public Command PickCommand(IEnumerable<Command> commands)
-		{
-			Store(_commandsCache, commands.Append(Command.Return));
-			Console.WriteLine(SelectCommandPrompt);
-			if (AutoPrintCommands)
-				PrintAll(_commandsCache);
-			return SelectFromDictionary(_commandsCache);
-		}
-
 		public ICommandAble PickCommandAble(IEnumerable<ICommandAble> commandables)
 		{
 			Store(_commandsCache, commandables.Select(Select));
@@ -53,6 +81,15 @@ namespace IronEngine.IO
 				PrintAll(_commandsCache);
 			SelectFromDictionary(_commandsCache).Invoke();
 			return _selected;
+		}
+
+		public Command PickCommand(IEnumerable<Command> commands)
+		{
+			Store(_commandsCache, commands.Append(Command.Return));
+			Console.WriteLine(SelectCommandPrompt);
+			if (AutoPrintCommands)
+				PrintAll(_commandsCache);
+			return SelectFromDictionary(_commandsCache);
 		}
 
 		public string GetHelp(IHasKey hasKey)
