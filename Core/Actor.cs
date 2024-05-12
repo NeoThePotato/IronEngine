@@ -131,7 +131,7 @@ namespace IronEngine
 
 			internal readonly void Invoke() => action.Invoke();
 
-			public static readonly Command Return = new(() => { }, "Back", "Back", false);
+			public static readonly Command Return = new(() => { }, "Deselect currently-selected object", "Deselect", false);
 		}
 
 		/// <summary>
