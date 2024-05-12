@@ -51,11 +51,11 @@ namespace IronEngine
 		#endregion
 
 		#region MAGNITUDE
-		private readonly double MagnitudeEuclidean => Sqrt(x * x + y * y);
+		public readonly double MagnitudeEuclidean => Sqrt(x * x + y * y);
 
-		private readonly int MagnitudeChebyshev => Abs(Max(x, y));
+		public readonly int MagnitudeChebyshev => Abs(Max(x, y));
 
-		private readonly int MagnitudeTaxicab => Abs(x) + Abs(y);
+		public readonly int MagnitudeTaxicab => Abs(x) + Abs(y);
 		#endregion
 
 		#region DISTANCE

@@ -214,6 +214,40 @@ namespace IronEngine
 		/// <returns><see cref="IEnumerable"/> with both original and mirrored positions.</returns>
 		public static IEnumerable<Position> MirrorXY(this IEnumerable<Position> source, Position pivot) => source.MirrorX(pivot).MirrorY(pivot);
 
+		/// <param name="origin">Starting position.</param>
+		/// <param name="clockwise">Whether to iterate clockwise.</param>
+		/// <returns>Returns spiral enumerable of all positions starting from <paramref name="origin"/>.</returns>
+		public static IEnumerable<Position> Spiral(this Position origin, bool clockwise = true) => Spiral(origin, new(-1, 0), clockwise);
+
+		/// <param name="origin">Starting position.</param>
+		/// <param name="startDirection">Direction to start with.</param>
+		/// <param name="clockwise">Whether to iterate clockwise.</param>
+		/// <returns>Returns a clockwise spiral enumerable of all positions starting from <paramref name="origin"/>.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">When <paramref name="startDirection"/> has a Taxicab magnitude different than 1.</exception>
+		public static IEnumerable<Position> Spiral(this Position origin, Position startDirection, bool clockwise = true) => SpiralInternal(origin, startDirection, clockwise ? RotateCW : RotateCCW);
+
+		private static IEnumerable<Position> SpiralInternal(Position position, Position direction, Func<Position, Position> rotateFunc)
+		{
+			if (direction.MagnitudeTaxicab != 1)
+				throw new ArgumentOutOfRangeException("Argument direction must have a Taxicab magnitude of exactly 1. I.E be either (1, 0), (-1, 0), (0, 1), or (0, -1).");
+			for (int chain = 1; ; chain++)
+			{
+				for (int repetitions = 0; repetitions < 2; repetitions++)
+				{
+					for (int movements = 0; movements < chain; movements++)
+					{
+						position += direction;
+						yield return position;
+					}
+					direction = rotateFunc(direction);
+				}
+			}
+		}
+
+		private static Position RotateCW(Position position) => new(-position.y, position.x);
+
+		private static Position RotateCCW(Position position) => new(position.y, -position.x);
+
 		/// <summary>
 		/// Filters an <see cref="IPositionable"/> enumerable to only include 1 instance every <paramref name="offset"/> iterations.
 		/// </summary>
