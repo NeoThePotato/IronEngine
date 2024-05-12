@@ -2,17 +2,43 @@
 
 namespace IronEngine
 {
+	/// <summary>
+	/// Interface for all instances of <see cref="IPositionable"/> that can also move on the <see cref="TileMap"/>.
+	/// </summary>
 	public interface IMoveable : IPositionable
 	{
 		#region MEMBERS
+		/// <summary>
+		/// The default MovementStrategy of this instance.
+		/// MovementStrategy is a function of type <see cref="MovementStrategy"/> that returns an <see cref="IEnumerable"/> of <see cref="Tile"/>s this instance move across, in order..
+		/// </summary>
 		MovementStrategy DefaultMovementStrategy => Teleport;
 
+		/// <summary>
+		/// Move to <paramref name="to"/> using <paramref name="strategy"/>.
+		/// </summary>
+		/// <param name="to">Target <see cref="Tile"/>.</param>
+		/// <param name="strategy">Function of type <see cref="MovementStrategy"/> to use.</param>
 		sealed void Move(Tile to, MovementStrategy strategy) => MoveInternal(to, strategy);
 
+		/// <summary>
+		/// Move to <paramref name="to"/> using <see cref="DefaultMovementStrategy"/>.
+		/// </summary>
+		/// <param name="to">Target <see cref="Tile"/>.</param>
 		sealed void Move(Tile to) => Move(to, DefaultMovementStrategy);
 
+		/// <summary>
+		/// Move to <see cref="Tile"/> at <see cref="Position"/> <paramref name="to"/> using <paramref name="strategy"/>.
+		/// </summary>
+		/// <param name="to">Target <see cref="Position"/>.</param>
+		/// <param name="strategy">Function of type <see cref="MovementStrategy"/> to use.</param>
 		sealed void Move(Position to, MovementStrategy strategy) => MoveInternal(to, strategy);
 
+		/// <summary>
+		/// Move to <see cref="Tile"/> at <see cref="Position"/> <paramref name="to"/> using <see cref="DefaultMovementStrategy"/>.
+		/// </summary>
+		/// <param name="to">Target <see cref="Position"/>.</param>
+		/// <param name="strategy">Function of type <see cref="MovementStrategy"/> to use.</param>
 		sealed void Move(Position to) => Move(to, DefaultMovementStrategy);
 		#endregion
 
