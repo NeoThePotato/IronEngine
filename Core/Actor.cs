@@ -6,7 +6,7 @@ namespace IronEngine
 	/// This class contains logic for sending commands to <see cref="ICommandAble"/> instances.
 	/// A single player will be represented with an instance of this class.
 	/// </summary>
-	public class Actor : IEnumerable<IHasActor>, IDestroyable
+	public class Actor : IEnumerable<IHasActor>, IDestroyable, ICommandAble
 	{
 		internal HashSet<IHasActor> _myObjects = new(1);
 		internal HashSet<ICommandAble> _myActionable = new(1);
@@ -15,6 +15,10 @@ namespace IronEngine
 		/// Returns all objects which belong to this <see cref="Actor"/>.
 		/// </summary>
 		public IEnumerable<IHasActor> MyObjects => _myObjects;
+
+		Actor? IHasActor.Actor => this;
+
+		public Actor() => _myActionable.Add(this);
 
 		internal void AddChild(IHasActor child)
 		{
@@ -84,6 +88,11 @@ namespace IronEngine
 		protected internal virtual void OnTurnOver() { }
 
 		internal IEnumerable<ICommandAble> GetFilteredCommandAbleWithAvailableActions() => FilterCommandAble(_myActionable.Where(a => a.GetAvailableActions().Any()));
+
+		public virtual IEnumerable<ICommandAble.Command> GetAvailableActions()
+		{
+			yield break;
+		}
 	}
 
 	/// <summary>
