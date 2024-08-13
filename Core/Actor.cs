@@ -94,7 +94,7 @@ namespace IronEngine
 		/// <summary>
 		/// The <see cref="Actor"/> to which this object belongs.
 		/// </summary>
-		Actor? Actor { get; internal set; }
+		Actor? Actor { get; }
 
 		/// <summary>
 		/// Returns whether this instance has an <see cref="Actor"/>. (Actor != <see langword="null"/>)

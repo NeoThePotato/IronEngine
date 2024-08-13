@@ -12,14 +12,14 @@ namespace IronEngine
 	{
 		#region SINGLETON
 		private static Runtime _instance;
-		internal static Runtime Instance => _instance;
+		public static Runtime Instance => _instance;
 		#endregion
 
 		#region TILEMAP
 		/// <summary>
 		/// The <see cref="TileMap"/> which is managed by this <see cref="Runtime"/>.
 		/// </summary>
-		protected TileMap TileMap { get; private set; }
+		public TileMap TileMap { get; private set; }
 		#endregion
 
 		#region ACTORS
@@ -28,7 +28,7 @@ namespace IronEngine
 		/// <summary>
 		/// The <see cref="Actor"/> which is currently acting.
 		/// </summary>
-		protected Actor CurrentActor => _turnCounter.Current;
+		public Actor CurrentActor => _turnCounter.Current;
 
 		/// <summary>
 		/// All <see cref="Actor"/>s which the <see cref="Runtime"/> currently manages.
@@ -49,7 +49,7 @@ namespace IronEngine
 		/// <summary>
 		/// Current turn count.
 		/// </summary>
-		protected uint Turn => _turnCounter._turnCounter;
+		public uint Turn => _turnCounter._turnCounter;
 
 		public Runtime()
 		{
@@ -109,19 +109,19 @@ namespace IronEngine
 		/// <summary>
 		/// The <see cref="IRenderer"/> responsible for rendering frames to the user.
 		/// </summary>
-		protected IRenderer Renderer { get; private set; }
+		public IRenderer Renderer { get; private set; }
 		#endregion
 
 		#region ABSTRACT
 		/// <summary>
 		/// Condition for the <see cref="Runtime"/> to finish executing.
 		/// </summary>
-		protected abstract bool ExitCondition { get; }
+		public abstract bool ExitCondition { get; }
 
 		/// <summary>
 		/// The <see cref="IInput"/> responsible for receiving input from the <see cref="Actor"/>s.
 		/// </summary>
-		protected abstract IInput Input { get; }
+		public abstract IInput Input { get; }
 
 		/// <summary>
 		/// Called when the <see cref="Runtime"/> is constructed.
