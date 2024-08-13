@@ -84,6 +84,7 @@ namespace IronEngine
 						break;
 					selectedCommandAble = Input.PickCommandAble(commandAbles);
 					var command = Input.PickCommand(selectedCommandAble.GetAvailableActions());
+					OnCommandSelected(command);
 					command.Invoke();
 					advanceTurn = command.endsTurn;
 					Renderer.UpdateFrame();
@@ -153,7 +154,13 @@ namespace IronEngine
 		/// <summary>
 		/// Callback for when the game ends.
 		/// </summary>
-		protected abstract void OnExit();
+		protected virtual void OnExit() { }
+
+		/// <summary>
+		/// Callback for when a <see cref="ICommandAble.Command"/> is selected.
+		/// </summary>
+		/// <param name="command">The selected <see cref="ICommandAble.Command"/>.</param>
+		protected virtual void OnCommandSelected(ICommandAble.Command command) { }
 		#endregion
 
 		#region TURN_ENUMERATOR
