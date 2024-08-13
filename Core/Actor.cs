@@ -126,17 +126,19 @@ namespace IronEngine
 		/// <param name="description">Player-readable description of what this command does.</param>
 		/// <param name="key">The key to select this command.</param>
 		/// <param name="endsTurn">Tells the engine whether this command ends the <see cref="Actor"/>'s turn.</param>
-		public readonly struct Command(Action action, string description, string? key = null, bool endsTurn = true) : IHasKey
+		public readonly struct Command(Action action, string description, string? key = null, bool endsTurn = true, Action? undo = null) : IHasKey
 		{
 			private readonly string? key = key;
 			public readonly string description = description;
 			public readonly Action action = action;
+			public readonly Action? undo = undo;
 			public readonly bool endsTurn = endsTurn;
 
 			public readonly string? Key => key;
 			public readonly string Description => description;
 
 			public bool HasKey => !string.IsNullOrEmpty(Key);
+			public readonly bool CanUndo => undo != null;
 
 			internal readonly void Invoke() => action.Invoke();
 
