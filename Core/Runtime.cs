@@ -11,8 +11,7 @@ namespace IronEngine
 	public abstract class Runtime : IDestroyable
 	{
 		#region SINGLETON
-		private static Runtime _instance;
-		public static Runtime Instance => _instance;
+		public static Runtime Instance { get; private set; }
 		#endregion
 
 		#region TILEMAP
@@ -53,7 +52,7 @@ namespace IronEngine
 
 		public Runtime()
 		{
-			_instance = this;
+			Instance = this;
 			_actors = CreateActors().ToList();
 			TileMap = CreateTileMap();
 			Renderer = CreateRenderer();
@@ -102,7 +101,7 @@ namespace IronEngine
 		public void Destroy()
 		{
 			TileMap.Destroy();
-			_instance = null;
+			Instance = null;
 		}
 		#endregion
 
@@ -164,24 +163,19 @@ namespace IronEngine
 		#endregion
 
 		#region TURN_ENUMERATOR
-		private class TurnEnumerator : IEnumerator<Actor>
+		private struct TurnEnumerator(List<Actor> actors) : IEnumerator<Actor>
 		{
-			private List<Actor> _actors;
+			private List<Actor> _actors = actors;
 			internal Actor _currentActor;
 			private int _currentActorIndex = -1;
 			internal uint _turnCounter = 0;
 			private int CurrentActorIndex { get => _currentActorIndex; set => _currentActorIndex = value % _actors.Count; }
 
-			public TurnEnumerator(List<Actor> actors)
-			{
-				_actors = actors;
-			}
-
 			public Actor Current => _currentActor;
 
 			object IEnumerator.Current => Current;
 
-			public void Dispose() { }
+			public readonly void Dispose() { }
 
 			public bool MoveNext()
 			{
