@@ -10,7 +10,7 @@ namespace IronEngine.DefaultRenderer
 	/// <summary>
 	/// Handles rendering of elements into the console.
 	/// </summary>
-	public class ConsoleRenderer : ConsoleRenderer.IConsoleRenderer
+	public partial class ConsoleRenderer : ConsoleRenderer.IConsoleRenderer
 	{
 		public const byte COLOR_WHITE = 15;
 		public const byte COLOR_BLACK = 0;
@@ -276,16 +276,18 @@ namespace IronEngine.DefaultRenderer
 		}
 
 		[SupportedOSPlatform("windows")]
-		[DllImport("kernel32.dll")]
-		private static extern nint GetStdHandle(int nStdHandle);
+		[LibraryImport("kernel32.dll")]
+		private static partial nint GetStdHandle(int nStdHandle);
 
 		[SupportedOSPlatform("windows")]
-		[DllImport("kernel32.dll")]
-		private static extern bool GetConsoleMode(nint hConsoleHandle, out uint lpMode);
+		[LibraryImport("kernel32.dll")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static partial bool GetConsoleMode(nint hConsoleHandle, out uint lpMode);
 
 		[SupportedOSPlatform("windows")]
-		[DllImport("kernel32.dll")]
-		private static extern bool SetConsoleMode(nint hConsoleHandle, uint dwMode);
+		[LibraryImport("kernel32.dll")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static partial bool SetConsoleMode(nint hConsoleHandle, uint dwMode);
 		#endregion
 
 		#region FRAME_BUFFER
