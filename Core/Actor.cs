@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using static IronEngine.ICommandAble;
 
 namespace IronEngine
 {
@@ -141,6 +142,8 @@ namespace IronEngine
 			public readonly bool CanUndo => undo != null;
 
 			internal readonly void Invoke() => action.Invoke();
+
+			public readonly override string? ToString() => Description;
 
 			public static readonly Command Return = new(() => { }, "Deselect currently-selected object", "Deselect", false);
 		}
