@@ -38,6 +38,8 @@ namespace IronEngine.DefaultRenderer
 		/// <param name="tileSizeY">Vertical size of each <see cref="Tile"/>.</param>
 		public ConsoleRenderer(TileMap tileMap, int tileSizeX = 6, int tileSizeY = 3)
 		{
+			if (IS_WINDOWS)
+				EnableVirtualTerminalProcessing();
 			TileSizeX = tileSizeX;
 			TileSizeY = tileSizeY;
 			if (tileMap is IRenderAble renderAble && renderAble.GetRenderer() is IConsoleRenderer consoleRenderer)
@@ -47,8 +49,6 @@ namespace IronEngine.DefaultRenderer
 			UpdateFrameBufferSize();
 			UpdateStringBufferCapacity();
 			UpdateFrame();
-			if (IS_WINDOWS)
-				EnableVirtualTerminalProcessing();
 		}
 
 		#region RENDERING_LOGIC
@@ -57,7 +57,8 @@ namespace IronEngine.DefaultRenderer
 			Validate();
 			ChildRenderer.UpdateFrame();
 			UpdateStringBuffer();
-			PrepareConsoleWindow();
+			if (IS_WINDOWS)
+				PrepareConsoleWindow();
 			WriteStringToConsole();
 		}
 
@@ -69,15 +70,9 @@ namespace IronEngine.DefaultRenderer
 			return valid;
 		}
 
-		private void UpdateStringBuffer()
-		{
-			ParseFrameBufferToStringBuffer();
-		}
+		private void UpdateStringBuffer() => ParseFrameBufferToStringBuffer();
 
-		private void WriteStringToConsole()
-		{
-			WriteLine(StringBuffer);
-		}
+		private void WriteStringToConsole() => WriteLine(StringBuffer);
 
 		private void ParseFrameBufferToStringBuffer()
 		{
@@ -106,7 +101,6 @@ namespace IronEngine.DefaultRenderer
 				previousBGColor = 0;
 			}
 		}
-
 		#endregion
 
 		#region BUFFER_SIZE_MANIPULATION
@@ -124,7 +118,6 @@ namespace IronEngine.DefaultRenderer
 		{
 			(int sizeJ, int sizeI) = Size;
 			UpdateFrameBufferSize(sizeJ, sizeI);
-			Debug.WriteLine($"Updated ConsoleRenderer.FrameBuffer.size to {BufferSizeX}, {BufferSizeY}.");
 		}
 
 		private void UpdateFrameBufferSize(int sizeJ, int sizeI)
@@ -150,14 +143,9 @@ namespace IronEngine.DefaultRenderer
 		private void UpdateStringBufferCapacity(int capacity)
 		{
 			if (StringBuffer != null)
-			{
 				StringBuffer.Capacity = capacity;
-				Debug.WriteLine($"Updated ConsoleRenderer.StringBuffer.capacity to {StringBuffer.Capacity}.");
-			}
 			else
-			{
 				StringBuffer = new StringBuilder(capacity);
-			}
 		}
 		#endregion
 
@@ -178,80 +166,6 @@ namespace IronEngine.DefaultRenderer
 			catch (IOException)
 			{
 
-			}
-		}
-
-		[SupportedOSPlatform("windows")]
-		private bool ValidateConsoleWindowSize()
-		{
-			bool invalid = WindowHeight != SizeX || WindowWidth != SizeY;
-
-			if (invalid)
-				UpdateConsoleWindowSize();
-
-			return !invalid;
-		}
-
-		[SupportedOSPlatform("windows")]
-		private void UpdateConsoleWindowSize()
-		{
-			UpdateConsoleWindowSize(SizeY, SizeX);
-		}
-
-		[SupportedOSPlatform("windows")]
-		private static void UpdateConsoleWindowSize(int sizeI, int sizeJ)
-		{
-			try
-			{
-				SetWindowSize(sizeI, sizeJ);
-				Debug.WriteLine($"Updated Console.Window's size to {WindowHeight}, {WindowWidth}.");
-			}
-			catch
-			{
-				Debug.WriteLine($"Failed to set Console.Window's size to {WindowHeight}, {WindowWidth}.");
-			}
-		}
-
-		[SupportedOSPlatform("windows")]
-		private bool ConsoleWindowSizeOutOfBounds()
-		{
-			return WindowHeight < SizeX || WindowHeight > LargestWindowHeight || WindowWidth < SizeY || WindowWidth > LargestWindowWidth;
-		}
-
-		[SupportedOSPlatform("windows")]
-		private static bool ValidateConsoleBufferSize()
-		{
-			bool invalid = BufferWidth != WindowWidth || BufferHeight != WindowHeight;
-
-			if (invalid)
-				UpdateConsoleBufferSize();
-
-			return !invalid;
-		}
-
-		[SupportedOSPlatform("windows")]
-		private static void UpdateConsoleBufferSize()
-		{
-			UpdateConsoleBufferSize(WindowWidth, WindowHeight);
-		}
-
-		[SupportedOSPlatform("windows")]
-		private static void UpdateConsoleBufferSize(int sizeI, int sizeJ)
-		{
-			if (sizeI < CursorLeft || sizeJ < CursorTop)
-				SetCursorPosition(0, 0);
-
-			if (sizeI < WindowWidth || sizeJ < WindowHeight)
-				UpdateConsoleWindowSize(sizeI, sizeJ);
-
-			try
-			{
-				SetBufferSize(sizeI, sizeJ);
-				Debug.WriteLine($"Updated Console.Buffer's size to {BufferHeight}, {BufferWidth}.");
-			}
-			catch
-			{
-				Debug.WriteLine($"Failed to set Console.Buffer's size to {BufferHeight}, {BufferWidth}.");
 			}
 		}
 
